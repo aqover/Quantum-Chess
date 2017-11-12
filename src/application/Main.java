@@ -25,52 +25,13 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 	
-		// list of objects
-		Label topicLabel = new Label("Topic:");
-		Label dateLabel = new Label("Date:");
+
+		System.out.println(new model.NormalChessGame());
 		
-		TextField topicTextField = new TextField("");
-		topicTextField.setPrefWidth(200);
+		HBox root = new HBox();
+		Scene scene = new Scene(root, 100, 100);
 		
-		DatePicker datePicker = new DatePicker();
-		datePicker.setPrefWidth(150);
-		
-		TextArea textArea = new TextArea();
-		
-		Button okBtn = new Button("OK");
-		okBtn.setPrefWidth(60);
-		
-		Button clearBtn = new Button("Clear");
-		clearBtn.setPrefWidth(60);
-		
-		// create Pane
-		BorderPane root = new BorderPane();
-		
-		VBox top = new VBox(3);
-		HBox line1 = new HBox();
-		HBox line2 = new HBox();
-		line1.getChildren().addAll(topicLabel, topicTextField);
-		line2.getChildren().addAll(dateLabel, datePicker);
-		top.getChildren().addAll(line1, line2);
-		
-		HBox center = new HBox();
-		
-		center.setPadding(new Insets(8, 0, 8, 0));
-		center.getChildren().add(textArea);
-		
-		HBox bottom = new HBox(3);
-		bottom.setAlignment(Pos.BOTTOM_RIGHT);
-		bottom.getChildren().addAll(okBtn, clearBtn);
-		
-		root.setPadding(new Insets(10, 5, 10, 5));
-		root.setTop(top);
-		root.setCenter(center);
-		root.setBottom(bottom);
-	    
-		// create scene
-		Scene scene = new Scene(root, 250, 280);
-		
-		primaryStage.setTitle("MyNote");
+		primaryStage.setTitle("Quantum Chess");
 		primaryStage.setScene(scene);
 		
 		primaryStage.show();
