@@ -4,6 +4,9 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
+import ui.Board;
+import ui.Chat;
+import ui.GameDetail;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
@@ -26,54 +29,77 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 	
 		// list of objects
-		Label topicLabel = new Label("Topic:");
-		Label dateLabel = new Label("Date:");
+//		Label topicLabel = new Label("Topic:");
+//		Label dateLabel = new Label("Date:");
+//		
+//		TextField topicTextField = new TextField("");
+//		topicTextField.setPrefWidth(200);
+//		
+//		DatePicker datePicker = new DatePicker();
+//		datePicker.setPrefWidth(150);
+//		
+//		TextArea textArea = new TextArea();
+//		
+//		Button okBtn = new Button("OK");
+//		okBtn.setPrefWidth(60);
+//		
+//		Button clearBtn = new Button("Clear");
+//		clearBtn.setPrefWidth(60);
+//		
+//		// create Pane
+//		BorderPane root = new BorderPane();
+//		
+//		VBox top = new VBox(3);
+//		HBox line1 = new HBox();
+//		HBox line2 = new HBox();
+//		line1.getChildren().addAll(topicLabel, topicTextField);
+//		line2.getChildren().addAll(dateLabel, datePicker);
+//		top.getChildren().addAll(line1, line2);
+//		
+//		HBox center = new HBox();
+//		
+//		center.setPadding(new Insets(8, 0, 8, 0));
+//		center.getChildren().add(textArea);
+//		
+//		HBox bottom = new HBox(3);
+//		bottom.setAlignment(Pos.BOTTOM_RIGHT);
+//		bottom.getChildren().addAll(okBtn, clearBtn);
+//		
+//		root.setPadding(new Insets(10, 5, 10, 5));
+//		root.setTop(top);
+//		root.setCenter(center);
+//		root.setBottom(bottom);
+//	    
+//		// create scene
+//		Scene scene = new Scene(root, 250, 280);
+//		
+//		primaryStage.setTitle("MyNote");
+//		primaryStage.setScene(scene);
+//		
+//		primaryStage.show();
 		
-		TextField topicTextField = new TextField("");
-		topicTextField.setPrefWidth(200);
-		
-		DatePicker datePicker = new DatePicker();
-		datePicker.setPrefWidth(150);
-		
-		TextArea textArea = new TextArea();
-		
-		Button okBtn = new Button("OK");
-		okBtn.setPrefWidth(60);
-		
-		Button clearBtn = new Button("Clear");
-		clearBtn.setPrefWidth(60);
-		
-		// create Pane
-		BorderPane root = new BorderPane();
-		
-		VBox top = new VBox(3);
-		HBox line1 = new HBox();
-		HBox line2 = new HBox();
-		line1.getChildren().addAll(topicLabel, topicTextField);
-		line2.getChildren().addAll(dateLabel, datePicker);
-		top.getChildren().addAll(line1, line2);
-		
-		HBox center = new HBox();
-		
-		center.setPadding(new Insets(8, 0, 8, 0));
-		center.getChildren().add(textArea);
-		
-		HBox bottom = new HBox(3);
-		bottom.setAlignment(Pos.BOTTOM_RIGHT);
-		bottom.getChildren().addAll(okBtn, clearBtn);
-		
-		root.setPadding(new Insets(10, 5, 10, 5));
-		root.setTop(top);
-		root.setCenter(center);
-		root.setBottom(bottom);
-	    
-		// create scene
-		Scene scene = new Scene(root, 250, 280);
-		
-		primaryStage.setTitle("MyNote");
-		primaryStage.setScene(scene);
-		
-		primaryStage.show();
+		try {
+			Pane root = new Pane();
+			Scene scene = new Scene(root);
+			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			
+			HBox box = new HBox();
+			root.getChildren().add(box);
+			
+			GameDetail detail = new GameDetail();
+			Board board = new Board();
+			Chat chat = new Chat();
+			box.getChildren().add(detail);
+			box.getChildren().add(board);
+			box.getChildren().add(chat);
+			box.setHgrow(board, Priority.ALWAYS);
+			
+			primaryStage.setScene(scene);
+			primaryStage.show();
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static void main(String[] args) {
