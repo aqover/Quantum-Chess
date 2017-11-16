@@ -1,12 +1,11 @@
 package application;
 	
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
-import ui.Board;
-import ui.Chat;
-import ui.GameDetail;
+import ui.GamePlay;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
@@ -24,7 +23,6 @@ import javafx.scene.text.Font;
 
 
 public class Main extends Application {
-	
 	@Override
 	public void start(Stage primaryStage) {
 	
@@ -83,16 +81,8 @@ public class Main extends Application {
 			Scene scene = new Scene(root);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			
-			HBox box = new HBox();
-			root.getChildren().add(box);
-			
-			GameDetail detail = new GameDetail();
-			Board board = new Board();
-			Chat chat = new Chat();
-			box.getChildren().add(detail);
-			box.getChildren().add(board);
-			box.getChildren().add(chat);
-			box.setHgrow(board, Priority.ALWAYS);
+			GamePlay gamePlay = new GamePlay();
+			root.getChildren().add(gamePlay);
 			
 			primaryStage.setScene(scene);
 			primaryStage.show();
