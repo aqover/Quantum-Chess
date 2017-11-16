@@ -1,7 +1,10 @@
 package shareObject;
 
+import java.util.ArrayList;
+
+import control.Team;
 import javafx.scene.image.Image;
-import view.Team;
+import view.Tuple;
 import view.pieces.Bishop;
 import view.pieces.King;
 import view.pieces.Knight;
@@ -30,19 +33,32 @@ public class RenderableHolder {
 	public static Image bgLight;
 	
 	public static double size;
+	public static double LineWidth;
 	
-	private IRenderable[][] stateGame = new IRenderable[8][8];
+	public static boolean isHover;
+	public static Team turnTeam;
+	private ArrayList<Tuple<Integer, Integer> > walkWay;
+	
+	private Pieces[][] stateGame = new Pieces[8][8];
 	
 	public static RenderableHolder getInstance() {
 		return instance;
 	}
 	
-	public IRenderable[][] getStateGame() {
+	public Pieces[][] getStateGame() {
 		return stateGame;
 	}
 
-	public void setStateGame(IRenderable[][] stateGame) {
+	public void setStateGame(Pieces[][] stateGame) {
 		this.stateGame = stateGame;
+	}
+
+	public ArrayList<Tuple<Integer, Integer>> getWalkWay() {
+		return walkWay;
+	}
+
+	public void setWalkWay(ArrayList<Tuple<Integer, Integer>> walkWay) {
+		this.walkWay = walkWay;
 	}
 
 	static {
@@ -51,6 +67,7 @@ public class RenderableHolder {
 	
 	public RenderableHolder() {
 		size = 60;
+		LineWidth = 5;
 		initPieces();
 	}
 	
@@ -96,8 +113,8 @@ public class RenderableHolder {
 		for(int i=0;i<8;i++)
 		{
 			stateGame[1][i] = new Pawn(1, i);
-			((Pieces) stateGame[1][i]).setTeam(Team.B);
-			((Pieces) stateGame[0][i]).setTeam(Team.B);
+			((Pieces) stateGame[1][i]).setTeam(Team.A);
+			((Pieces) stateGame[0][i]).setTeam(Team.A);
 		}
 		
 		
@@ -113,8 +130,8 @@ public class RenderableHolder {
 		for(int i=0;i<8;i++)
 		{
 			stateGame[6][i] = new Pawn(6, i);
-			((Pieces) stateGame[6][i]).setTeam(Team.A);
-			((Pieces) stateGame[7][i]).setTeam(Team.A);
+			((Pieces) stateGame[6][i]).setTeam(Team.B);
+			((Pieces) stateGame[7][i]).setTeam(Team.B);
 		}
 	}
 }

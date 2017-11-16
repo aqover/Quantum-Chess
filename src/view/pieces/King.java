@@ -2,9 +2,9 @@ package view.pieces;
 
 import java.util.ArrayList;
 
+import control.Team;
 import javafx.scene.canvas.GraphicsContext;
 import shareObject.RenderableHolder;
-import view.Team;
 import view.Tuple;
 
 public class King extends Pieces implements CornerMove, StraightMove {
@@ -18,7 +18,7 @@ public class King extends Pieces implements CornerMove, StraightMove {
 	}
 	
 	@Override
-	public ArrayList<Tuple<Integer, Integer> > drawCanMove(int i, int j) {
+	public ArrayList<Tuple<Integer, Integer> > drawCanMove() {
 		// TODO Auto-generated method stub
 		ArrayList<Tuple<Integer, Integer> > data = new ArrayList<Tuple<Integer, Integer> >();
 		if (StraightMove.DIRECTION_TOP)
@@ -43,7 +43,7 @@ public class King extends Pieces implements CornerMove, StraightMove {
 	@Override
 	public void draw(GraphicsContext gc) {
 		// TODO Auto-generated method stub
-		gc.drawImage((team == Team.B)? RenderableHolder.bk: RenderableHolder.wk, 
+		gc.drawImage((team == Team.A)? RenderableHolder.bk: RenderableHolder.wk, 
 				x, 
 				y, 
 				RenderableHolder.size, 

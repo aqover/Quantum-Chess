@@ -1,5 +1,7 @@
 package view;
 
+import control.Team;
+
 public class Tuple<X, Y> {
 	private final X i;
 	private final Y j;

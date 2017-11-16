@@ -1,7 +1,10 @@
 package view.pieces;
 
+import java.util.ArrayList;
+
+import control.Team;
 import view.Entity;
-import view.Team;
+import view.Tuple;
 
 public class Pieces extends Entity {
 	protected Team team;
@@ -35,5 +38,10 @@ public class Pieces extends Entity {
 
 	public int getJ() {
 		return j;
+	}
+
+	public ArrayList<Tuple<Integer, Integer>> drawCanMove() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
