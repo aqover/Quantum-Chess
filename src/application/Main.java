@@ -1,9 +1,11 @@
 package application;
 	
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
+import ui.GamePlay;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
@@ -21,10 +23,8 @@ import javafx.scene.text.Font;
 
 
 public class Main extends Application {
-	
 	@Override
 	public void start(Stage primaryStage) {
-	
 
 		System.out.println(new model.NormalChessGame());
 		
@@ -34,7 +34,20 @@ public class Main extends Application {
 		primaryStage.setTitle("Quantum Chess");
 		primaryStage.setScene(scene);
 		
-		primaryStage.show();
+		try {
+			Pane root = new Pane();
+			Scene scene = new Scene(root);
+			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			
+			GamePlay gamePlay = new GamePlay();
+			root.getChildren().add(gamePlay);
+			
+			primaryStage.setScene(scene);
+			primaryStage.show();
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static void main(String[] args) {
