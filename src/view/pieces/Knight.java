@@ -2,9 +2,9 @@ package view.pieces;
 
 import java.util.ArrayList;
 
+import control.Team;
 import javafx.scene.canvas.GraphicsContext;
 import shareObject.RenderableHolder;
-import view.Team;
 import view.Tuple;
 
 public class Knight extends Pieces implements LMove {
@@ -13,7 +13,7 @@ public class Knight extends Pieces implements LMove {
 	}
 	
 	@Override
-	public ArrayList<Tuple<Integer, Integer> > drawCanMove(int i, int j) {
+	public ArrayList<Tuple<Integer, Integer> > drawCanMove() {
 		// TODO Auto-generated method stub
 		ArrayList<Tuple<Integer, Integer> > data = new ArrayList<Tuple<Integer, Integer> >();
 		if (LMove.DIRECTION_TOP_LEFT)
@@ -38,7 +38,7 @@ public class Knight extends Pieces implements LMove {
 	@Override
 	public void draw(GraphicsContext gc) {
 		// TODO Auto-generated method stub
-		gc.drawImage((team == Team.B)? RenderableHolder.bn: RenderableHolder.wn, 
+		gc.drawImage((team == Team.A)? RenderableHolder.bn: RenderableHolder.wn, 
 				x, 
 				y, 
 				RenderableHolder.size, 

@@ -2,9 +2,9 @@ package view.pieces;
 
 import java.util.ArrayList;
 
+import control.Team;
 import javafx.scene.canvas.GraphicsContext;
 import shareObject.RenderableHolder;
-import view.Team;
 import view.Tuple;
 
 public class Pawn extends Pieces implements StraightMove{
@@ -22,7 +22,7 @@ public class Pawn extends Pieces implements StraightMove{
 	}
 
 	@Override
-	public ArrayList<Tuple<Integer, Integer> > drawCanMove(int i, int j) {
+	public ArrayList<Tuple<Integer, Integer> > drawCanMove() {
 //		System.out.println(String.format("Pawn can move in, %s", team));
 		// TODO Auto-generated method stub
 		ArrayList<Tuple<Integer, Integer> > data = new ArrayList<Tuple<Integer, Integer> >();
@@ -34,7 +34,7 @@ public class Pawn extends Pieces implements StraightMove{
 	@Override
 	public void draw(GraphicsContext gc) {
 		// TODO Auto-generated method stub
-		gc.drawImage((team == Team.B)? RenderableHolder.bp: RenderableHolder.wp, 
+		gc.drawImage((team == Team.A)? RenderableHolder.bp: RenderableHolder.wp, 
 				x, 
 				y, 
 				RenderableHolder.size, 

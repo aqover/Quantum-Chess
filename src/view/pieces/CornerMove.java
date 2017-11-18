@@ -2,7 +2,7 @@ package view.pieces;
 
 import java.util.ArrayList;
 
-import view.Team;
+import control.Team;
 import view.Tuple;
 
 public interface CornerMove {
@@ -11,44 +11,24 @@ public interface CornerMove {
 	static boolean DIRECTION_TOP_RIGHT = true;
 	static boolean DIRECTION_BOTTOM_LEFT = true;
 	static boolean DIRECTION_BOTTOM_RIGHT = true;
-	
-	public ArrayList<Tuple<Integer, Integer> > drawCanMove(int i, int j);
-	
+		
 	public default ArrayList<Tuple<Integer, Integer> > drawHoverTopLeft(Team team, int straightMove, int i, int j) {
 		Pieces[][] stateGame = (Pieces[][]) shareObject.RenderableHolder.getInstance().getStateGame();
 		int t,r;
 		ArrayList<Tuple<Integer, Integer> > data = new ArrayList<Tuple<Integer, Integer> >();
-		if (team == Team.A)
+		for(int k=1; k <= straightMove; k++)
 		{
-			for(int k=straightMove; k>= 0 && (i-k) >= 0 && (j-k) >= 0; k--)
+			t = (team == Team.A)? i+k: i-k; 
+			r = (team == Team.A)? j+k: j-k;
+			if (t < 0 || t > 7) continue;
+			if(stateGame[t][r] != null)
 			{
-				t = i-k; 
-				r = j-k;				
-				if(stateGame[t][r] != null)
-				{
-					if (stateGame[t][r].getTeam() != team)
-						data.add(new Tuple<Integer, Integer>(t, r, stateGame[t][r].getTeam()));
-					break;
-				}
-				else
-					data.add(new Tuple<Integer, Integer>(t, r, Team.None));
+				if (stateGame[t][r].getTeam() != team)
+					data.add(new Tuple<Integer, Integer>(t, r, stateGame[t][r].getTeam()));
+				break;
 			}
-		}
-		else if(team == Team.B)
-		{
-			for(int k=0; k < straightMove && (i+k) < 8 && (j+k) < 8; k++)
-			{
-				t = i+k; 
-				r = j+k;
-				if(stateGame[t][r] != null)
-				{
-					if (stateGame[t][r].getTeam() != team)
-						data.add(new Tuple<Integer, Integer>(t, r, stateGame[t][r].getTeam()));
-					break;
-				}
-				else
-					data.add(new Tuple<Integer, Integer>(t, r, Team.None));
-			}
+			else
+				data.add(new Tuple<Integer, Integer>(t, r, Team.None));
 		}
 		return data;
 	}
@@ -57,37 +37,19 @@ public interface CornerMove {
 		Pieces[][] stateGame = (Pieces[][]) shareObject.RenderableHolder.getInstance().getStateGame();
 		int t,r;
 		ArrayList<Tuple<Integer, Integer> > data = new ArrayList<Tuple<Integer, Integer> >();
-		if (team == Team.A)
+		for(int k=1; k <= straightMove; k++)
 		{
-			for(int k=straightMove; k>= 0 && (i-k) >= 0 && (j+k) < 8; k--)
+			t = (team == Team.A)? i+k: i-k; 
+			r = (team == Team.A)? j-k: j+k;
+			if (t < 0 || t > 7) continue;
+			if(stateGame[t][r] != null)
 			{
-				t = i-k; 
-				r = j+k;
-				if(stateGame[t][r] != null)
-				{
-					if (stateGame[t][r].getTeam() != team)
-						data.add(new Tuple<Integer, Integer>(t, r, stateGame[t][r].getTeam()));
-					break;
-				}
-				else
-					data.add(new Tuple<Integer, Integer>(t, r, Team.None));
+				if (stateGame[t][r].getTeam() != team)
+					data.add(new Tuple<Integer, Integer>(t, r, stateGame[t][r].getTeam()));
+				break;
 			}
-		}
-		else if(team == Team.B)
-		{
-			for(int k=0; k < straightMove && (i+k) < 8 && (j-k) >= 0; k++)
-			{
-				t = i+k; 
-				r = j-k;
-				if(stateGame[t][r] != null)
-				{
-					if (stateGame[t][r].getTeam() != team)
-						data.add(new Tuple<Integer, Integer>(t, r, stateGame[t][r].getTeam()));
-					break;
-				}
-				else
-					data.add(new Tuple<Integer, Integer>(t, r, Team.None));
-			}
+			else
+				data.add(new Tuple<Integer, Integer>(t, r, Team.None));
 		}
 		return data;
 	}
@@ -96,37 +58,19 @@ public interface CornerMove {
 		Pieces[][] stateGame = (Pieces[][]) shareObject.RenderableHolder.getInstance().getStateGame();
 		int t,r;
 		ArrayList<Tuple<Integer, Integer> > data = new ArrayList<Tuple<Integer, Integer> >();
-		if (team == Team.A)
+		for(int k=1; k <= straightMove; k++)
 		{
-			for(int k=0; k < straightMove && (i+k) < 8  && (j+k) < 8; k++)
+			t = (team == Team.A)? i-k: i+k; 
+			r = (team == Team.A)? j-k: j+k;
+			if (t < 0 || t > 7) continue;
+			if(stateGame[t][r] != null)
 			{
-				t = i+k; 
-				r = j+k;
-				if(stateGame[t][r] != null)
-				{
-					if (stateGame[t][r].getTeam() != team)
-						data.add(new Tuple<Integer, Integer>(t, r, stateGame[t][r].getTeam()));
-					break;
-				}
-				else
-					data.add(new Tuple<Integer, Integer>(t, r, Team.None));
+				if (stateGame[t][r].getTeam() != team)
+					data.add(new Tuple<Integer, Integer>(t, r, stateGame[t][r].getTeam()));
+				break;
 			}
-		}
-		else if(team == Team.B)
-		{
-			for(int k=straightMove; k>= 0 && (i-k) >= 0 && (j-k) >= 0; k--)
-			{
-				t = i-k; 
-				r = j-k;
-				if(stateGame[t][r] != null)
-				{
-					if (stateGame[t][r].getTeam() != team)
-						data.add(new Tuple<Integer, Integer>(t, r, stateGame[t][r].getTeam()));
-					break;
-				}
-				else
-					data.add(new Tuple<Integer, Integer>(t, r, Team.None));
-			}
+			else
+				data.add(new Tuple<Integer, Integer>(t, r, Team.None));
 		}
 		return data;
 	}
@@ -135,39 +79,20 @@ public interface CornerMove {
 		Pieces[][] stateGame = (Pieces[][]) shareObject.RenderableHolder.getInstance().getStateGame();
 		int t,r;
 		ArrayList<Tuple<Integer, Integer> > data = new ArrayList<Tuple<Integer, Integer> >();
-		if (team == Team.A)
+		for(int k=1; k <= straightMove; k++)
 		{
-			for(int k=0; k < straightMove && (i+k) < 8 && (j-k) >= 0; k++)
+			t = (team == Team.A)? i-k: i+k; 
+			r = (team == Team.A)? j+k: j-k;
+			if (t < 0 || t > 7) continue;
+			if(stateGame[t][r] != null)
 			{
-				t = i+k; 
-				r = j-k;
-				if(stateGame[t][r] != null)
-				{
-					if (stateGame[t][r].getTeam() != team)
-						data.add(new Tuple<Integer, Integer>(t, r, stateGame[t][r].getTeam()));
-					break;
-				}
-				else
-					data.add(new Tuple<Integer, Integer>(t, r, Team.None));
+				if (stateGame[t][r].getTeam() != team)
+					data.add(new Tuple<Integer, Integer>(t, r, stateGame[t][r].getTeam()));
+				break;
 			}
+			else
+				data.add(new Tuple<Integer, Integer>(t, r, Team.None));
 		}
-		else if(team == Team.B)
-		{
-			for(int k=straightMove; k>= 0 && (i-k) >= 0 && (j+k) < 8; k--)
-			{
-				t = i-k; 
-				r = j+k;
-				if(stateGame[t][r] != null)
-				{
-					if (stateGame[t][r].getTeam() != team)
-						data.add(new Tuple<Integer, Integer>(t, r, stateGame[t][r].getTeam()));
-					break;
-				}
-				else
-					data.add(new Tuple<Integer, Integer>(t, r, Team.None));
-			}
-		}
-		
 		return data;
 	}
 }
