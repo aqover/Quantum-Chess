@@ -8,8 +8,8 @@ public abstract class ChessPiece {
 	
 	public ChessBoard getChessBoardAfterMove(ChessBoard board, ChessBoard.Move move, char empty_cell) {
 		ChessBoard new_board = new ChessBoard(board);
-		new_board.setValue(move.row_from, move.col_from, board.getAt(move.row_to, move.col_to));
-		new_board.setValue(move.row_to, move.col_to, empty_cell);
+		new_board.setValue(move.row1, move.col1, board.getAt(move.row2, move.col2));
+		new_board.setValue(move.row2, move.col2, empty_cell);
 		return new_board;
 	}
 	
