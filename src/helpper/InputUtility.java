@@ -1,7 +1,4 @@
-package input;
-
-import helpper.Team;
-import helpper.Tuple;
+package helpper;
 
 public class InputUtility {
 	public static double mouseX, mouseY;

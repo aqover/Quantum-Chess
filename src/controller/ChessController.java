@@ -2,9 +2,9 @@ package controller;
 
 import java.util.ArrayList;
 
+import helpper.InputUtility;
 import helpper.Team;
 import helpper.Tuple;
-import input.InputUtility;
 import javafx.animation.AnimationTimer;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;

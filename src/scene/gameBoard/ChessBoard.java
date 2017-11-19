@@ -2,7 +2,7 @@ package scene.gameBoard;
 
 import java.util.ArrayList;
 
-import input.InputUtility;
+import helpper.InputUtility;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseButton;
