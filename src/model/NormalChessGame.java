@@ -5,6 +5,7 @@ import java.util.List;
 
 import model.piece.ChessPiece;
 import model.piece.King;
+import view.Board;
 
 public class NormalChessGame {
 
@@ -62,9 +63,8 @@ public class NormalChessGame {
 	 * Move function
 	 */
 	// return validation of the move
-	public boolean isMoveValid(String moveString) {
+	public boolean isMoveValid(ChessBoard.Move move) {
 		try {
-			ChessBoard.Move move = new ChessBoard.Move(moveString);
 			ChessBoard board = this.getBoard();
 			
 			// out of bound
@@ -104,12 +104,11 @@ public class NormalChessGame {
 	// create new version and add
 	// return whether the move is successful
 	public boolean move(String moveString) {
-
-		if (!this.isMoveValid(moveString)) {
-			return false;
-		}
-		
 		try {
+			if (!this.isMoveValid(new ChessBoard.Move(moveString))) {
+				return false;
+			}
+
 			ChessBoard.Move move = new ChessBoard.Move(moveString);
 			ChessBoard board = this.getBoard();
 	
@@ -163,13 +162,39 @@ public class NormalChessGame {
 		return GAME_RESULT_ONGOING;
 	}
 	
+	private int getSide(char ch) {
+		if (Character.isLowerCase(ch)) return PLAYER_WHITE;
+		if (Character.isUpperCase(ch)) return PLAYER_BLACK;
+		return -1;
+	}
+	
 	/*
 	 * Getters
 	 */
-	
 	public List<ChessBoard.Move> getPossibleMoves(int player) { 
-		// TODO implements this
-		return new ArrayList<ChessBoard.Move>();
+
+		ChessBoard board = getBoard();
+		ArrayList<ChessBoard.Move> moves = new ArrayList<>();
+		
+		for (int i = 0; i < BOARD_SIZE; ++i) {
+			for (int j = 0; j < BOARD_SIZE; ++j) {
+				
+				if (getSide(board.getAt(i, j)) != player) {
+					continue;
+				}
+				
+				for (int ii = 0; ii < BOARD_SIZE; ++ii) {
+					for (int jj = 0; jj < BOARD_SIZE; ++jj) {
+						ChessBoard.Move move = new ChessBoard.Move(i, j, ii, jj);
+						if (this.isMoveValid(move)) {
+							moves.add(move);
+						}
+					}
+				}
+			}
+		}
+
+		return moves;
 	}
 
 	public ChessBoard getBoard(int version) throws IndexOutOfBoundsException {
