@@ -20,7 +20,41 @@ public class King extends ChessPiece {
 	}
 
 	public static boolean isKingThreaten(ChessBoard board, char kingPiece) {
-		// TODO implements this
+		
+		int kingI = -1, kingJ = -1;
+		for (int i = 0; i < board.rows(); ++i) {
+			for (int j = 0; j < board.cols(); ++j) {
+				if (board.getAt(i, j) == kingPiece) {
+					kingI = i;
+					kingJ = j;
+				}
+			}
+		}
+		
+		if (kingI == -1) {
+			return false;
+		}
+
+		for (int i = 0; i < board.rows(); ++i) {
+			for (int j = 0; j < board.cols(); ++j) {
+				char piece = board.getAt(i, j);
+				if (NormalChessGame.getSide(piece) == NormalChessGame.PLAYER_NOSIDE) {
+					continue;
+				}
+				if (NormalChessGame.getSide(piece) == NormalChessGame.getSide(kingPiece)) {
+					continue;
+				}
+				
+				try {
+					if (ChessPiece.getClassFromChar(piece).isValidMove(board, new Move(i, j, kingI, kingJ))) {
+						return true;
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
 		return false;
 	}
 }

@@ -53,6 +53,13 @@ public class ChessBoard {
 	/*
 	 * Setter & Getter
 	 */
+	public int rows() {
+		return NUMBER_OF_ROWS;
+	}
+	public int cols() {
+		return NUMBER_OF_COLS;
+	}
+
 	// return character at the given position (0-index) 
 	public char getAt(int row, int col) throws IndexOutOfBoundsException {
 		return this.board[row].charAt(col);
