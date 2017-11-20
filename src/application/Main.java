@@ -77,6 +77,7 @@ public class Main extends Application {
 //		primaryStage.show();
 		
 		try {
+<<<<<<< HEAD
 			Pane root = new Pane();
 			Scene scene = new Scene(root);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
@@ -87,6 +88,9 @@ public class Main extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 			
+=======
+			controller.SceneManager.initialize(primaryStage);
+>>>>>>> parent of ea98998... Revert "- add select game page for choose game type which online or offline"
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

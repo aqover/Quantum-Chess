@@ -1,7 +1,4 @@
-package Input;
-
-import control.Team;
-import view.Tuple;
+package helpper;
 
 public class InputUtility {
 	public static double mouseX, mouseY;
@@ -39,9 +36,14 @@ public class InputUtility {
 	}
 	
 	public static Tuple<Integer, Integer> getMousePosition() {
-		int i = (int) (mouseY / shareObject.RenderableHolder.size);
-		int j = (int) (mouseX / shareObject.RenderableHolder.size);
-//		System.out.println(String.format("x = %d, y = %d", i, j));
+		int i = (int) (mouseY / scene.gameBoard.shareObject.GameHolder.size);
+		int j = (int) (mouseX / scene.gameBoard.shareObject.GameHolder.size);
+		return new Tuple<Integer, Integer>(i, j, Team.None);
+	}
+	
+	public static Tuple<Integer, Integer> getMousePosition(double x, double y) {
+		int i = (int) (y / scene.gameBoard.shareObject.GameHolder.size);
+		int j = (int) (x / scene.gameBoard.shareObject.GameHolder.size);
 		return new Tuple<Integer, Integer>(i, j, Team.None);
 	}
 }
