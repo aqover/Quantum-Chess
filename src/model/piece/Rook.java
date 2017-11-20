@@ -1,13 +1,17 @@
 package model.piece;
 
 import model.ChessBoard;
+<<<<<<< HEAD
 import model.NormalChessGame;
+=======
+>>>>>>> UI
 import model.ChessBoard.Move;
 
 public class Rook extends ChessPiece {
 
 	@Override
 	public boolean isValidMove(ChessBoard board, Move move) {
+<<<<<<< HEAD
 		
 		if (NormalChessGame.getSide(board.getAt(move.row1, move.col1)) == 
 			NormalChessGame.getSide(board.getAt(move.row2, move.col2))) {
@@ -33,6 +37,9 @@ public class Rook extends ChessPiece {
 			return true;
 		}
 		
+=======
+		// TODO Auto-generated method stub
+>>>>>>> UI
 		return false;
 	}
 

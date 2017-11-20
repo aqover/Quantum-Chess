@@ -6,6 +6,16 @@ public abstract class ChessPiece {
 
 	public abstract boolean isValidMove(ChessBoard board, ChessBoard.Move move);
 	
+<<<<<<< HEAD
+=======
+	public ChessBoard getChessBoardAfterMove(ChessBoard board, ChessBoard.Move move, char empty_cell) {
+		ChessBoard new_board = new ChessBoard(board);
+		new_board.setValue(move.row_from, move.col_from, board.getAt(move.row_to, move.col_to));
+		new_board.setValue(move.row_to, move.col_to, empty_cell);
+		return new_board;
+	}
+	
+>>>>>>> UI
 	public static ChessPiece getClassFromChar(char piece) throws NoPieceException {
 		if (piece == 'r' || piece == 'R') return new Rook();
 		if (piece == 'n' || piece == 'N') return new Knight();

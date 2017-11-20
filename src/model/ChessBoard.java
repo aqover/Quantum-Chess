@@ -31,6 +31,7 @@ public class ChessBoard {
 	}
 
 	/*
+<<<<<<< HEAD
 	 * Move
 	 * 
 	 * apply move to the board
@@ -50,6 +51,8 @@ public class ChessBoard {
 		return newBoard;
 	}
 	/*
+=======
+>>>>>>> UI
 	 * Setter & Getter
 	 */
 	// return character at the given position (0-index) 
@@ -73,16 +76,20 @@ public class ChessBoard {
 
 	/*
 	 * Internal classes
+<<<<<<< HEAD
 	 * Move class
 	 * 
 	 * Move String : "1A2B"
 	 * meaning move from cell(1A) to cell(2B)
 	 * Move String : "3H4C"
 	 * meaning move from cell(3H) to cell(4C)
+=======
+>>>>>>> UI
 	 */
 	public static class Move {
 		
 		private String message;
+<<<<<<< HEAD
 		public final int row1, col1, row2, col2;
 		
 		public Move(int row1, int col1, int row2, int col2) {
@@ -112,6 +119,22 @@ public class ChessBoard {
 				min_row <= row2 && row2 <= max_row &&
 				min_col <= col1 && col1 <= max_col &&
 				min_col <= col2 && col2 <= max_col;
+=======
+		public final int row_from, col_from, row_to, col_to;
+		
+		public Move(int row_from, int col_from, int row_to, int col_to) {
+			
+			this.row_from = row_from;
+			this.col_from = col_from;
+			this.row_to = row_to;
+			this.col_to = col_to;
+			this.message = "";
+		}
+		
+		public Move(String move) {
+			this(move.charAt(0)-'1', move.charAt(1)-'A', move.charAt(2)-'1', move.charAt(3)-'A');
+			this.message = move;
+>>>>>>> UI
 		}
 		
 		public String toString() {

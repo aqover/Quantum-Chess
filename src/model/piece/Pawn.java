@@ -1,12 +1,16 @@
 package model.piece;
 
 import model.ChessBoard;
+<<<<<<< HEAD
 import model.NormalChessGame;
+=======
+>>>>>>> UI
 
 public class Pawn extends ChessPiece {
 
 	@Override
 	public boolean isValidMove(ChessBoard board, ChessBoard.Move move) {
+<<<<<<< HEAD
 
 		int sideFrom = board.getAt(move.row1, move.col1);
 		int sideTo = board.getAt(move.row2, move.col2);
@@ -45,6 +49,9 @@ public class Pawn extends ChessPiece {
 			}
 		}
 		
+=======
+		// TODO Auto-generated method stub
+>>>>>>> UI
 		return false;
 	}
 }
