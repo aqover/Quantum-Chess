@@ -63,22 +63,6 @@ public class NormalChessGame {
 	 * Move function
 	 */
 	// return validation of the move
-	public static boolean isMoveValid(ChessBoard board, ChessBoard.Move move) {
-		try {
-			
-			// out of bound
-			if (!move.isInBound(0, 0, BOARD_SIZE-1, BOARD_SIZE-1)) {
-				return false;
-			}
-			
-			char piece = board.getAt(move.row1, move.col1);			
-			return ChessPiece.getClassFromChar(piece).isValidMove(board, move);
-			
-		} catch (Exception e) {
-			return false;
-		}
-	}
-	
 	public boolean isMoveValid(ChessBoard.Move move) {
 		try {
 			ChessBoard board = this.getBoard();

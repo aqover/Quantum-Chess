@@ -23,16 +23,18 @@ public class Pawn extends ChessPiece {
 		
 		if (sideTo == NormalChessGame.PLAYER_NOSIDE) {
 			if (sideFrom == NormalChessGame.PLAYER_WHITE) {
-				if (move.row1 == 6 && drow == -2 && NormalChessGame.getSide(board.getAt(move.row1-1, move.col1)) == NormalChessGame.PLAYER_NOSIDE) {
-					return true;
+				if (move.row1 == 6) {
+					return (-2 <= drow && drow <= -1) && dcol == 0;
+				} else {
+					return drow == -1 && dcol == 0;
 				}
-				return drow == -1 && dcol == 0;
 			}
 			if (sideFrom == NormalChessGame.PLAYER_BLACK) {
-				if (move.row1 == 1 && drow == 2 && NormalChessGame.getSide(board.getAt(move.row1+1, move.col1)) == NormalChessGame.PLAYER_NOSIDE) {
-					return true;
+				if (move.row1 == 1) {
+					return (1 <= drow && drow <= 2) && dcol == 0;
+				} else {
+					return drow == 1 && dcol == 0;
 				}
-				return drow == 1 && dcol == 0;
 			}
 		}
 		
