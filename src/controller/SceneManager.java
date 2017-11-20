@@ -8,6 +8,7 @@ public final class SceneManager {
 	
 	private static Stage primaryStage;
 	private static Scene mainMenu;
+<<<<<<< HEAD
 	private static Scene selectGame;
 	private static Scene gameOffline;
 	private static Scene gameOnline;
@@ -25,6 +26,17 @@ public final class SceneManager {
 		primaryStage.setResizable(false);
 		primaryStage.sizeToScene();
 		
+=======
+	
+	static {
+		mainMenu = new Scene(new MainMenuController());
+	}
+	
+	public static void initialize(Stage stage) {
+		stage.setTitle("Quantum Chess");
+		
+		primaryStage = stage;
+>>>>>>> parent of ed88e67... Revert "- add main menu"
 		setSceneMainMenu();
 		primaryStage.show();
 	}
@@ -33,6 +45,7 @@ public final class SceneManager {
 		primaryStage.setScene(mainMenu);
 	}
 	
+<<<<<<< HEAD
 	public static void setSceneSelectGame() {
 		primaryStage.setScene(selectGame);
 	}
@@ -45,6 +58,8 @@ public final class SceneManager {
 		primaryStage.setScene(gameOffline);
 	}
 	
+=======
+>>>>>>> parent of ed88e67... Revert "- add main menu"
 	public static void setScene(Pane pane)
 	{
 		primaryStage.setScene(new Scene(pane));
