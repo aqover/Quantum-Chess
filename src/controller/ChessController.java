@@ -2,15 +2,10 @@ package controller;
 
 import java.util.ArrayList;
 
-<<<<<<< HEAD
-import helpper.InputUtility;
-import helpper.Team;
-import helpper.Tuple;
-=======
-import helpper.Team;
-import helpper.Tuple;
-import input.InputUtility;
->>>>>>> parent of ed88e67... Revert "- add main menu"
+import helper.InputUtility;
+import helper.Team;
+import helper.Tuple;
+
 import javafx.animation.AnimationTimer;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -37,10 +32,10 @@ public class ChessController {
 	private ChessDetail detail;
 	private ChessBoard board;
 	private AnimationTimer animationTimer;
+	private Tuple<Integer, Integer> mouse;
 	
 	private long timePrevious;
 	
-	private Tuple<Integer, Integer> mouse;
 	private Pieces piece, selectedPiece;
 	private Team turnTeam;
 	
@@ -79,6 +74,7 @@ public class ChessController {
 		{
 			mouse = InputUtility.getMousePosition();
 			piece = scene.gameBoard.shareObject.GameHolder.getInstance().getPieceFromMouse(mouse);
+			
 			if(selectedPiece != null)
 			{
 				if(movePiece(selectedPiece, mouse))

@@ -1,6 +1,6 @@
 package scene.gameBoard.shareObject;
 
-import helpper.Tuple;
+import helper.Tuple;
 import scene.gameBoard.view.pieces.Pieces;
 
 public class Animation {	

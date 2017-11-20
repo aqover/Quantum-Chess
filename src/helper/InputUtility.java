@@ -1,4 +1,4 @@
-package helpper;
+package helper;
 
 public class InputUtility {
 	public static double mouseX, mouseY;

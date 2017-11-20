@@ -2,7 +2,7 @@ package scene.gameBoard.shareObject;
 
 import java.util.ArrayList;
 
-import helpper.Tuple;
+import helper.Tuple;
 import javafx.scene.image.Image;
 import scene.gameBoard.view.pieces.Pieces;
 
