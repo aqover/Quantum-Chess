@@ -1,12 +1,50 @@
 package model.piece;
 
 import model.ChessBoard;
+import model.NormalChessGame;
 
 public class Pawn extends ChessPiece {
 
 	@Override
 	public boolean isValidMove(ChessBoard board, ChessBoard.Move move) {
-		// TODO Auto-generated method stub
+
+		int sideFrom = board.getAt(move.row1, move.col1);
+		int sideTo = board.getAt(move.row2, move.col2);
+
+		if (sideFrom == sideTo) {
+			return false;
+		}
+		
+		int drow = move.row2 - move.row1;
+		int dcol = move.col2 - move.col1;
+		
+		if (sideTo == NormalChessGame.PLAYER_NOSIDE) {
+			if (sideFrom == NormalChessGame.PLAYER_WHITE) {
+				if (move.row1 == 6) {
+					return (-2 <= drow && drow <= -1) && dcol == 0;
+				} else {
+					return drow == -1 && dcol == 0;
+				}
+			}
+			if (sideFrom == NormalChessGame.PLAYER_BLACK) {
+				if (move.row1 == 1) {
+					return (1 <= drow && drow <= 2) && dcol == 0;
+				} else {
+					return drow == 1 && dcol == 0;
+				}
+			}
+		}
+		
+		if (sideTo != sideFrom) {
+			if (sideFrom == NormalChessGame.PLAYER_WHITE) {
+				return drow == 1 && Math.abs(dcol) == 1;
+			}
+			
+			if (sideFrom == NormalChessGame.PLAYER_BLACK) {
+				return drow == -1 && Math.abs(dcol) == 1;
+			}
+		}
+		
 		return false;
 	}
 }

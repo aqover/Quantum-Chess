@@ -38,14 +38,8 @@ public class ChessBoard {
 	public void move(Move move, char emptySpace) {
 		try {
 			if (move.isMoving()) {
-				this.board[move.row2] = 
-					this.board[move.row2].substring(0, move.col2) + 
-					this.board[move.row1].charAt(move.col1) + 
-					this.board[move.row2].substring(move.col2+1);
-				this.board[move.row1] = 
-					this.board[move.row1].substring(0, move.col1) +
-					emptySpace +
-					this.board[move.row1].substring(move.col1+1);
+				this.setValue(move.row2, move.col2, this.getAt(move.row1, move.col1));
+				this.setValue(move.row1, move.col1, emptySpace);
 			}
 		} catch (Exception e) {}
 	}

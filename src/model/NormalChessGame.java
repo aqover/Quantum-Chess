@@ -10,6 +10,7 @@ import view.Board;
 public class NormalChessGame {
 
 	// player turn
+	public static final int PLAYER_NOSIDE = -1;
 	public static final int PLAYER_WHITE = 0;
 	public static final int PLAYER_BLACK = 1;
 	protected final int firstTurn;
@@ -162,10 +163,10 @@ public class NormalChessGame {
 		return GAME_RESULT_ONGOING;
 	}
 	
-	private int getSide(char ch) {
+	public static int getSide(char ch) {
 		if (Character.isLowerCase(ch)) return PLAYER_WHITE;
 		if (Character.isUpperCase(ch)) return PLAYER_BLACK;
-		return -1;
+		return PLAYER_NOSIDE;
 	}
 	
 	/*
