@@ -18,6 +18,7 @@ public class NormalChessGame {
 	public static final int BOARD_SIZE = 8;
 	
 	// for undo state
+	public final boolean keepVersion;
 	private int versionIndex;
 	private ArrayList<ChessBoard> versions;
 	private ArrayList<ChessBoard.Move> moves;
@@ -26,7 +27,7 @@ public class NormalChessGame {
 	 * Constructor
 	 * @param board or default board
 	 */
-	public NormalChessGame(String fin) {
+	public NormalChessGame(String fin, boolean keepVersion) {
 		
 		assert(fin.length() == BOARD_SIZE * BOARD_SIZE);
 		
@@ -36,10 +37,11 @@ public class NormalChessGame {
 		
 		versionIndex = 0;
 		firstTurn = PLAYER_WHITE;
+		this.keepVersion = keepVersion;
 	}
 	
 	public NormalChessGame() {
-		this("RNBQKBNR" + "PPPPPPPP" + "........" + "........" + "........" + "........" + "pppppppp" + "rnbqkbnr");
+		this("RNBQKBNR" + "PPPPPPPP" + "........" + "........" + "........" + "........" + "pppppppp" + "rnbqkbnr", true);
 	}
 	
 	/*
@@ -102,17 +104,21 @@ public class NormalChessGame {
 
 			ChessBoard.Move move = new ChessBoard.Move(moveString);
 			ChessBoard board = this.getBoard();
-	
-			// adjust history
-			while (this.versions.size() > this.versionIndex + 1) {
-				this.versions.remove(this.versions.size()-1);
-				this.moves.remove(this.moves.size()-1);
+			
+			if (keepVersion) {
+				// adjust history
+				while (this.versions.size() > this.versionIndex + 1) {
+					this.versions.remove(this.versions.size()-1);
+					this.moves.remove(this.moves.size()-1);
+				}
+					
+				// add new version
+				this.versions.add(board.moveDuplicate(move, '.'));
+				this.moves.add(move);
+				this.versionIndex++;
+			} else {
+				board.move(move, '.');
 			}
-				
-			// add new version
-			this.versions.add(board.moveDuplicate(move, '.'));
-			this.moves.add(move);
-			this.versionIndex++;
 			
 			return true;
 		} catch (Exception e) {
