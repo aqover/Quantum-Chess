@@ -73,7 +73,7 @@ public class NormalChessGame {
 			}
 			
 			char piece = board.getAt(move.row1, move.col1);
-			if (this.getTurn() != this.getSide(piece)) {
+			if (this.getTurn() != NormalChessGame.getSide(piece)) {
 				return false;
 			}
 			
