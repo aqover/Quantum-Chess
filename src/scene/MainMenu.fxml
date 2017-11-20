@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<<<<<<< HEAD
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-=======
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
->>>>>>> parent of ed88e67... Revert "- add main menu"
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
@@ -25,9 +22,7 @@
 	            <Font name="System Bold" size="18.0" />
 	         </font>
 	      </Label>
-<<<<<<< HEAD
-	      <Button layoutX="50.0" layoutY="80.0" onMouseClicked="#handlerSelectGame" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #40C4FF;" text="Start Game" textFill="WHITE">
-=======
+
 	      <Label alignment="CENTER" layoutX="50.0" layoutY="60.0" prefHeight="40.0" prefWidth="200.0" text="Player A Name">
 	         <font>
 	            <Font size="16.0" />
@@ -49,7 +44,7 @@
 	         </cursor>
 	      </TextField>
 	      <Button layoutX="50.0" layoutY="310.0" onMouseClicked="#startGame" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #40C4FF;" text="Start Game" textFill="WHITE">
->>>>>>> parent of ed88e67... Revert "- add main menu"
+
 	         <font>
 	            <Font name="System Bold" size="18.0" />
 	         </font>
