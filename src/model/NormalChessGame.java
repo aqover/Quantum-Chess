@@ -1,24 +1,15 @@
 package model;
 
 import java.util.ArrayList;
-<<<<<<< HEAD
 import java.util.List;
 
 import model.piece.ChessPiece;
 import model.piece.King;
-import view.Board;
-=======
-
-import model.piece.ChessPiece;
->>>>>>> UI
 
 public class NormalChessGame {
 
 	// player turn
-<<<<<<< HEAD
 	public static final int PLAYER_NOSIDE = -1;
-=======
->>>>>>> UI
 	public static final int PLAYER_WHITE = 0;
 	public static final int PLAYER_BLACK = 1;
 	protected final int firstTurn;
@@ -29,11 +20,7 @@ public class NormalChessGame {
 	// for undo state
 	private int versionIndex;
 	private ArrayList<ChessBoard> versions;
-<<<<<<< HEAD
 	private ArrayList<ChessBoard.Move> moves;
-=======
-	private ArrayList<String> moves;
->>>>>>> UI
 	
 	/*
 	 * Constructor
@@ -76,7 +63,6 @@ public class NormalChessGame {
 	 * Move function
 	 */
 	// return validation of the move
-<<<<<<< HEAD
 	public boolean isMoveValid(ChessBoard.Move move) {
 		try {
 			ChessBoard board = this.getBoard();
@@ -87,77 +73,21 @@ public class NormalChessGame {
 			}
 			
 			char piece = board.getAt(move.row1, move.col1);
-			if (this.getTurn() == PLAYER_WHITE) {
-				// move lower-case letter	
-				if (!Character.isLowerCase(piece)) {
-					return false;
-				}
-				try {
-					return ChessPiece.getClassFromChar(piece).isValidMove(board, move);
-				} catch (Exception e) {
-					return false;
-				}
-			} else {
-				// move upper-case letter
-				if (!Character.isUpperCase(piece)) {
-					return false;
-				}
-				try {
-					return ChessPiece.getClassFromChar(piece).isValidMove(board, move);
-				} catch (Exception e) {
-					return false;
-				}
+			if (this.getTurn() != this.getSide(piece)) {
+				return false;
 			}
-
+			try {
+				return ChessPiece.getClassFromChar(piece).isValidMove(board, move);
+			} catch (Exception e) {
+				return false;
+			}
 		} catch (Exception e) {
 			return false;
 		}
-
-=======
-	public boolean isMoveValid(String moveString) {
-		
-		// TO DO: check validation of the move
-		if (moveString.length() != 4) return false;
-		
-		ChessBoard board = this.getBoard();
-		ChessBoard.Move move = new ChessBoard.Move(moveString);
-		
-		// out of bound
-		if (!(0 <=  move.row_from && move.row_from < BOARD_SIZE && 0 <= move.col_from && move.col_from < BOARD_SIZE)) {
-			return false;
-		}
-		if (!(0 <= move.row_to && move.row_to < BOARD_SIZE && 0 <= move.col_to && move.col_to < BOARD_SIZE)) {
-			return false;
-		}
-		
-		char piece = board.getAt(move.row_from, move.col_from);
-		if (this.getTurn() == PLAYER_WHITE) {
-			// move lower-case letter	
-			if (!Character.isLowerCase(piece)) {
-				return false;
-			}
-			try {
-				return ChessPiece.getClassFromChar(piece).isValidMove(board, move);
-			} catch (Exception e) {
-				return false;
-			}
-		} else {
-			// move upper-case letter
-			if (!Character.isUpperCase(piece)) {
-				return false;
-			}
-			try {
-				return ChessPiece.getClassFromChar(piece).isValidMove(board, move);
-			} catch (Exception e) {
-				return false;
-			}
-		}
->>>>>>> UI
 	}
-	
+
 	// create new version and add
 	// return whether the move is successful
-<<<<<<< HEAD
 	public boolean move(String moveString) {
 		try {
 			if (!this.isMoveValid(new ChessBoard.Move(moveString))) {
@@ -182,34 +112,12 @@ public class NormalChessGame {
 		} catch (Exception e) {
 			return false;
 		}
-=======
-	public boolean move(String move) {
-		if (!this.isMoveValid(move)) {
-			return false;
-		}
-		
-		ChessBoard board = this.getBoard();
-		int row_from = move.charAt(0) - '1', col_from = move.charAt(1) - 'A';
-		int row_to = move.charAt(2) - '1', col_to = move.charAt(3) - 'A';
-
-		// add new version
-		while (this.versions.size() > this.versionIndex + 1) {
-			this.versions.remove(this.versions.size()-1);
-			this.moves.remove(this.moves.size()-1);
-		}
-		this.versions.add(board.move(row_from, col_from, row_to, col_to, '.'));
-		this.moves.add(move);
-		this.versionIndex++;
-		
-		return true;
->>>>>>> UI
 	}
 	
 	
 	/*
 	 * Winner status
 	 */
-<<<<<<< HEAD
 	// TODO: implement get winner 
 	public static int GAME_RESULT_DRAW = 0;
 	public static int GAME_RESULT_WHITE_WINS = 1;
@@ -244,14 +152,10 @@ public class NormalChessGame {
 		if (Character.isUpperCase(ch)) return PLAYER_BLACK;
 		return PLAYER_NOSIDE;
 	}
-=======
-	
->>>>>>> UI
 	
 	/*
 	 * Getters
 	 */
-<<<<<<< HEAD
 	public List<ChessBoard.Move> getPossibleMoves(int player) { 
 
 		ChessBoard board = getBoard();
@@ -278,15 +182,12 @@ public class NormalChessGame {
 		return moves;
 	}
 
-=======
->>>>>>> UI
 	public ChessBoard getBoard(int version) throws IndexOutOfBoundsException {
 		return this.versions.get(version);
 	}
 	public ChessBoard getBoard() throws IndexOutOfBoundsException {
 		return this.versions.get(this.versionIndex);
 	}
-<<<<<<< HEAD
 	public ChessBoard.Move getMove(int version) throws IndexOutOfBoundsException {
 		return this.moves.get(version);
 	}
@@ -294,14 +195,6 @@ public class NormalChessGame {
 		return this.moves.get(this.versionIndex);
 	}
 	
-=======
-	public String getMove(int version) throws IndexOutOfBoundsException {
-		return this.moves.get(version);
-	}
-	public String getMove() throws IndexOutOfBoundsException {
-		return this.moves.get(this.versionIndex);
-	}
->>>>>>> UI
 	public int getTurn() {
 		return this.versionIndex % 2 == 0 ? this.firstTurn : 
 			(this.firstTurn == PLAYER_WHITE ? PLAYER_BLACK : PLAYER_WHITE);
