@@ -73,19 +73,25 @@ public class NormalChessGame {
 			}
 			
 			char piece = board.getAt(move.row1, move.col1);
-			if (this.getTurn() != this.getSide(piece)) {
+			if (this.getTurn() != NormalChessGame.getSide(piece)) {
 				return false;
 			}
-			try {
-				return ChessPiece.getClassFromChar(piece).isValidMove(board, move);
-			} catch (Exception e) {
-				return false;
-			}
+			
+			return ChessPiece.getClassFromChar(piece).isValidMove(board, move);
+			
 		} catch (Exception e) {
 			return false;
 		}
 	}
-
+	
+	public boolean isMoveValid(String moveString) {
+		try {
+			return isMoveValid(new ChessBoard.Move(moveString));
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
 	// create new version and add
 	// return whether the move is successful
 	public boolean move(String moveString) {
