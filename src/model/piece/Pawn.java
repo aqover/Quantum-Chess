@@ -8,9 +8,6 @@ public class Pawn extends ChessPiece {
 	@Override
 	public boolean isValidMove(ChessBoard board, ChessBoard.Move move) {
 
-		System.out.println("Check Move : " + move.toString());
-		System.out.println("" + move.row1 + " " + move.col1 + " # " + move.row2 + " " + move.col2);
-		
 		int sideFrom = board.getAt(move.row1, move.col1);
 		int sideTo = board.getAt(move.row2, move.col2);
 

@@ -13,6 +13,7 @@ public class ChessBoard {
 	public ChessBoard(String board, int number_of_rows, int number_of_columns) {
 		
 		assert(board.length() == number_of_rows * number_of_columns);
+		
 		this.NUMBER_OF_ROWS = number_of_rows;
 		this.NUMBER_OF_COLUMNS = number_of_columns;
 		
@@ -21,6 +22,7 @@ public class ChessBoard {
 			this.board[i] = board.substring(i * NUMBER_OF_ROWS, (i+1) * NUMBER_OF_ROWS);
 		}
 	}
+	
 	public ChessBoard(ChessBoard board) {
 		this.NUMBER_OF_ROWS = board.NUMBER_OF_ROWS;
 		this.NUMBER_OF_COLUMNS = board.NUMBER_OF_COLUMNS;
@@ -53,7 +55,27 @@ public class ChessBoard {
 	/*
 	 * Setter & Getter
 	 */
-	// return character at the given position (0-index) 
+	// set all cells to the given character
+	public void fill(char ch) {
+		
+		StringBuffer buffer = new StringBuffer();
+		for (int i = 0; i < NUMBER_OF_COLUMNS; ++i) {
+			buffer.append(ch);
+		}
+		
+		for (int i = 0; i < NUMBER_OF_ROWS; ++i) {
+			board[i] = buffer.toString();
+		}
+	}
+	
+	public int getRows() {
+		return NUMBER_OF_ROWS;
+	}
+	public int getColumns() {
+		return NUMBER_OF_COLUMNS;
+	}
+
+	// return character at the given position (0-index)
 	public char getAt(int row, int col) throws IndexOutOfBoundsException {
 		return this.board[row].charAt(col);
 	}

@@ -6,19 +6,11 @@ import java.util.List;
 import model.piece.ChessPiece;
 import model.piece.King;
 
-public class NormalChessGame {
+public class NormalChessGame implements ChessGameInfo {
 
-	// player turn
-	public static final int PLAYER_NOSIDE = -1;
-	public static final int PLAYER_WHITE = 0;
-	public static final int PLAYER_BLACK = 1;
 	protected final int firstTurn;
-	
-	// board size
-	public static final int BOARD_SIZE = 8;
-	
+		
 	// for undo state
-	public final boolean keepVersion;
 	private int versionIndex;
 	private ArrayList<ChessBoard> versions;
 	private ArrayList<ChessBoard.Move> moves;
@@ -27,21 +19,33 @@ public class NormalChessGame {
 	 * Constructor
 	 * @param board or default board
 	 */
-	public NormalChessGame(String fin, boolean keepVersion) {
-		
-		assert(fin.length() == BOARD_SIZE * BOARD_SIZE);
+	
+	public NormalChessGame(ChessBoard board) {
 		
 		versions = new ArrayList<>();
 		moves = new ArrayList<>();
-		versions.add(new ChessBoard(fin, BOARD_SIZE, BOARD_SIZE));	
+		versions.add(board);
 		
 		versionIndex = 0;
 		firstTurn = PLAYER_WHITE;
-		this.keepVersion = keepVersion;
+		
+	}
+	public NormalChessGame(String fin) {
+		this(new ChessBoard(fin, BOARD_SIZE, BOARD_SIZE));	
 	}
 	
 	public NormalChessGame() {
-		this("RNBQKBNR" + "PPPPPPPP" + "........" + "........" + "........" + "........" + "pppppppp" + "rnbqkbnr", true);
+		this("RNBQKBNR" + "PPPPPPPP" + "........" + "........" + "........" + "........" + "pppppppp" + "rnbqkbnr");
+	}
+	
+	// copy constructor
+	public NormalChessGame(NormalChessGame game) {
+
+		this.firstTurn = game.firstTurn;
+		this.versionIndex = game.versionIndex;
+
+		this.versions = new ArrayList<>(game.versions);
+		this.moves = new ArrayList<>(game.moves);
 	}
 	
 	/*
@@ -57,6 +61,7 @@ public class NormalChessGame {
 			this.versionIndex = versions.size() - 1;
 		}
 	}
+	
 	public void moveVersion(int offset_version) {
 		this.setVersion(this.versionIndex + offset_version);
 	}
@@ -86,39 +91,27 @@ public class NormalChessGame {
 		}
 	}
 	
-	public boolean isMoveValid(String moveString) {
-		try {
-			return isMoveValid(new ChessBoard.Move(moveString));
-		} catch (Exception e) {
-			return false;
-		}
+	public static boolean isMoveValid(ChessBoard board, ChessBoard.Move move) {
+		return (new NormalChessGame(board)).isMoveValid(move);
 	}
 	
 	// create new version and add
 	// return whether the move is successful
-	public boolean move(String moveString) {
+	public boolean move(ChessBoard.Move move) {
 		try {
-			if (!this.isMoveValid(new ChessBoard.Move(moveString))) {
-				return false;
-			}
 
-			ChessBoard.Move move = new ChessBoard.Move(moveString);
 			ChessBoard board = this.getBoard();
 			
-			if (keepVersion) {
-				// adjust history
-				while (this.versions.size() > this.versionIndex + 1) {
-					this.versions.remove(this.versions.size()-1);
-					this.moves.remove(this.moves.size()-1);
-				}
-					
-				// add new version
-				this.versions.add(board.moveDuplicate(move, '.'));
-				this.moves.add(move);
-				this.versionIndex++;
-			} else {
-				board.move(move, '.');
+			// adjust history
+			while (this.versions.size() > this.versionIndex + 1) {
+				this.versions.remove(this.versions.size()-1);
+				this.moves.remove(this.moves.size()-1);
 			}
+				
+			// add new version
+			this.versions.add(board.moveDuplicate(move, EMPTY_SPACE));
+			this.moves.add(move);
+			this.versionIndex++;
 			
 			return true;
 		} catch (Exception e) {
@@ -130,7 +123,6 @@ public class NormalChessGame {
 	/*
 	 * Winner status
 	 */
-	// TODO: implement get winner 
 	public static int GAME_RESULT_DRAW = 0;
 	public static int GAME_RESULT_WHITE_WINS = 1;
 	public static int GAME_RESULT_BLACK_WINS = 2;
@@ -140,7 +132,7 @@ public class NormalChessGame {
 		
 		// white is being threaten
 		if (getTurn() == PLAYER_WHITE && getPossibleMoves(PLAYER_WHITE).size() == 0) {
-			if (King.isKingThreaten(this.getBoard(), 'k')) {
+			if (King.isKingThreaten(this.getBoard(), WHITE_KING)) {
 				return GAME_RESULT_DRAW;
 			} else {
 				return GAME_RESULT_BLACK_WINS;
@@ -149,7 +141,7 @@ public class NormalChessGame {
 		
 		// black is being threaten
 		if (getTurn() == PLAYER_BLACK && getPossibleMoves(PLAYER_BLACK).size() == 0) {
-			if (King.isKingThreaten(this.getBoard(), 'K')) {
+			if (King.isKingThreaten(this.getBoard(), BLACK_KING)) {
 				return GAME_RESULT_DRAW;
 			} else {
 				return GAME_RESULT_WHITE_WINS;

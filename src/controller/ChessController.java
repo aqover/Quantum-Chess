@@ -2,15 +2,9 @@ package controller;
 
 import java.util.ArrayList;
 
-<<<<<<< HEAD
 import helpper.InputUtility;
 import helpper.Team;
 import helpper.Tuple;
-=======
-import helpper.Team;
-import helpper.Tuple;
-import input.InputUtility;
->>>>>>> parent of ed88e67... Revert "- add main menu"
 import javafx.animation.AnimationTimer;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
