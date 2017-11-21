@@ -102,6 +102,7 @@ public class QuantumChessGame implements ChessGameInfo {
 					this.deadPieces.add(cell);
 					purge = cell;
 				}
+				
 				this.currentGame.move(qmove.move);
 			}
 		}
@@ -151,16 +152,21 @@ public class QuantumChessGame implements ChessGameInfo {
 	public int getWinner() { 
 		
 		if (deadPieces.contains(Piece.BLACK_KING)) {
-			return PLAYER_WHITE;
+			return GAME_RESULT_WHITE_WINS;
 		}
 		
 		if (deadPieces.contains(Piece.WHITE_KING)) {
-			return PLAYER_BLACK;
+			return GAME_RESULT_BLACK_WINS;
 		}
 		
-		return PLAYER_NOSIDE;
+		return GAME_RESULT_ONGOING;
 	}
 	
+	public int getTurn() {
+		return this.moves.size() % 2 == 0 ? this.firstTurn : 
+			(this.firstTurn == PLAYER_WHITE ? PLAYER_BLACK : PLAYER_WHITE);
+	}
+
 	private void resetGame() {
 
 		this.currentGame.setVersion(0);

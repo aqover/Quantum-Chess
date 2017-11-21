@@ -7,6 +7,12 @@ public interface ChessGameInfo {
 	public static final int PLAYER_WHITE = 0;
 	public static final int PLAYER_BLACK = 1;
 	
+	// game result
+	public static int GAME_RESULT_DRAW = 0;
+	public static int GAME_RESULT_WHITE_WINS = 1;
+	public static int GAME_RESULT_BLACK_WINS = 2;
+	public static int GAME_RESULT_ONGOING = 3;
+	
 	// board size
 	public static final int BOARD_SIZE = 8;
 

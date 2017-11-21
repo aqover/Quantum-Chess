@@ -109,7 +109,7 @@ public class NormalChessGame implements ChessGameInfo {
 			}
 				
 			// add new version
-			this.versions.add(board.moveDuplicate(move, EMPTY_SPACE));
+			this.versions.add(board.moveDuplicate(move, Piece.EMPTY_SPACE));
 			this.moves.add(move);
 			this.versionIndex++;
 			
@@ -123,16 +123,12 @@ public class NormalChessGame implements ChessGameInfo {
 	/*
 	 * Winner status
 	 */
-	public static int GAME_RESULT_DRAW = 0;
-	public static int GAME_RESULT_WHITE_WINS = 1;
-	public static int GAME_RESULT_BLACK_WINS = 2;
-	public static int GAME_RESULT_ONGOING = 3;
 	
 	public int gameResult() {
 		
 		// white is being threaten
 		if (getTurn() == PLAYER_WHITE && getPossibleMoves(PLAYER_WHITE).size() == 0) {
-			if (King.isKingThreaten(this.getBoard(), WHITE_KING)) {
+			if (King.isKingThreaten(this.getBoard(), Piece.WHITE_KING)) {
 				return GAME_RESULT_DRAW;
 			} else {
 				return GAME_RESULT_BLACK_WINS;
@@ -141,7 +137,7 @@ public class NormalChessGame implements ChessGameInfo {
 		
 		// black is being threaten
 		if (getTurn() == PLAYER_BLACK && getPossibleMoves(PLAYER_BLACK).size() == 0) {
-			if (King.isKingThreaten(this.getBoard(), BLACK_KING)) {
+			if (King.isKingThreaten(this.getBoard(), Piece.BLACK_KING)) {
 				return GAME_RESULT_DRAW;
 			} else {
 				return GAME_RESULT_WHITE_WINS;
