@@ -50,6 +50,11 @@ public class MainMenuController extends Pane {
     }
 	
 	@FXML 
+	public void handlerSelectGame(MouseEvent arg0) {
+		SceneManager.setSceneSelectGame();
+	}
+	
+	@FXML 
 	public void handlerHTP(MouseEvent arg0) {
 		SceneManager.setScene(new HTPController());
 	}

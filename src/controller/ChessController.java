@@ -11,6 +11,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.Alert.AlertType;
+import model.ChessBoard.Move;
 import model.NormalChessGame;
 import scene.gameBoard.ChessBoard;
 import scene.gameBoard.ChessDetail;
@@ -100,16 +101,16 @@ public class ChessController {
 	}
 
 	private boolean movePiece(Pieces source, Tuple<Integer, Integer> mouse) {
-		String moveString = String.format("%d%C%d%C", source.getI() + 1, source.getJ() + 'A', mouse.getI() + 1, mouse.getI() + 'A');
-		if (normalChessGame.isMoveValid(moveString))
+		if (normalChessGame.isMoveValid(new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ())))
 		{
 			scene.gameBoard.shareObject.Animation.getInstance().startAnimate(source, mouse);
 			return true;
 		}			
 		else
 		{
-			Alert alert = new Alert(AlertType.NONE, "The move is not valid, Please try again.", ButtonType.OK);
-			alert.show();
+//			Alert alert = new Alert(AlertType.NONE, "The move is not valid, Please try again.", ButtonType.OK);
+//			alert.show();
+			System.out.println("2#$%^&*");
 		}
 			
 		return false;
