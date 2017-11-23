@@ -2,14 +2,15 @@ package controller;
 
 import java.util.ArrayList;
 
-import helpper.InputUtility;
-import helpper.Team;
-import helpper.Tuple;
+import helper.InputUtility;
+import helper.Team;
+import helper.Tuple;
 import javafx.animation.AnimationTimer;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.Alert.AlertType;
+import model.ChessBoard.Move;
 import model.NormalChessGame;
 import scene.gameBoard.ChessBoard;
 import scene.gameBoard.ChessDetail;
@@ -31,10 +32,10 @@ public class ChessController {
 	private ChessDetail detail;
 	private ChessBoard board;
 	private AnimationTimer animationTimer;
+	private Tuple<Integer, Integer> mouse;
 	
 	private long timePrevious;
 	
-	private Tuple<Integer, Integer> mouse;
 	private Pieces piece, selectedPiece;
 	private Team turnTeam;
 	
@@ -73,6 +74,7 @@ public class ChessController {
 		{
 			mouse = InputUtility.getMousePosition();
 			piece = scene.gameBoard.shareObject.GameHolder.getInstance().getPieceFromMouse(mouse);
+			
 			if(selectedPiece != null)
 			{
 				if(movePiece(selectedPiece, mouse))
@@ -98,16 +100,16 @@ public class ChessController {
 	}
 
 	private boolean movePiece(Pieces source, Tuple<Integer, Integer> mouse) {
-		String moveString = String.format("%d%C%d%C", source.getI() + 1, source.getJ() + 'A', mouse.getI() + 1, mouse.getI() + 'A');
-		if (normalChessGame.isMoveValid(moveString))
+		if (normalChessGame.isMoveValid(new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ())))
 		{
 			scene.gameBoard.shareObject.Animation.getInstance().startAnimate(source, mouse);
 			return true;
 		}			
 		else
 		{
-			Alert alert = new Alert(AlertType.NONE, "The move is not valid, Please try again.", ButtonType.OK);
-			alert.show();
+//			Alert alert = new Alert(AlertType.NONE, "The move is not valid, Please try again.", ButtonType.OK);
+//			alert.show();
+			System.out.println("2#$%^&*");
 		}
 			
 		return false;

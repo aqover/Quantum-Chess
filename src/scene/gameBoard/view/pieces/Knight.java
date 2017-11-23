@@ -2,8 +2,8 @@ package scene.gameBoard.view.pieces;
 
 import java.util.ArrayList;
 
-import helpper.Team;
-import helpper.Tuple;
+import helper.Team;
+import helper.Tuple;
 import javafx.scene.canvas.GraphicsContext;
 import scene.gameBoard.shareObject.GameHolder;
 

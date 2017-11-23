@@ -3,7 +3,7 @@ package scene.gameBoard;
 import java.io.IOException;
 
 import controller.ChessController;
-import helpper.Team;
+import helper.Team;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;

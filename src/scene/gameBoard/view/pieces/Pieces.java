@@ -2,8 +2,8 @@ package scene.gameBoard.view.pieces;
 
 import java.util.ArrayList;
 
-import helpper.Team;
-import helpper.Tuple;
+import helper.Team;
+import helper.Tuple;
 import scene.gameBoard.view.Entity;
 
 public class Pieces extends Entity{

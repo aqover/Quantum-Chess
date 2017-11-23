@@ -1,7 +1,7 @@
 package scene.gameBoard.view.pieces;
 
-import helpper.Team;
-import helpper.Tuple;
+import helper.Team;
+import helper.Tuple;
 
 public interface LMove {
 	static boolean DIRECTION_TOP_LEFT = true;

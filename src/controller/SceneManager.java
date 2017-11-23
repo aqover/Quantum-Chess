@@ -8,7 +8,6 @@ public final class SceneManager {
 	
 	private static Stage primaryStage;
 	private static Scene mainMenu;
-
 	private static Scene selectGame;
 	private static Scene gameOffline;
 	private static Scene gameOnline;

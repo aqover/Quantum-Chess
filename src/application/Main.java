@@ -9,7 +9,7 @@ public class Main extends Application {
 		try {
 			
 			controller.SceneManager.initialize(primaryStage);
-			
+
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
