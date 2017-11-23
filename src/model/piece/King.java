@@ -1,5 +1,6 @@
 package model.piece;
 
+import helper.Team;
 import model.ChessBoard;
 import model.NormalChessGame;
 import model.ChessBoard.Move;
@@ -20,7 +21,38 @@ public class King extends ChessPiece {
 	}
 
 	public static boolean isKingThreaten(ChessBoard board, char kingPiece) {
-		// TODO implements this
+		
+		Team kside = NormalChessGame.getSide(kingPiece);
+		int krow = -1, kcol = -1;
+		
+		for (int i = 0; i < board.getRows(); ++i) {
+			for (int j = 0; j < board.getColumns(); ++j) {
+				if (board.getAt(i, j) == kingPiece) {
+					krow = i;
+					kcol = j;
+				}
+			}
+		}
+		
+		if (krow == -1) {
+			return false;
+		}
+		
+		for (int i = 0; i < board.getRows(); ++i) {
+			for (int j = 0; j < board.getColumns(); ++j) {
+				char piece = board.getAt(i, j);
+				Team pieceSide = NormalChessGame.getSide(piece);
+				if (pieceSide != kside && pieceSide != Team.NONE) {
+					ChessBoard.Move move = new ChessBoard.Move(i, j, krow, kcol);
+					try {
+						if (ChessPiece.getClassFromChar(piece).isValidMove(board, move)) {
+							return true;
+						}
+					} catch (Exception e) {}
+				}
+			}
+		}
+
 		return false;
 	}
 }

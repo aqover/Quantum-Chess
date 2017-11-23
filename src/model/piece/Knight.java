@@ -8,7 +8,7 @@ public class Knight extends ChessPiece {
 
 	@Override
 	public boolean isValidMove(ChessBoard board, Move move) {
-	
+
 		if (NormalChessGame.getSide(board.getAt(move.row1, move.col1)) == 
 			NormalChessGame.getSide(board.getAt(move.row2, move.col2))) {
 			return false;
