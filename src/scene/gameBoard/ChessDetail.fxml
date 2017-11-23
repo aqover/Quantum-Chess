@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -9,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <FlowPane alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #03A9F4;" AnchorPane.topAnchor="0.0">
          <children>
@@ -40,16 +45,13 @@
                         <RadioButton fx:id="radioA" disable="true" mnemonicParsing="false" />
                      </children>
                   </FlowPane>
-                  <Label fx:id="labelNameA" prefHeight="50.0" text="Test">
-                     <VBox.margin>
-                        <Insets left="15.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Label fx:id="labelTimeA" prefHeight="50.0" text="Test">
-                     <VBox.margin>
-                        <Insets left="15.0" />
-                     </VBox.margin>
-                  </Label>
+                  <HBox alignment="TOP_CENTER" prefHeight="50.0" prefWidth="170.0" spacing="10.0">
+                     <children>
+                        <Label fx:id="labelNameA" prefHeight="50.0" text="Test" />
+                        <Label fx:id="labelTimeA" prefHeight="50.0" text="Test" />
+                     </children>
+                  </HBox>
+                  <FlowPane prefHeight="60.0" prefWidth="170.0" />
                </children>
             </VBox>
             <VBox>
@@ -67,32 +69,43 @@
                         <RadioButton fx:id="radioB" disable="true" mnemonicParsing="false" selected="true" />
                      </children>
                   </FlowPane>
-                  <Label fx:id="labelNameB" prefHeight="50.0" text="Test">
-                     <VBox.margin>
-                        <Insets left="15.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Label fx:id="labelTimeB" prefHeight="50.0" text="Test">
-                     <VBox.margin>
-                        <Insets left="15.0" />
-                     </VBox.margin>
-                  </Label>
+                  <HBox alignment="TOP_CENTER" prefHeight="50.0" prefWidth="170.0" spacing="10.0">
+                     <children>
+                        <Label fx:id="labelNameB" prefHeight="50.0" text="Test" />
+                        <Label fx:id="labelTimeB" prefHeight="50.0" text="Test" />
+                     </children>
+                  </HBox>
+                  <FlowPane prefHeight="60.0" prefWidth="170.0" />
                </children>
             </VBox>
-            <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="170.0" style="-fx-background-color: #00B0FF;" text="Draw" textFill="WHITE">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Button>
-            <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="170.0" style="-fx-background-color: #00B0FF;" text="Give Up" textFill="WHITE">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Button>
+            <HBox prefHeight="42.0" prefWidth="170.0" spacing="10.0">
+               <children>
+                  <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="170.0" style="-fx-background-color: #00B0FF;" text="Undo" textFill="WHITE">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="170.0" style="-fx-background-color: #00B0FF;" text="Redo" textFill="WHITE">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+            <HBox prefHeight="43.0" prefWidth="170.0" spacing="10.0">
+               <children>
+                  <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="170.0" style="-fx-background-color: #00B0FF;" text="Draw" textFill="WHITE">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="170.0" style="-fx-background-color: #00B0FF;" text="Give Up" textFill="WHITE">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
          </children>
          <padding>
-            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-         </padding>
-      </VBox>
-   </children>
-</fx:root>
+ 
