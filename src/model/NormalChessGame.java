@@ -3,12 +3,13 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import helper.Team;
 import model.piece.ChessPiece;
 import model.piece.King;
 
 public class NormalChessGame implements ChessGameInfo {
 
-	protected final int firstTurn;
+	protected final Team firstTurn;
 		
 	// for undo state
 	private int versionIndex;
@@ -27,7 +28,7 @@ public class NormalChessGame implements ChessGameInfo {
 		versions.add(board);
 		
 		versionIndex = 0;
-		firstTurn = PLAYER_WHITE;
+		firstTurn = Team.PLAYER_WHITE;
 		
 	}
 	public NormalChessGame(String fin) {
@@ -127,7 +128,7 @@ public class NormalChessGame implements ChessGameInfo {
 	public int gameResult() {
 		
 		// white is being threaten
-		if (getTurn() == PLAYER_WHITE && getPossibleMoves(PLAYER_WHITE).size() == 0) {
+		if (getTurn() == Team.PLAYER_WHITE && getPossibleMoves(Team.PLAYER_WHITE).size() == 0) {
 			if (King.isKingThreaten(this.getBoard(), Piece.WHITE_KING)) {
 				return GAME_RESULT_DRAW;
 			} else {
@@ -136,7 +137,7 @@ public class NormalChessGame implements ChessGameInfo {
 		}
 		
 		// black is being threaten
-		if (getTurn() == PLAYER_BLACK && getPossibleMoves(PLAYER_BLACK).size() == 0) {
+		if (getTurn() == Team.PLAYER_BLACK && getPossibleMoves(Team.PLAYER_BLACK).size() == 0) {
 			if (King.isKingThreaten(this.getBoard(), Piece.BLACK_KING)) {
 				return GAME_RESULT_DRAW;
 			} else {
@@ -147,16 +148,16 @@ public class NormalChessGame implements ChessGameInfo {
 		return GAME_RESULT_ONGOING;
 	}
 	
-	public static int getSide(char ch) {
-		if (Character.isLowerCase(ch)) return PLAYER_WHITE;
-		if (Character.isUpperCase(ch)) return PLAYER_BLACK;
-		return PLAYER_NOSIDE;
+	public static Team getSide(char ch) {
+		if (Character.isLowerCase(ch)) return Team.PLAYER_WHITE;
+		if (Character.isUpperCase(ch)) return Team.PLAYER_BLACK;
+		return Team.NONE;
 	}
 	
 	/*
 	 * Getters
 	 */
-	public List<ChessBoard.Move> getPossibleMoves(int player) { 
+	public List<ChessBoard.Move> getPossibleMoves(Team player) { 
 
 		ChessBoard board = getBoard();
 		ArrayList<ChessBoard.Move> moves = new ArrayList<>();
@@ -195,9 +196,9 @@ public class NormalChessGame implements ChessGameInfo {
 		return this.moves.get(this.versionIndex);
 	}
 	
-	public int getTurn() {
+	public Team getTurn() {
 		return this.versionIndex % 2 == 0 ? this.firstTurn : 
-			(this.firstTurn == PLAYER_WHITE ? PLAYER_BLACK : PLAYER_WHITE);
+			(this.firstTurn == Team.PLAYER_WHITE ? Team.PLAYER_BLACK : Team.PLAYER_WHITE);
 	}
 	
 	// toString function

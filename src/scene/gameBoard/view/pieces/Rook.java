@@ -33,7 +33,7 @@ public class Rook extends Pieces implements StraightMove, Cloneable {
 	@Override
 	public void draw(GraphicsContext gc) {
 		// TODO Auto-generated method stub
-		gc.drawImage((team == Team.A)? GameHolder.br: GameHolder.wr, 
+		gc.drawImage((team == Team.PLAYER_WHITE)? GameHolder.br: GameHolder.wr, 
 				x, 
 				y, 
 				GameHolder.size, 

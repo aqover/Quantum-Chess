@@ -43,7 +43,7 @@ public class Queen extends Pieces implements CornerMove, StraightMove, Cloneable
 	@Override
 	public void draw(GraphicsContext gc) {
 		// TODO Auto-generated method stub
-		gc.drawImage((team == Team.A)? GameHolder.bq: GameHolder.wq, 
+		gc.drawImage((team == Team.PLAYER_WHITE)? GameHolder.bq: GameHolder.wq, 
 				x, 
 				y, 
 				GameHolder.size, 

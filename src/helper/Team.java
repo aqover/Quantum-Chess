@@ -1,5 +1,5 @@
 package helper;
 
 public enum Team {
-	None, A, B
+	NONE, PLAYER_WHITE, PLAYER_BLACK
 }

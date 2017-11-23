@@ -34,10 +34,11 @@ public class ChessController {
 	private AnimationTimer animationTimer;
 	private Tuple<Integer, Integer> mouse;
 	
+	private boolean disable;
+	
 	private long timePrevious;
 	
 	private Pieces piece, selectedPiece;
-	private Team turnTeam;
 	
 	public HBox getPane() {
 		return pane;
@@ -54,7 +55,8 @@ public class ChessController {
 		scene.gameBoard.shareObject.GameHolder.getInstance().addEntity(createPiecesTeamB());
 		
 		selectedPiece = piece = null;
-		turnTeam = Team.A;
+		
+		disable = false;
 	} 
 	
 	public void startGame() {
@@ -62,77 +64,71 @@ public class ChessController {
 		timePrevious = System.nanoTime();
 	}
 	
-	public void endTurn() {
-		turnTeam = (turnTeam == Team.A)? Team.B : Team.A;
-	}
+	public void endTurn() {}
 	
 	public void update() {
 		if (Animation.getInstance().isAnimating())
 			return;
 		
-		if (InputUtility.isMouseLeftClicked())
-		{
-			mouse = InputUtility.getMousePosition();
-			piece = scene.gameBoard.shareObject.GameHolder.getInstance().getPieceFromMouse(mouse);
+		synchronized (this) {
 			
-			if(selectedPiece != null)
+			if (disable) {
+				return;
+			}
+			
+			if (InputUtility.isMouseLeftClicked())
 			{
-				if(movePiece(selectedPiece, mouse))
-					endTurn();
+				mouse = InputUtility.getMousePosition();
+				piece = scene.gameBoard.shareObject.GameHolder.getInstance().getPieceFromMouse(mouse);
 				
-				selectedPiece.setSelected(false);
-				selectedPiece = null;
-				System.gc();
-			}
-			else
-			{
-				if(piece != null)
+				if(selectedPiece != null)
 				{
-					selectedPiece = piece;
-					selectedPiece.setSelected(true);
+					if(movePiece(selectedPiece, mouse))
+						endTurn();
+					
+					selectedPiece.setSelected(false);
+					selectedPiece = null;
+					System.gc();
 				}
-			}
+				else
+				{
+					if(piece != null)
+					{
+						selectedPiece = piece;
+						selectedPiece.setSelected(true);
+					}
+				}
+			}			
 		}
 	}
 	
 	public Team getTurnTeam() {
-		return turnTeam;
+		return normalChessGame.getTurn();
 	}
 
 	private boolean movePiece(Pieces source, Tuple<Integer, Integer> mouse) {
-		if (normalChessGame.isMoveValid(new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ())))
-		{
-			scene.gameBoard.shareObject.Animation.getInstance().startAnimate(source, mouse);
-			return true;
-		}			
-		else
-		{
-//			Alert alert = new Alert(AlertType.NONE, "The move is not valid, Please try again.", ButtonType.OK);
-//			alert.show();
-			System.out.println("2#$%^&*");
+		synchronized (this) {
+			if (normalChessGame.isMoveValid(new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ())))
+			{
+				scene.gameBoard.shareObject.Animation.getInstance().startAnimate(source, mouse);
+				return true;
+			}			
+			else
+			{
+					
+				disable = true;
+				
+				Alert alert = new Alert(AlertType.NONE, "The move is not valid, Please try again.", ButtonType.OK);
+				alert.setOnHidden(e -> { disable = false; });
+				alert.show();
+			}
 		}
 			
 		return false;
 	}
 
 	private ArrayList<IRenderable> createPiecesTeamA() {
-		ArrayList<IRenderable> entity = new ArrayList<IRenderable>();
-		entity.add(new Rook(0, 0));
-		entity.add(new Knight(0, 1));
-		entity.add(new Bishop(0, 2));
-		entity.add(new Queen(0, 3));
-		entity.add(new King(0, 4));
-		entity.add(new Bishop(0, 5));
-		entity.add(new Knight(0, 6));
-		entity.add(new Rook(0, 7));
 		
-		for(int i=0; i<8; i++) entity.add(new Pawn(1, i));
-		for(IRenderable tmp: entity) ((Pieces) tmp).setTeam(Team.A);
-		
-		return entity;
-	}
-	
-	private ArrayList<IRenderable> createPiecesTeamB() {
 		ArrayList<IRenderable> entity = new ArrayList<IRenderable>();
 		entity.add(new Rook(7, 0));
 		entity.add(new Knight(7, 1));
@@ -144,11 +140,29 @@ public class ChessController {
 		entity.add(new Rook(7, 7));
 		
 		for(int i=0; i<8; i++) entity.add(new Pawn(6, i));
-		for(IRenderable tmp: entity) ((Pieces) tmp).setTeam(Team.B);
+		for(IRenderable tmp: entity) ((Pieces) tmp).setTeam(Team.PLAYER_WHITE);
 		
 		return entity;
 	}
 
+	private ArrayList<IRenderable> createPiecesTeamB() {
+		ArrayList<IRenderable> entity = new ArrayList<IRenderable>();
+		entity.add(new Rook(0, 0));
+		entity.add(new Knight(0, 1));
+		entity.add(new Bishop(0, 2));
+		entity.add(new Queen(0, 3));
+		entity.add(new King(0, 4));
+		entity.add(new Bishop(0, 5));
+		entity.add(new Knight(0, 6));
+		entity.add(new Rook(0, 7));
+		
+		for(int i=0; i<8; i++) entity.add(new Pawn(1, i));
+		for(IRenderable tmp: entity) ((Pieces) tmp).setTeam(Team.PLAYER_BLACK);
+		
+		return entity;
+	}
+	
+	
 	private void initialPane() {
 		pane = new HBox();
 		detail = new ChessDetail(this);

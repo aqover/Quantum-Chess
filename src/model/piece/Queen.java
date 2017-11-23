@@ -1,5 +1,6 @@
 package model.piece;
 
+import helper.Team;
 import model.ChessBoard;
 import model.NormalChessGame;
 
@@ -16,7 +17,7 @@ public class Queen extends ChessPiece {
 		// check like rook
 		if (move.row1 == move.row2) {
 			for (int i = Math.min(move.col1, move.col2) + 1; i < Math.max(move.col1, move.col2); ++i) {
-				if (NormalChessGame.getSide(board.getAt(move.row1, i)) != NormalChessGame.PLAYER_NOSIDE) {
+				if (NormalChessGame.getSide(board.getAt(move.row1, i)) != Team.NONE) {
 					return false;
 				}
 			}
@@ -26,7 +27,7 @@ public class Queen extends ChessPiece {
 		
 		if (move.col1 == move.col2) {
 			for (int i = Math.min(move.row1, move.row2); i < Math.max(move.row1, move.row2); ++i) {
-				if (NormalChessGame.getSide(board.getAt(i, move.col1)) != NormalChessGame.PLAYER_NOSIDE) {
+				if (NormalChessGame.getSide(board.getAt(i, move.col1)) != Team.NONE) {
 					return false;
 				}				
 			}
@@ -38,7 +39,7 @@ public class Queen extends ChessPiece {
 			int brow = Math.min(move.row1, move.row2);
 			int bcol = Math.max(move.col1, move.col2);
 			for (int i = 1; i < Math.abs(move.row2 - move.row1); ++i) {
-				if (NormalChessGame.getSide(board.getAt(brow + i, bcol - i)) != NormalChessGame.PLAYER_NOSIDE) {
+				if (NormalChessGame.getSide(board.getAt(brow + i, bcol - i)) != Team.NONE) {
 					return false;
 				}
 			}
@@ -49,7 +50,7 @@ public class Queen extends ChessPiece {
 			int brow = Math.min(move.row1, move.row2);
 			int bcol = Math.min(move.col1, move.col2);
 			for (int i = 1; i < Math.abs(move.row2 - move.row1); ++i) {
-				if (NormalChessGame.getSide(board.getAt(brow + i, bcol + i)) != NormalChessGame.PLAYER_NOSIDE) {
+				if (NormalChessGame.getSide(board.getAt(brow + i, bcol + i)) != Team.NONE) {
 					return false;
 				}
 			}

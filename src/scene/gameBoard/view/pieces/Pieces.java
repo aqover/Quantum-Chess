@@ -11,7 +11,7 @@ public class Pieces extends Entity{
 	protected int i, j;
 	
 	public Pieces(int i, int j) {
-		team = Team.None;
+		team = Team.NONE;
 		setPosition(i, j);
 	}
 

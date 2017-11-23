@@ -6,11 +6,6 @@ import model.ChessBoard.Move;
 
 public class Knight extends ChessPiece {
 
-	private static int[][] moves = {
-		{1, 2}, {1, -2}, {-1, 2}, {-1, -2}, 
-		{2, 1}, {-2, 1}, {2, -1}, {-2, -1}
-	};
-	
 	@Override
 	public boolean isValidMove(ChessBoard board, Move move) {
 	

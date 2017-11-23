@@ -31,7 +31,7 @@ public class Pawn extends Pieces implements StraightMove, Cloneable {
 	@Override
 	public void draw(GraphicsContext gc) {
 		// TODO Auto-generated method stub
-		gc.drawImage((team == Team.A)? GameHolder.bp: GameHolder.wp, 
+		gc.drawImage((team == Team.PLAYER_WHITE)? GameHolder.bp: GameHolder.wp, 
 				x, 
 				y, 
 				GameHolder.size, 

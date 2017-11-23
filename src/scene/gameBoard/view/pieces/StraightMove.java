@@ -17,7 +17,7 @@ public interface StraightMove {
 		ArrayList<Tuple<Integer, Integer> > data = new ArrayList<Tuple<Integer, Integer> >();
 		for(int k=1; k <= straightMove; k++)
 		{
-			t = (team == Team.A)? i+k : i-k; 
+			t = (team == Team.PLAYER_WHITE)? i+k : i-k; 
 			r = j;
 			if (t < 0 || t > 7 || r < 0 || r > 7) continue;
 			c = board[t].charAt(r);
@@ -28,7 +28,7 @@ public interface StraightMove {
 				break;
 			}
 			else
-				data.add(new Tuple<Integer, Integer>(t, r, Team.None));
+				data.add(new Tuple<Integer, Integer>(t, r, Team.NONE));
 		}
 		return data;
 	}
@@ -39,7 +39,7 @@ public interface StraightMove {
 		for(int k=1; k <= straightMove; k++)
 		{
 			t = i; 
-			r = (team == Team.A)? j-k: j+k;
+			r = (team == Team.PLAYER_WHITE)? j-k: j+k;
 			if (t < 0 || t > 7 || r < 0 || r > 7) continue;
 			c = board[t].charAt(r);
 			if(c != '.')
@@ -49,7 +49,7 @@ public interface StraightMove {
 				break;
 			}
 			else
-				data.add(new Tuple<Integer, Integer>(t, r, Team.None));
+				data.add(new Tuple<Integer, Integer>(t, r, Team.NONE));
 		}
 		return data;
 	}
@@ -59,7 +59,7 @@ public interface StraightMove {
 		ArrayList<Tuple<Integer, Integer> > data = new ArrayList<Tuple<Integer, Integer> >();
 		for(int k=1; k <= straightMove; k++)
 		{
-			t = (team == Team.A)? i-k: i+k;
+			t = (team == Team.PLAYER_WHITE)? i-k: i+k;
 			r = j;
 			if (t < 0 || t > 7 || r < 0 || r > 7) continue;
 			c = board[t].charAt(r);
@@ -70,7 +70,7 @@ public interface StraightMove {
 				break;
 			}
 			else
-				data.add(new Tuple<Integer, Integer>(t, r, Team.None));
+				data.add(new Tuple<Integer, Integer>(t, r, Team.NONE));
 		}
 		return data;
 	}
@@ -81,7 +81,7 @@ public interface StraightMove {
 		for(int k=1; k <= straightMove; k++)
 		{
 			t = i; 
-			r = (team == Team.A)? j+k: j-k;
+			r = (team == Team.PLAYER_WHITE)? j+k: j-k;
 			if (t < 0 || t > 7 || r < 0 || r > 7) continue;
 			c = board[t].charAt(r);
 			if(c != '.')
@@ -91,12 +91,12 @@ public interface StraightMove {
 				break;
 			}
 			else
-				data.add(new Tuple<Integer, Integer>(t, r, Team.None));
+				data.add(new Tuple<Integer, Integer>(t, r, Team.NONE));
 		}
 		return data;
 	}
 	
 	static Team getTeamFromBoard(char c) {
-		return (Character.isUpperCase(c)? Team.A: Team.B);
+		return (Character.isUpperCase(c)? Team.PLAYER_WHITE: Team.PLAYER_BLACK);
 	}
 }

@@ -1,5 +1,6 @@
 package model.piece;
 
+import helper.Team;
 import model.ChessBoard;
 import model.NormalChessGame;
 import model.ChessBoard.Move;
@@ -18,7 +19,7 @@ public class Bishop extends ChessPiece {
 			int brow = Math.min(move.row1, move.row2);
 			int bcol = Math.max(move.col1, move.col2);
 			for (int i = 1; i < Math.abs(move.row2 - move.row1); ++i) {
-				if (NormalChessGame.getSide(board.getAt(brow + i, bcol - i)) != NormalChessGame.PLAYER_NOSIDE) {
+				if (NormalChessGame.getSide(board.getAt(brow + i, bcol - i)) != Team.NONE) {
 					return false;
 				}
 			}
@@ -29,7 +30,7 @@ public class Bishop extends ChessPiece {
 			int brow = Math.min(move.row1, move.row2);
 			int bcol = Math.min(move.col1, move.col2);
 			for (int i = 1; i < Math.abs(move.row2 - move.row1); ++i) {
-				if (NormalChessGame.getSide(board.getAt(brow + i, bcol + i)) != NormalChessGame.PLAYER_NOSIDE) {
+				if (NormalChessGame.getSide(board.getAt(brow + i, bcol + i)) != Team.NONE) {
 					return false;
 				}
 			}

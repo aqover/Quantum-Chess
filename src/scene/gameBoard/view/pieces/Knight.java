@@ -38,7 +38,7 @@ public class Knight extends Pieces implements LMove, Cloneable {
 	@Override
 	public void draw(GraphicsContext gc) {
 		// TODO Auto-generated method stub
-		gc.drawImage((team == Team.A)? GameHolder.bn: GameHolder.wn, 
+		gc.drawImage((team == Team.PLAYER_WHITE)? GameHolder.bn: GameHolder.wn, 
 				x, 
 				y, 
 				GameHolder.size, 

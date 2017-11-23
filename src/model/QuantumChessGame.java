@@ -2,10 +2,12 @@ package model;
 
 import java.util.ArrayList;
 
+import helper.Team;
+
 public class QuantumChessGame implements ChessGameInfo {
 
 	// player turn
-	protected final int firstTurn;
+	protected final Team firstTurn;
 	
 	// for all version
 	private ArrayList<QuantumBoard> possibleBoards;
@@ -24,7 +26,7 @@ public class QuantumChessGame implements ChessGameInfo {
 		displayBoard = new ChessBoard(fin, BOARD_SIZE, BOARD_SIZE);
 		
 		resetGame();
-		firstTurn = PLAYER_WHITE;
+		firstTurn = Team.PLAYER_WHITE;
 	}
 	
 	public QuantumChessGame() {
@@ -162,9 +164,9 @@ public class QuantumChessGame implements ChessGameInfo {
 		return GAME_RESULT_ONGOING;
 	}
 	
-	public int getTurn() {
+	public Team getTurn() {
 		return this.moves.size() % 2 == 0 ? this.firstTurn : 
-			(this.firstTurn == PLAYER_WHITE ? PLAYER_BLACK : PLAYER_WHITE);
+			(this.firstTurn == Team.PLAYER_WHITE ? Team.PLAYER_BLACK : Team.PLAYER_WHITE);
 	}
 
 	private void resetGame() {

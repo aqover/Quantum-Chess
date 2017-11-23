@@ -2,11 +2,6 @@ package model;
 
 public interface ChessGameInfo {
 
-	// player status
-	public static final int PLAYER_NOSIDE = -1;
-	public static final int PLAYER_WHITE = 0;
-	public static final int PLAYER_BLACK = 1;
-	
 	// game result
 	public static int GAME_RESULT_DRAW = 0;
 	public static int GAME_RESULT_WHITE_WINS = 1;
