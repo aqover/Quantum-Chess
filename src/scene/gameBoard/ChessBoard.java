@@ -3,11 +3,18 @@ package scene.gameBoard;
 import java.util.ArrayList;
 
 import helper.InputUtility;
+import helper.Team;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import scene.gameBoard.shareObject.IRenderable;
+import scene.gameBoard.view.pieces.Bishop;
+import scene.gameBoard.view.pieces.King;
+import scene.gameBoard.view.pieces.Knight;
+import scene.gameBoard.view.pieces.Pawn;
+import scene.gameBoard.view.pieces.Queen;
+import scene.gameBoard.view.pieces.Rook;
 
 public class ChessBoard extends Canvas {
 	public ChessBoard () {
@@ -70,5 +77,30 @@ public class ChessBoard extends Canvas {
 			if (tmp.isVisible() && !tmp.isDestroyed())
 				tmp.draw(gc);
 		}
+	}
+
+	public void setBoard(String[] board) {
+		ArrayList<IRenderable> entity = new ArrayList<IRenderable>();
+		char c; 
+		Team t;
+		for(int j=0;j < board.length;j++)
+		{
+			for(int i=0;i < board[j].length(); i++)
+			{
+				t = Character.isUpperCase(board[j].charAt(i))? Team.PLAYER_BLACK: Team.PLAYER_WHITE;
+				c = Character.toLowerCase(board[j].charAt(i));
+				switch(c) {
+					case 'b': entity.add(new Bishop(j, i, t)); break;
+					case 'k': entity.add(new King(j, i, t)); break;
+					case 'n': entity.add(new Knight(j, i, t)); break;
+					case 'p': entity.add(new Pawn(j, i, t)); break;
+					case 'q': entity.add(new Queen(j, i, t)); break;
+					case 'r': entity.add(new Rook(j, i, t)); break;
+					default:
+						break;
+				}
+			}
+		}
+		scene.gameBoard.shareObject.GameHolder.getInstance().setEntity(entity);
 	}
 }

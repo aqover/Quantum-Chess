@@ -11,16 +11,16 @@ public class Pieces extends Entity{
 	protected int i, j;
 	
 	public Pieces(int i, int j) {
-		team = Team.NONE;
+		this(i, j, Team.NONE);
+	}
+	
+	public Pieces(int i, int j, Team t) {
+		team = t;
 		setPosition(i, j);
 	}
 
 	public Team getTeam() {
 		return team;
-	}
-
-	public void setTeam(Team team) {
-		this.team = team;
 	}
 	
 	public void setPosition(int i, int j)
@@ -28,7 +28,7 @@ public class Pieces extends Entity{
 		this.i = i;
 		this.j = j;
 		x = j * scene.gameBoard.shareObject.GameHolder.size;
-		y = i * scene.gameBoard.shareObject.GameHolder.size;
+		y = (7-i) * scene.gameBoard.shareObject.GameHolder.size;
 	}
 	
 	public void setPositionOnScreen(double x, double y)

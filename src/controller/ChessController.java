@@ -1,7 +1,5 @@
 package controller;
 
-import java.util.ArrayList;
-
 import helper.InputUtility;
 import helper.Team;
 import helper.Tuple;
@@ -16,14 +14,7 @@ import scene.gameBoard.ChessBoard;
 import scene.gameBoard.ChessDetail;
 import scene.gameBoard.shareObject.Animation;
 import scene.gameBoard.shareObject.GameHolder;
-import scene.gameBoard.shareObject.IRenderable;
-import scene.gameBoard.view.pieces.Bishop;
-import scene.gameBoard.view.pieces.King;
-import scene.gameBoard.view.pieces.Knight;
-import scene.gameBoard.view.pieces.Pawn;
 import scene.gameBoard.view.pieces.Pieces;
-import scene.gameBoard.view.pieces.Queen;
-import scene.gameBoard.view.pieces.Rook;
 
 public class ChessController {
 	
@@ -51,11 +42,8 @@ public class ChessController {
 	public ChessController() {
 		normalChessGame = new NormalChessGame();
 		initialPane();
-		scene.gameBoard.shareObject.GameHolder.getInstance().addEntity(createPiecesTeamA());
-		scene.gameBoard.shareObject.GameHolder.getInstance().addEntity(createPiecesTeamB());
-		
-		selectedPiece = piece = null;
-		
+		board.setBoard(normalChessGame.getBoard().getBoard());
+		selectedPiece = piece = null;		
 		disable = false;
 	} 
 	
@@ -64,7 +52,7 @@ public class ChessController {
 		timePrevious = System.nanoTime();
 	}
 	
-	public void endTurn() {}
+	public void endTurn() { }
 	
 	public void update() {
 		if (Animation.getInstance().isAnimating())
@@ -83,8 +71,9 @@ public class ChessController {
 				
 				if(selectedPiece != null)
 				{
-					if(movePiece(selectedPiece, mouse))
-						endTurn();
+					if (piece == null || (piece != null && selectedPiece.getTeam() != piece.getTeam()))
+							if(movePiece(selectedPiece, mouse))
+								endTurn();			
 					
 					selectedPiece.setSelected(false);
 					selectedPiece = null;
@@ -94,6 +83,9 @@ public class ChessController {
 				{
 					if(piece != null)
 					{
+						if (getTurnTeam() != piece.getTeam())
+							return;
+						
 						selectedPiece = piece;
 						selectedPiece.setSelected(true);
 					}
@@ -110,6 +102,7 @@ public class ChessController {
 		synchronized (this) {
 			if (normalChessGame.isMoveValid(new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ())))
 			{
+				normalChessGame.move(new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ()));
 				scene.gameBoard.shareObject.Animation.getInstance().startAnimate(source, mouse);
 				return true;
 			}			
@@ -127,52 +120,12 @@ public class ChessController {
 		return false;
 	}
 
-	private ArrayList<IRenderable> createPiecesTeamA() {
-		
-		ArrayList<IRenderable> entity = new ArrayList<IRenderable>();
-		entity.add(new Rook(7, 0));
-		entity.add(new Knight(7, 1));
-		entity.add(new Bishop(7, 2));
-		entity.add(new Queen(7, 3));
-		entity.add(new King(7, 4));
-		entity.add(new Bishop(7, 5));
-		entity.add(new Knight(7, 6));
-		entity.add(new Rook(7, 7));
-		
-		for(int i=0; i<8; i++) entity.add(new Pawn(6, i));
-		for(IRenderable tmp: entity) ((Pieces) tmp).setTeam(Team.PLAYER_WHITE);
-		
-		return entity;
-	}
-
-	private ArrayList<IRenderable> createPiecesTeamB() {
-		ArrayList<IRenderable> entity = new ArrayList<IRenderable>();
-		entity.add(new Rook(0, 0));
-		entity.add(new Knight(0, 1));
-		entity.add(new Bishop(0, 2));
-		entity.add(new Queen(0, 3));
-		entity.add(new King(0, 4));
-		entity.add(new Bishop(0, 5));
-		entity.add(new Knight(0, 6));
-		entity.add(new Rook(0, 7));
-		
-		for(int i=0; i<8; i++) entity.add(new Pawn(1, i));
-		for(IRenderable tmp: entity) ((Pieces) tmp).setTeam(Team.PLAYER_BLACK);
-		
-		return entity;
-	}
-	
-	
 	private void initialPane() {
 		pane = new HBox();
 		detail = new ChessDetail(this);
 		board = new ChessBoard();		
 		animationTimer = new AnimationTimer() {
-			public void handle(long now) {
-				ArrayList<IRenderable> entity = GameHolder.getInstance().getEntity();
-				for(IRenderable tmp: entity)
-					((Pieces) tmp).update();
-				
+			public void handle(long now) {				
 				//Detail
 				detail.update();
 				detail.decreseTime(now - timePrevious);

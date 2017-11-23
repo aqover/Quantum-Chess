@@ -49,14 +49,20 @@ public class Animation {
 		tmpX = source.getJ() + ((sink.getJ() - source.getJ()) * (tmpTime / animationTimeSpeed));
 		tmpY = source.getI() + ((sink.getI() - source.getI()) * (tmpTime / animationTimeSpeed));
 
-		source.setPositionOnScreen(tmpX*scene.gameBoard.shareObject.GameHolder.size, tmpY*scene.gameBoard.shareObject.GameHolder.size);
-//		System.out.println(String.format("x = %f, y = %f", tmpX*shareObject.RenderableHolder.size, tmpY*shareObject.RenderableHolder.size));
+		source.setPositionOnScreen(tmpX * GameHolder.size, (7.0 - tmpY) * GameHolder.size);
+//		System.out.println(String.format("x = %f, y = %f", tmpX * GameHolder.size, (7.0 - tmpY) * GameHolder.size));
 		if (currentNanoTime > stopNanoTime)
 		{
-			isAnimating = false;
-			source = null;
-			sink = null;
+			stopAnimate();
 		}
+	}
+	
+	public void stopAnimate() {
+		source.setPosition(sink.getI(), sink.getJ());
+		
+		isAnimating = false;
+		source = null;
+		sink = null;		
 	}
 	
 	private double calculateDistance() {

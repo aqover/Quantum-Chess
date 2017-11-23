@@ -68,6 +68,11 @@ public class GameHolder {
 	public void addEntity(ArrayList<IRenderable> entity) {
 		this.entity.addAll(entity);
 	}
+	
+	public void setEntity(ArrayList<IRenderable> entity) {
+		this.entity.clear();
+		this.entity.addAll(entity);
+	}
 
 	//-----------------------------------------------------------------------------//
 	static {
