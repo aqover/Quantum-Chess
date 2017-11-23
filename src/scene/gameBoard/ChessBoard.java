@@ -10,16 +10,26 @@ import javafx.scene.input.MouseEvent;
 import scene.gameBoard.shareObject.IRenderable;
 
 public class ChessBoard extends Canvas {
+	
+	private boolean flipBoard;
+	
 	public ChessBoard () {
 		this.setHeight(8 * scene.gameBoard.shareObject.GameHolder.size);
 		this.setWidth(8 * scene.gameBoard.shareObject.GameHolder.size);
 		
 		drawBackground();
 		addListenEvents();
+		
+		flipBoard = true;
+	}
+	
+	public void flipBoard() {
+		flipBoard = !flipBoard;
 	}
 	
 	private void drawBackground() {
-		for(int i=0;i<8;i++)
+		
+		for(int i=0;i<8;i++) {
 			for(int j=0;j<8;j++)
 			{
 				this.getGraphicsContext2D().drawImage(
@@ -30,6 +40,7 @@ public class ChessBoard extends Canvas {
 					scene.gameBoard.shareObject.GameHolder.size
 				);
 			}
+		}
 	}
 	
 	private void addListenEvents() {

@@ -33,7 +33,7 @@ public class Bishop extends Pieces implements CornerMove, Cloneable{
 	@Override
 	public void draw(GraphicsContext gc) {
 		// TODO Auto-generated method stub
-		gc.drawImage((team == Team.PLAYER_WHITE)? GameHolder.bb: GameHolder.wb, 
+		gc.drawImage((team == Team.PLAYER_WHITE)? GameHolder.wb: GameHolder.bb, 
 				x, 
 				y, 
 				GameHolder.size, 

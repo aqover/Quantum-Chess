@@ -44,7 +44,6 @@ public class Entity implements IRenderable {
 
 	@Override
 	public void draw(GraphicsContext gc) {
-		// TODO Auto-generated method stub
 		
 	}
 	

@@ -60,8 +60,9 @@ public class Animation {
 	}
 	
 	private double calculateDistance() {
-		double x = Math.pow((source.getJ() - sink.getJ()), 2.0);
-		double y = Math.pow((source.getI() - sink.getI()), 2.0);
-		return Math.sqrt(x+y);
+//		double x = Math.pow((source.getJ() - sink.getJ()), 2.0);
+//		double y = Math.pow((source.getI() - sink.getI()), 2.0);
+//		return Math.sqrt(x+y);
+		return Math.hypot(source.getJ() - sink.getJ(), source.getI() - sink.getI());
 	}
 }

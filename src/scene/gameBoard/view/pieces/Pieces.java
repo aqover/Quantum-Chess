@@ -51,7 +51,7 @@ public class Pieces extends Entity{
 	}
 	
 	public void update() {
-		// Animation was finnished;
+		// Animation was finished;
 		
 	}
 }

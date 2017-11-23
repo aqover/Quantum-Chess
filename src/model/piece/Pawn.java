@@ -40,13 +40,13 @@ public class Pawn extends ChessPiece {
 			}
 		}
 		
-		if (sideTo != sideFrom) {
+		if (sideFrom != sideTo) {
 			if (sideFrom == Team.PLAYER_WHITE) {
-				return drow == 1 && Math.abs(dcol) == 1;
+				return drow == -1 && Math.abs(dcol) == 1;
 			}
 			
 			if (sideFrom == Team.PLAYER_BLACK) {
-				return drow == -1 && Math.abs(dcol) == 1;
+				return drow == 1 && Math.abs(dcol) == 1;
 			}
 		}
 		

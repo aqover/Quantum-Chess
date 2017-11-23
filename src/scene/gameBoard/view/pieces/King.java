@@ -43,7 +43,7 @@ public class King extends Pieces implements CornerMove, StraightMove, Cloneable 
 	@Override
 	public void draw(GraphicsContext gc) {
 		// TODO Auto-generated method stub
-		gc.drawImage((team == Team.PLAYER_WHITE)? GameHolder.bk: GameHolder.wk, 
+		gc.drawImage((team == Team.PLAYER_WHITE)? GameHolder.wk: GameHolder.bk, 
 				x, 
 				y, 
 				GameHolder.size, 
