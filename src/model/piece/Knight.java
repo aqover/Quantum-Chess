@@ -6,6 +6,12 @@ import model.ChessBoard.Move;
 
 public class Knight extends ChessPiece {
 
+	private static Knight instance = new Knight();
+	
+	public static Knight getInstance() {
+		return instance;
+	}
+	
 	@Override
 	public boolean isValidMove(ChessBoard board, Move move) {
 

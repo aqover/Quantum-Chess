@@ -7,6 +7,12 @@ import model.ChessBoard.Move;
 
 public class Rook extends ChessPiece {
 
+	private static Rook instance = new Rook();
+	
+	public static Rook getInstance() {
+		return instance;
+	}
+	
 	@Override
 	public boolean isValidMove(ChessBoard board, Move move) {
 

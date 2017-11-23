@@ -7,6 +7,12 @@ import model.ChessBoard.Move;
 
 public class Bishop extends ChessPiece {
 
+	private static Bishop instance = new Bishop();
+
+	public static Bishop getInstance() {
+		return instance;
+	}
+	
 	@Override
 	public boolean isValidMove(ChessBoard board, Move move) {
 		

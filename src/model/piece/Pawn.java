@@ -6,6 +6,12 @@ import model.NormalChessGame;
 
 public class Pawn extends ChessPiece {
 
+	private static Pawn instance = new Pawn();
+	
+	public static Pawn getInstance() {
+		return instance;
+	}
+	
 	@Override
 	public boolean isValidMove(ChessBoard board, ChessBoard.Move move) {
 

@@ -8,12 +8,12 @@ public abstract class ChessPiece implements ChessGameInfo {
 	public abstract boolean isValidMove(ChessBoard board, ChessBoard.Move move);
 	
 	public static ChessPiece getClassFromChar(char piece) throws NoPieceException {
-		if (piece == Piece.WHITE_ROOK || piece == Piece.BLACK_ROOK) return new Rook();
-		if (piece == Piece.WHITE_KNIGHT || piece == Piece.BLACK_KNIGHT) return new Knight();
-		if (piece == Piece.WHITE_BISHOP || piece == Piece.BLACK_BISHOP) return new Bishop();
-		if (piece == Piece.WHITE_KING || piece == Piece.BLACK_KING) return new King();
-		if (piece == Piece.WHITE_QUEEN || piece == Piece.BLACK_QUEEN) return new Queen();
-		if (piece == Piece.WHITE_PAWN || piece == Piece.BLACK_PAWN) return new Pawn();
+		if (piece == Piece.WHITE_ROOK || piece == Piece.BLACK_ROOK) return Rook.getInstance();
+		if (piece == Piece.WHITE_KNIGHT || piece == Piece.BLACK_KNIGHT) return Knight.getInstance();
+		if (piece == Piece.WHITE_BISHOP || piece == Piece.BLACK_BISHOP) return Bishop.getInstance();
+		if (piece == Piece.WHITE_KING || piece == Piece.BLACK_KING) return King.getInstance();
+		if (piece == Piece.WHITE_QUEEN || piece == Piece.BLACK_QUEEN) return Queen.getInstance();
+		if (piece == Piece.WHITE_PAWN || piece == Piece.BLACK_PAWN) return Pawn.getInstance();
 		
 		throw new NoPieceException(piece);
 	}
