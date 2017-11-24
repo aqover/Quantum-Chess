@@ -84,9 +84,8 @@ public class ChessController {
 					if (piece == null || (piece != null && selectedPiece.getTeam() != piece.getTeam()))
 							if(movePiece(selectedPiece, mouse))
 								endTurn();			
-					
-					selectedPiece.setSelected(false);
-					selectedPiece = null;
+
+					select(null);
 					System.gc();
 				}
 				else
@@ -120,6 +119,7 @@ public class ChessController {
 
 	private boolean movePiece(ChessPiece source, Tuple<Integer, Integer> mouse) {
 		synchronized (this) {
+			
 			if (normalChessGame.isMoveValid(new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ())))
 			{
 				normalChessGame.move(new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ()));
@@ -129,11 +129,8 @@ public class ChessController {
 			else
 			{
 				
-				disable = true;
-				
-				Alert alert = new Alert(AlertType.NONE, "The move is not valid, Please try again.", ButtonType.OK);
-				alert.setOnHidden(e -> { disable = false; });
-				alert.show();
+				System.out.println("ERROR");
+				SceneManager.showMessage("The move is not valid", () -> {});
 			}
 		}
 			
