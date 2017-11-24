@@ -2,6 +2,7 @@ package scene.gameBoard.view;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import scene.gameBoard.shareObject.GameHolder;
 import scene.gameBoard.shareObject.IRenderable;
 
 public class Entity implements IRenderable {
@@ -42,16 +43,24 @@ public class Entity implements IRenderable {
 		this.isSelected = isSelected;
 	}
 
+	public void setZ(int z) {
+		this.z = z;
+	}
+	
+	public void setPositionOnScreen(double x, double y) {
+		this.x = x;
+		this.y = y;
+	}
+	
 	@Override
 	public void draw(GraphicsContext gc) {
-		// TODO Auto-generated method stub
 		
 	}
 	
 	public void drawHover(GraphicsContext gc) {
-		gc.setLineWidth(scene.gameBoard.shareObject.GameHolder.LineWidth);
+		gc.setLineWidth(GameHolder.LineWidth);
 		gc.setStroke(Color.WHITE);
-		gc.strokeRect(x,  y, scene.gameBoard.shareObject.GameHolder.size, scene.gameBoard.shareObject.GameHolder.size );
+		gc.strokeRect(x,  y, GameHolder.size, GameHolder.size );
 	}
 
 	public void Destroy() {

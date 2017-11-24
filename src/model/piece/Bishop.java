@@ -3,10 +3,24 @@ package model.piece;
 import helper.Team;
 import model.ChessBoard;
 import model.NormalChessGame;
+import scene.gameBoard.shareObject.GameHolder;
 import model.ChessBoard.Move;
 
 public class Bishop extends ChessPiece {
 
+	private static Bishop instance = new Bishop(-1, -1, Team.NONE);
+
+	public static Bishop getInstance() {
+		return instance;
+	}
+
+	public Bishop(Integer row, Integer col, Team team) {
+		super(row, col, team, (team != Team.NONE ? 
+			team == Team.PLAYER_WHITE ? GameHolder.wb : GameHolder.bb 
+			: null)
+		);
+	}
+	
 	@Override
 	public boolean isValidMove(ChessBoard board, Move move) {
 		

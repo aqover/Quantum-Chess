@@ -3,9 +3,24 @@ package model.piece;
 import helper.Team;
 import model.ChessBoard;
 import model.NormalChessGame;
+import scene.gameBoard.shareObject.GameHolder;
 
 public class Queen extends ChessPiece {
 
+	private static Queen instance = new Queen(-1, -1, Team.NONE);
+	
+	public static Queen getInstance() {
+		return instance;
+	}
+	
+	public Queen(Integer row, Integer col, Team team) {
+		super(row, col, team, (team != Team.NONE ? 
+			team == Team.PLAYER_WHITE ? GameHolder.wq : GameHolder.bq 
+			: null)
+		);
+	}
+
+	
 	@Override
 	public boolean isValidMove(ChessBoard board, ChessBoard.Move move) {
 

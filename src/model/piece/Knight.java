@@ -1,14 +1,29 @@
 package model.piece;
 
+import helper.Team;
 import model.ChessBoard;
 import model.NormalChessGame;
 import model.ChessBoard.Move;
+import scene.gameBoard.shareObject.GameHolder;
 
 public class Knight extends ChessPiece {
 
+	private static Knight instance = new Knight(-1, -1, Team.NONE);
+	
+	public static Knight getInstance() {
+		return instance;
+	}
+	
+	public Knight(Integer row, Integer col, Team team) {
+		super(row, col, team, (team != Team.NONE ? 
+			team == Team.PLAYER_WHITE ? GameHolder.wn : GameHolder.bn 
+			: null)
+		);
+	}
+
 	@Override
 	public boolean isValidMove(ChessBoard board, Move move) {
-	
+
 		if (NormalChessGame.getSide(board.getAt(move.row1, move.col1)) == 
 			NormalChessGame.getSide(board.getAt(move.row2, move.col2))) {
 			return false;

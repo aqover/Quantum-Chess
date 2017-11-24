@@ -3,9 +3,24 @@ package model.piece;
 import helper.Team;
 import model.ChessBoard;
 import model.NormalChessGame;
+import scene.gameBoard.shareObject.GameHolder;
 
 public class Pawn extends ChessPiece {
 
+	private static Pawn instance = new Pawn(-1, -1, Team.NONE);
+	
+	public static Pawn getInstance() {
+		return instance;
+	}
+
+	public Pawn(Integer row, Integer col, Team team) {
+		super(row, col, team, (team != Team.NONE ? 
+			team == Team.PLAYER_WHITE ? GameHolder.wp : GameHolder.bp 
+			: null)
+		);
+	}
+
+	
 	@Override
 	public boolean isValidMove(ChessBoard board, ChessBoard.Move move) {
 
@@ -34,13 +49,13 @@ public class Pawn extends ChessPiece {
 			}
 		}
 		
-		if (sideTo != sideFrom) {
+		if (sideFrom != sideTo) {
 			if (sideFrom == Team.PLAYER_WHITE) {
-				return drow == 1 && Math.abs(dcol) == 1;
+				return drow == -1 && Math.abs(dcol) == 1;
 			}
 			
 			if (sideFrom == Team.PLAYER_BLACK) {
-				return drow == -1 && Math.abs(dcol) == 1;
+				return drow == 1 && Math.abs(dcol) == 1;
 			}
 		}
 		

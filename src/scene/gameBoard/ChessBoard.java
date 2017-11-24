@@ -1,5 +1,6 @@
 package scene.gameBoard;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 
 import helper.InputUtility;
@@ -8,21 +9,28 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import model.NormalChessGame;
+import model.ChessGameInfo.Piece;
+import model.piece.ChessPiece;
+import scene.gameBoard.shareObject.GameHolder;
 import scene.gameBoard.shareObject.IRenderable;
-import scene.gameBoard.view.pieces.Bishop;
-import scene.gameBoard.view.pieces.King;
-import scene.gameBoard.view.pieces.Knight;
-import scene.gameBoard.view.pieces.Pawn;
-import scene.gameBoard.view.pieces.Queen;
-import scene.gameBoard.view.pieces.Rook;
 
 public class ChessBoard extends Canvas {
+	
+	private boolean flipBoard;
+	
 	public ChessBoard () {
 		this.setHeight(8 * scene.gameBoard.shareObject.GameHolder.size);
 		this.setWidth(8 * scene.gameBoard.shareObject.GameHolder.size);
 		
 		drawBackground();
 		addListenEvents();
+		
+		flipBoard = false;
+	}
+	
+	public void flipBoard() {
+		flipBoard = !flipBoard;
 	}
 	
 	private void drawBackground() {
@@ -79,28 +87,35 @@ public class ChessBoard extends Canvas {
 		}
 	}
 
-	public void setBoard(String[] board) {
+	public void setBoard(NormalChessGame game) {
 		ArrayList<IRenderable> entity = new ArrayList<IRenderable>();
-		char c; 
-		Team t;
-		for(int j=0;j < board.length;j++)
-		{
-			for(int i=0;i < board[j].length(); i++)
-			{
-				t = Character.isUpperCase(board[j].charAt(i))? Team.PLAYER_BLACK: Team.PLAYER_WHITE;
-				c = Character.toLowerCase(board[j].charAt(i));
-				switch(c) {
-					case 'b': entity.add(new Bishop(j, i, t)); break;
-					case 'k': entity.add(new King(j, i, t)); break;
-					case 'n': entity.add(new Knight(j, i, t)); break;
-					case 'p': entity.add(new Pawn(j, i, t)); break;
-					case 'q': entity.add(new Queen(j, i, t)); break;
-					case 'r': entity.add(new Rook(j, i, t)); break;
-					default:
-						break;
+		
+		for (int i = 0; i < game.getBoard().getRows(); ++i) {
+			for (int j = 0; j < game.getBoard().getColumns(); ++j) {
+
+				char piece = game.getBoard().getAt(i, j);
+				
+				if (piece != Piece.EMPTY_SPACE) {
+				
+					Team team = NormalChessGame.getSide(piece);
+					
+					try {
+						
+						@SuppressWarnings("unchecked")
+						Class<? extends ChessPiece> pieceClass = (Class<? extends ChessPiece>) Class.forName(ChessPiece.getClassFromChar(piece).getClass().getName());
+						
+						Constructor<? extends ChessPiece> constructor = pieceClass.getConstructor(Integer.class, Integer.class, Team.class);
+						ChessPiece chessPiece = (ChessPiece) constructor.newInstance(i, j, team);
+							
+						 entity.add(chessPiece);
+					
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
-		scene.gameBoard.shareObject.GameHolder.getInstance().setEntity(entity);
+		
+		GameHolder.getInstance().setEntity(entity);
 	}
 }

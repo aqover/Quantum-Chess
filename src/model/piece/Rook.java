@@ -4,12 +4,27 @@ import helper.Team;
 import model.ChessBoard;
 import model.NormalChessGame;
 import model.ChessBoard.Move;
+import scene.gameBoard.shareObject.GameHolder;
 
 public class Rook extends ChessPiece {
 
+	private static Rook instance = new Rook(-1, -1, Team.NONE);
+	
+	public static Rook getInstance() {
+		return instance;
+	}
+	
+	public Rook(Integer row, Integer col, Team team) {
+		super(row, col, team, (team != Team.NONE ? 
+			team == Team.PLAYER_WHITE ? GameHolder.wr : GameHolder.br 
+			: null)
+		);
+	}
+
+	
 	@Override
 	public boolean isValidMove(ChessBoard board, Move move) {
-		
+
 		if (NormalChessGame.getSide(board.getAt(move.row1, move.col1)) == 
 			NormalChessGame.getSide(board.getAt(move.row2, move.col2))) {
 			return false;

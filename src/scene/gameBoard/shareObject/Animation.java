@@ -1,12 +1,12 @@
 package scene.gameBoard.shareObject;
 
 import helper.Tuple;
-import scene.gameBoard.view.pieces.Pieces;
+import model.piece.ChessPiece;
 
 public class Animation {	
 	private static final Animation instance = new Animation();
 	
-	private Pieces source;
+	private ChessPiece source;
 	private Tuple<Integer, Integer> sink;
 	
 	private boolean isAnimating = false;
@@ -30,7 +30,7 @@ public class Animation {
 		return isAnimating;
 	}
 	
-	public void startAnimate(Pieces source, Tuple<Integer, Integer> mouse) {
+	public void startAnimate(ChessPiece source, Tuple<Integer, Integer> mouse) {
 //		System.out.println("start animation in");
 		this.source = source;
 		this.sink = mouse;
@@ -49,7 +49,7 @@ public class Animation {
 		tmpX = source.getJ() + ((sink.getJ() - source.getJ()) * (tmpTime / animationTimeSpeed));
 		tmpY = source.getI() + ((sink.getI() - source.getI()) * (tmpTime / animationTimeSpeed));
 
-		source.setPositionOnScreen(tmpX * GameHolder.size, (7.0 - tmpY) * GameHolder.size);
+		source.setPositionOnScreen(tmpX * GameHolder.size, tmpY * GameHolder.size);
 //		System.out.println(String.format("x = %f, y = %f", tmpX * GameHolder.size, (7.0 - tmpY) * GameHolder.size));
 		if (currentNanoTime > stopNanoTime)
 		{
@@ -58,6 +58,7 @@ public class Animation {
 	}
 	
 	public void stopAnimate() {
+		
 		source.setPosition(sink.getI(), sink.getJ());
 		
 		isAnimating = false;
@@ -66,8 +67,9 @@ public class Animation {
 	}
 	
 	private double calculateDistance() {
-		double x = Math.pow((source.getJ() - sink.getJ()), 2.0);
-		double y = Math.pow((source.getI() - sink.getI()), 2.0);
-		return Math.sqrt(x+y);
+//		double x = Math.pow((source.getJ() - sink.getJ()), 2.0);
+//		double y = Math.pow((source.getI() - sink.getI()), 2.0);
+//		return Math.sqrt(x+y);
+		return Math.hypot(source.getJ() - sink.getJ(), source.getI() - sink.getI());
 	}
 }

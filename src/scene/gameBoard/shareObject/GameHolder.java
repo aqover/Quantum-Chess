@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import helper.Tuple;
 import javafx.scene.image.Image;
-import scene.gameBoard.view.pieces.Pieces;
+import model.piece.ChessPiece;
 
 public class GameHolder {
 	private static final GameHolder instance = new GameHolder();
@@ -43,20 +43,26 @@ public class GameHolder {
 		return entity;
 	}
 	
-	public Pieces getPiece(Tuple<Integer, Integer> target) {
-		for(IRenderable tmp: entity)
-		{
-			if (((Pieces) tmp).getI() == target.getI() && ((Pieces) tmp).getJ() == target.getJ() && ((Pieces) tmp).getTeam() == target.getTeam())
-				return (Pieces) tmp;
+	public ChessPiece getPiece(Tuple<Integer, Integer> target) {
+		for(IRenderable en : entity) {
+			if (en instanceof ChessPiece) {
+				ChessPiece piece = (ChessPiece) en;
+				if (piece.getI() == target.getI() && piece.getJ() == target.getJ() && piece.getTeam() == target.getTeam()) {
+					return piece;				
+				}
+			}
 		}
 		return null;
 	}
 	
-	public Pieces getPieceFromMouse(Tuple<Integer, Integer> target) {
-		for(IRenderable tmp: entity)
-		{
-			if (((Pieces) tmp).getI() == target.getI() && ((Pieces) tmp).getJ() == target.getJ())
-				return (Pieces) tmp;
+	public ChessPiece getPieceFromMouse(Tuple<Integer, Integer> target) {
+		for(IRenderable en : entity) {
+			if (en instanceof ChessPiece) {
+				ChessPiece piece = (ChessPiece) en;
+				if (piece.getI() == target.getI() && piece.getJ() == target.getJ()) {
+					return piece;				
+				}
+			}
 		}
 		return null;
 	}

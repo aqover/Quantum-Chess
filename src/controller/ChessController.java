@@ -5,16 +5,16 @@ import helper.Team;
 import helper.Tuple;
 import javafx.animation.AnimationTimer;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.HBox;
-import javafx.scene.control.Alert.AlertType;
 import model.ChessBoard.Move;
 import model.NormalChessGame;
+import model.piece.ChessPiece;
 import scene.gameBoard.ChessBoard;
 import scene.gameBoard.ChessDetail;
 import scene.gameBoard.shareObject.Animation;
 import scene.gameBoard.shareObject.GameHolder;
-import scene.gameBoard.view.pieces.Pieces;
 
 public class ChessController {
 	
@@ -25,11 +25,10 @@ public class ChessController {
 	private AnimationTimer animationTimer;
 	private Tuple<Integer, Integer> mouse;
 	
-	private boolean disable;
-	
 	private long timePrevious;
 	
-	private Pieces piece, selectedPiece;
+	private ChessPiece selectedPiece;
+	public boolean disable;
 	
 	public HBox getPane() {
 		return pane;
@@ -42,8 +41,9 @@ public class ChessController {
 	public ChessController() {
 		normalChessGame = new NormalChessGame();
 		initialPane();
-		board.setBoard(normalChessGame.getBoard().getBoard());
-		selectedPiece = piece = null;		
+
+		board.setBoard(normalChessGame);
+		selectedPiece = null;		
 		disable = false;
 	} 
 	
@@ -54,17 +54,27 @@ public class ChessController {
 	
 	public void endTurn() { }
 	
+	private void select(ChessPiece piece) {
+		if (selectedPiece != null) {
+			selectedPiece.setSelected(false);	
+			selectedPiece = null;
+		}
+		if (piece != null && piece.getTeam() == normalChessGame.getTurn()) {
+			selectedPiece = piece;
+			selectedPiece.setSelected(true);
+		}
+	}
+	
 	public void update() {
 		if (Animation.getInstance().isAnimating())
 			return;
 		
-		synchronized (this) {
+		if (InputUtility.isMouseLeftClicked())
+		{
+			mouse = InputUtility.getMousePosition();
+			ChessPiece piece = scene.gameBoard.shareObject.GameHolder.getInstance().getPieceFromMouse(mouse);
 			
-			if (disable) {
-				return;
-			}
-			
-			if (InputUtility.isMouseLeftClicked())
+			if(selectedPiece != null)
 			{
 				mouse = InputUtility.getMousePosition();
 				piece = scene.gameBoard.shareObject.GameHolder.getInstance().getPieceFromMouse(mouse);
@@ -90,15 +100,25 @@ public class ChessController {
 						selectedPiece.setSelected(true);
 					}
 				}
-			}			
-		}
+				
+				System.gc();
+			}
+			else
+			{
+				select(piece);
+			}
+		}			
+	}
+
+	public void flipBoard() {
+		board.flipBoard();
 	}
 	
 	public Team getTurnTeam() {
 		return normalChessGame.getTurn();
 	}
 
-	private boolean movePiece(Pieces source, Tuple<Integer, Integer> mouse) {
+	private boolean movePiece(ChessPiece source, Tuple<Integer, Integer> mouse) {
 		synchronized (this) {
 			if (normalChessGame.isMoveValid(new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ())))
 			{
@@ -108,7 +128,7 @@ public class ChessController {
 			}			
 			else
 			{
-					
+				
 				disable = true;
 				
 				Alert alert = new Alert(AlertType.NONE, "The move is not valid, Please try again.", ButtonType.OK);

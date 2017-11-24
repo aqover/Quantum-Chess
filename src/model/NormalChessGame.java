@@ -85,7 +85,12 @@ public class NormalChessGame implements ChessGameInfo {
 				return false;
 			}
 			
-			return ChessPiece.getClassFromChar(piece).isValidMove(board, move);
+			if (!ChessPiece.getClassFromChar(piece).isValidMove(board, move)) {
+				return false;
+			}
+			
+			char king = (this.getTurn() == Team.PLAYER_WHITE ? Piece.WHITE_KING : Piece.BLACK_KING);
+			return !King.isKingThreaten(board.moveDuplicate(move, Piece.EMPTY_SPACE), king);
 			
 		} catch (Exception e) {
 			return false;
@@ -101,6 +106,10 @@ public class NormalChessGame implements ChessGameInfo {
 	public boolean move(ChessBoard.Move move) {
 		try {
 
+			if (!isMoveValid(move)) {
+				return false;
+			}
+			
 			ChessBoard board = this.getBoard();
 			
 			// adjust history
