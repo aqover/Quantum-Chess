@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
 public class ChessDetail extends AnchorPane {
@@ -23,6 +24,11 @@ public class ChessDetail extends AnchorPane {
 	@FXML Label labelTimeB;
 	@FXML RadioButton radioA;
 	@FXML RadioButton radioB;
+	
+	@FXML
+	protected void handleFlipBoard(MouseEvent event) {
+		gameControl.flipBoard();
+    }
 	
 	public void setName(String a, String b) {
 		labelNameA.setText(a);
@@ -68,4 +74,6 @@ public class ChessDetail extends AnchorPane {
 		else if (gameControl.getTurnTeam() == Team.PLAYER_BLACK)
 			timePlayerB = timePlayerB - decreseTime;
 	}
+	
+	
 }

@@ -89,6 +89,11 @@
                         <Insets />
                      </HBox.margin>
                   </Button>
+                  <Button mnemonicParsing="false" onMouseClicked="#handleFlipBoard" prefHeight="40.0" prefWidth="170.0" style="-fx-background-color: #00B0FF;" text="Flip" textFill="WHITE">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
                   <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="170.0" style="-fx-background-color: #00B0FF;" text="Redo" textFill="WHITE">
                      <font>
                         <Font size="14.0" />

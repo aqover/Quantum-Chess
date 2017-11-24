@@ -17,6 +17,13 @@ public class Entity implements IRenderable {
 		destroyed = false;
 	}
 
+	public double getX() {
+		return this.x;
+	}
+	public double getY() {
+		return this.y;
+	}
+	
 	@Override
 	public int getZ() {
 		// TODO Auto-generated method stub
