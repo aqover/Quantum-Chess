@@ -2,22 +2,41 @@ package library.socket;
 
 import java.io.*;
 import java.net.*;
+import java.util.Set;
 
-public class TCPClient {	
-	Socket socket;
-	DataOutputStream bufferStream;
-	BufferedReader buffer;
+public class TCPClient implements Runnable, TCPSocket {	
+	private Socket socket;
+	private DataOutputStream bufferStream;
+	private BufferedReader buffer;
 	
-	public TCPClient(String host, int port) throws UnknownHostException, IOException, SecurityException, IllegalArgumentException {
-		Socket socket = new Socket(host, port);
-		bufferStream = new DataOutputStream(socket.getOutputStream());
-		buffer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+	private String host;
+	private int port;
+		
+	private Set<TCPListener> listeners;
+	public void addListener(TCPListener listener) { listeners.add(listener); }
+	
+	public TCPClient(String host, int port) { this.host = host; this.port = port; }
+	
+	public void connect() {		
+		try {
+			socket = new Socket(host, port);
+			bufferStream = new DataOutputStream(socket.getOutputStream());
+			buffer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			
+			for(TCPListener listener: listeners)
+				listener.OnConnected();
+		}
+		catch (Exception ex)
+		{
+			close();
+		}		
 	}
 	
 	public boolean isConnected() {
 		return (socket != null && socket.isConnected());
 	}
 	
+	@Override
 	public String read()
 	{
 		if (socket == null)
@@ -27,12 +46,13 @@ public class TCPClient {
 			if (buffer.ready())
 				return buffer.readLine();
 		} catch (IOException e) { 
-			socket = null;
+			close();
 		}
 		
 		return null;
 	}
 	
+	@Override
 	public int write(String msg)
 	{
 		if (socket == null)
@@ -40,17 +60,45 @@ public class TCPClient {
 		
 		try {
 			bufferStream.writeBytes(msg);
+			for(TCPListener listener: listeners)
+				listener.OnSended(msg);
 			return msg.length();
 		}
 		catch (IOException ex) { 
-			socket = null;
+			close();
 		}
 		
 		return 0;
 	}
 	
-	
-	public void close() throws IOException {
-		socket.close();
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		connect();
+		
+		String msg;
+		while(isConnected())
+		{
+			msg = read();
+			if (msg != null)
+			{
+				for(TCPListener listener: listeners)
+					listener.OnReceived(msg);
+			}
+		}
+		
+		close();
 	}
+	
+	public void close() {
+		if (socket == null) return;
+		
+		try { socket.close(); } catch (IOException e) { }
+		
+		socket = null;
+		
+		for(TCPListener listener: listeners)
+			listener.OnClosed();
+	}
+
 }

@@ -21,7 +21,7 @@ import javafx.scene.layout.Pane;
 
 import library.socket.TCPServer;
 
-public class GameOnlineController extends Pane implements ThreadCompleteListener {
+public class GOController extends Pane implements ThreadCompleteListener {
 
 	@FXML
 	TextField ip;
@@ -38,7 +38,7 @@ public class GameOnlineController extends Pane implements ThreadCompleteListener
 	private TCPServer server;
 	private AcceptClient waiting;
 
-	public GameOnlineController() {
+	public GOController() {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("../scene/GameOnline.fxml"));
 			loader.setRoot(this);

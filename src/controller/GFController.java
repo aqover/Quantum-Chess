@@ -11,12 +11,12 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
-public class GameOfflineController extends Pane {
+public class GFController extends Pane {
 	
 	@FXML TextField playerA;
 	@FXML TextField playerB;
 	
-	public GameOfflineController() {
+	public GFController() {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("../scene/GameOffline.fxml"));
 			loader.setRoot(this);
