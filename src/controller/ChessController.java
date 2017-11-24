@@ -90,12 +90,12 @@ public class ChessController {
 						}
 						select(null);
 					}
-				} else if(piece != null) {
+				} else {
 					if (getTurnTeam() == piece.getTeam()) {
 						select(piece);
+					} else {
+						select(null);
 					}
-				} else {
-					// error
 				}
 				
 				System.gc();
@@ -127,12 +127,7 @@ public class ChessController {
 				);
 				return true;
 			} else {
-				
-				disable = true;
-				
-				Alert alert = new Alert(AlertType.NONE, "The move is not valid, Please try again.", ButtonType.OK);
-				alert.setOnHidden(e -> { disable = false; });
-				alert.show();
+				SceneManager.showMessage("The move is not valid", () -> {});
 			}
 		}
 			

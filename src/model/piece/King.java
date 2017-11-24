@@ -63,7 +63,9 @@ public class King extends ChessPiece {
 						if (ChessPiece.getClassFromChar(piece).isValidMove(board, move)) {
 							return true;
 						}
-					} catch (Exception e) {}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
