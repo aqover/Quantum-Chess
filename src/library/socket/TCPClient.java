@@ -4,6 +4,8 @@ import java.io.*;
 import java.net.*;
 import java.util.Set;
 
+import library.socket.TCPCommand.Command;
+
 public class TCPClient implements Runnable, TCPSocket {	
 	private Socket socket;
 	private DataOutputStream bufferStream;
@@ -58,10 +60,11 @@ public class TCPClient implements Runnable, TCPSocket {
 		if (socket == null)
 			return 0;
 		
+		String text = String.format("%03d%s", msg.length(), msg);
 		try {
-			bufferStream.writeBytes(msg);
+			bufferStream.writeBytes(text);
 			for(TCPListener listener: listeners)
-				listener.OnSended(msg);
+				listener.OnSended(text);
 			return msg.length();
 		}
 		catch (IOException ex) { 
@@ -77,13 +80,23 @@ public class TCPClient implements Runnable, TCPSocket {
 		connect();
 		
 		String msg;
+		Command cmd;
+		int len;
 		while(isConnected())
 		{
 			msg = read();
 			if (msg != null)
 			{
 				for(TCPListener listener: listeners)
-					listener.OnReceived(msg);
+				{
+//					while (msg.length() > 0)
+//					{
+						len = Integer.getInteger(msg.substring(0, 3));
+						cmd = Command.valueOf(Integer.getInteger(msg.substring(3, 5)));
+						listener.OnReceived(cmd, msg.substring(5, len - 5));
+//						msg = msg.substring(0, 5 + len);
+//					}
+				}
 			}
 		}
 		

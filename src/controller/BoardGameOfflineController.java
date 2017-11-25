@@ -1,5 +1,8 @@
 package controller;
 
-public class BoardGameOfflineController {
-
+public class BoardGameOfflineController extends ChessController {
+	
+	public BoardGameOfflineController() {
+		
+	}
 }
