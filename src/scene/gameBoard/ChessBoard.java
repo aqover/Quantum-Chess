@@ -20,8 +20,8 @@ public class ChessBoard extends Canvas {
 	private boolean flipBoard;
 	
 	public ChessBoard () {
-		this.setHeight(8 * scene.gameBoard.shareObject.GameHolder.size);
-		this.setWidth(8 * scene.gameBoard.shareObject.GameHolder.size);
+		this.setHeight(8 * GameHolder.size);
+		this.setWidth(8 * GameHolder.size);
 		
 		drawBackground();
 		addListenEvents();
@@ -29,8 +29,20 @@ public class ChessBoard extends Canvas {
 		flipBoard = false;
 	}
 	
-	public void flipBoard() {
+	public synchronized void flipBoard() {
 		flipBoard = !flipBoard;
+			
+		for (IRenderable tmp: GameHolder.getInstance().getEntity())
+		{
+			if (tmp instanceof ChessPiece) {
+				ChessPiece piece = (ChessPiece) tmp;
+				piece.setPositionOnScreen(piece.getX(), GameHolder.size * 7 - piece.getY());
+			}
+		}	
+	}
+	
+	public synchronized boolean isBoardFlipped() {
+		return flipBoard;
 	}
 	
 	private void drawBackground() {
@@ -38,11 +50,11 @@ public class ChessBoard extends Canvas {
 			for(int j=0;j<8;j++)
 			{
 				this.getGraphicsContext2D().drawImage(
-					((i+j)%2 == 0)? scene.gameBoard.shareObject.GameHolder.bgDark: scene.gameBoard.shareObject.GameHolder.bgLight, 
-					i * scene.gameBoard.shareObject.GameHolder.size, 
-					j * scene.gameBoard.shareObject.GameHolder.size,
-					scene.gameBoard.shareObject.GameHolder.size,
-					scene.gameBoard.shareObject.GameHolder.size
+					((i+j)%2 == 0)? GameHolder.bgDark: GameHolder.bgLight, 
+					i * GameHolder.size, 
+					j * GameHolder.size,
+					GameHolder.size,
+					GameHolder.size
 				);
 			}
 	}
@@ -79,11 +91,13 @@ public class ChessBoard extends Canvas {
 		drawBackground();
 		
 		GraphicsContext gc = this.getGraphicsContext2D();
-		ArrayList<IRenderable> entity = scene.gameBoard.shareObject.GameHolder.getInstance().getEntity();
-		for (IRenderable tmp: entity)
+		for (IRenderable tmp: GameHolder.getInstance().getEntity())
 		{
-			if (tmp.isVisible() && !tmp.isDestroyed())
-				tmp.draw(gc);
+			if (tmp instanceof ChessPiece) {
+				ChessPiece piece = (ChessPiece) tmp;
+				if (piece.isVisible() && !piece.isDestroyed())
+					piece.draw(gc);			
+			}
 		}
 	}
 

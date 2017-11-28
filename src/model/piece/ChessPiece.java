@@ -49,6 +49,11 @@ public abstract class ChessPiece extends Entity implements ChessGameInfo {
 	public int getJ() { return col; }
 	public boolean isDead() { return isdead; }
 	
+	public void setOnlyPosition(int row, int col) {
+		this.row = row;
+		this.col = col;
+	}
+	
 	public void setPosition(int row, int col) {
 		this.row = row;
 		this.col = col;

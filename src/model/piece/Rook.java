@@ -41,7 +41,7 @@ public class Rook extends ChessPiece {
 		}
 		
 		if (move.col1 == move.col2) {
-			for (int i = Math.min(move.row1, move.row2); i < Math.max(move.row1, move.row2); ++i) {
+			for (int i = Math.min(move.row1, move.row2) + 1; i < Math.max(move.row1, move.row2); ++i) {
 				if (NormalChessGame.getSide(board.getAt(i, move.col1)) != Team.NONE) {
 					return false;
 				}				

@@ -1,6 +1,8 @@
 package scene.gameBoard.shareObject;
 
 import java.util.ArrayList;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import helper.Tuple;
 import javafx.scene.image.Image;
@@ -32,52 +34,64 @@ public class GameHolder {
 		
 	public static boolean isTurnEnded;
 	
-	private ArrayList<IRenderable> entity = new ArrayList<IRenderable>();
+	private Queue<IRenderable> entity = new ConcurrentLinkedQueue<IRenderable>();
 	
 	public static GameHolder getInstance() {
 		return instance;
 	}
 	
 	//Add or Get Entity
-	public ArrayList<IRenderable> getEntity() {
-		return entity;
+	public Queue<IRenderable> getEntity() {
+		synchronized (this) {
+			return entity;
+		}
 	}
 	
 	public ChessPiece getPiece(Tuple<Integer, Integer> target) {
-		for(IRenderable en : entity) {
-			if (en instanceof ChessPiece) {
-				ChessPiece piece = (ChessPiece) en;
-				if (piece.getI() == target.getI() && piece.getJ() == target.getJ() && piece.getTeam() == target.getTeam()) {
-					return piece;				
+		synchronized (this) {
+			for(IRenderable en : entity) {
+				if (en instanceof ChessPiece) {
+					ChessPiece piece = (ChessPiece) en;
+					if (piece.getI() == target.getI() && piece.getJ() == target.getJ() && piece.getTeam() == target.getTeam()) {
+						return piece;				
+					}
 				}
 			}
+			return null;
 		}
-		return null;
 	}
 	
 	public ChessPiece getPieceFromMouse(Tuple<Integer, Integer> target) {
-		for(IRenderable en : entity) {
-			if (en instanceof ChessPiece) {
-				ChessPiece piece = (ChessPiece) en;
-				if (piece.getI() == target.getI() && piece.getJ() == target.getJ()) {
-					return piece;				
+		synchronized (this) {
+			for(IRenderable en : entity) {
+				if (en instanceof ChessPiece) {
+					ChessPiece piece = (ChessPiece) en;
+					if (piece.getI() == target.getI() && piece.getJ() == target.getJ()) {
+						return piece;				
+					}
 				}
 			}
+			return null;
 		}
-		return null;
 	}
 	
 	public void addEntity(IRenderable entity) {
-		this.entity.add(entity);
+		synchronized (this) {
+			this.entity.add(entity);
+		}
 	}
 	
 	public void addEntity(ArrayList<IRenderable> entity) {
-		this.entity.addAll(entity);
+		synchronized (this) {
+			this.entity.addAll(entity);
+		}
 	}
 	
 	public void setEntity(ArrayList<IRenderable> entity) {
-		this.entity.clear();
-		this.entity.addAll(entity);
+		synchronized (this) {	
+			this.entity.clear();
+			this.entity.addAll(entity);
+		}
 	}
 
 	//-----------------------------------------------------------------------------//
@@ -92,12 +106,15 @@ public class GameHolder {
 	}
 	
 	public void update() {
-		for(IRenderable tmp: entity)
-		{
-			if (tmp.isDestroyed())
-				entity.remove(tmp);
+		synchronized (this) {
+	
+			for(IRenderable tmp: entity)
+			{
+				if (tmp.isDestroyed())
+					entity.remove(tmp);
+			}
+			System.gc();
 		}
-		System.gc();
 	}
 	
 	public static void loadResource() {

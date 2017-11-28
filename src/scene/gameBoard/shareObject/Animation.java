@@ -6,6 +6,8 @@ import model.piece.ChessPiece;
 public class Animation {	
 	private static final Animation instance = new Animation();
 	
+	private Runnable onFinished;
+	
 	private ChessPiece source;
 	private Tuple<Integer, Integer> sink;
 	
@@ -30,7 +32,7 @@ public class Animation {
 		return isAnimating;
 	}
 	
-	public void startAnimate(ChessPiece source, Tuple<Integer, Integer> mouse) {
+	public void startAnimate(ChessPiece source, Tuple<Integer, Integer> mouse, Runnable onFinished) {
 //		System.out.println("start animation in");
 		this.source = source;
 		this.sink = mouse;
@@ -40,16 +42,18 @@ public class Animation {
 		
 		startNanoTime = System.nanoTime();
 		stopNanoTime = startNanoTime + (animationTimeSpeed * 1000000l);
+		
+		this.onFinished = onFinished;
 	}
 	
 	public void update(long currentNanoTime) {
 		if (!isAnimating) return;
 				
 		tmpTime = (Math.min(stopNanoTime, currentNanoTime) - startNanoTime) / 1000000.0;
-		tmpX = source.getJ() + ((sink.getJ() - source.getJ()) * (tmpTime / animationTimeSpeed));
-		tmpY = source.getI() + ((sink.getI() - source.getI()) * (tmpTime / animationTimeSpeed));
+		tmpX = source.getX() + ((sink.getJ() * GameHolder.size - source.getX()) * (tmpTime / animationTimeSpeed));
+		tmpY = source.getY() + ((sink.getI() * GameHolder.size - source.getY()) * (tmpTime / animationTimeSpeed));
 
-		source.setPositionOnScreen(tmpX * GameHolder.size, tmpY * GameHolder.size);
+		source.setPositionOnScreen(tmpX, tmpY);
 //		System.out.println(String.format("x = %f, y = %f", tmpX * GameHolder.size, (7.0 - tmpY) * GameHolder.size));
 		if (currentNanoTime > stopNanoTime)
 		{
@@ -59,7 +63,7 @@ public class Animation {
 	
 	public void stopAnimate() {
 		
-		source.setPosition(sink.getI(), sink.getJ());
+		this.onFinished.run();
 		
 		isAnimating = false;
 		source = null;

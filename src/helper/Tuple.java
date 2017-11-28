@@ -26,7 +26,7 @@ public class Tuple<X, Y> {
 	public X getI() {
 		return i;
 	}
-
+	
 	public Y getJ() {
 		return j;
 	}

@@ -33,19 +33,20 @@ public class Pawn extends ChessPiece {
 		
 		int drow = move.row2 - move.row1;
 		int dcol = move.col2 - move.col1;
-		
+
 		if (sideTo == Team.NONE) {
+			if (dcol != 0) return false;
 			if (sideFrom == Team.PLAYER_WHITE) {
 				if (move.row1 == 6 && drow == -2 && NormalChessGame.getSide(board.getAt(move.row1-1, move.col1)) == Team.NONE) {
 					return true;
 				}
-				return drow == -1 && dcol == 0;
+				return drow == -1;
 			}
 			if (sideFrom == Team.PLAYER_BLACK) {
 				if (move.row1 == 1 && drow == 2 && NormalChessGame.getSide(board.getAt(move.row1+1, move.col1)) == Team.NONE) {
 					return true;
 				}
-				return drow == 1 && dcol == 0;
+				return drow == 1;
 			}
 		}
 		

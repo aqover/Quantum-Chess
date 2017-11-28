@@ -49,7 +49,11 @@ public class ChessController {
 		timePrevious = System.nanoTime();
 	}
 	
-	public void endTurn() { }
+	public void endTurn() { 
+		if (board.isBoardFlipped() != (normalChessGame.getTurn() != normalChessGame.firstTurn)) {
+			flipBoard(); 
+		}
+	}
 	
 	private void select(ChessPiece piece) {
 		if (selectedPiece != null) {
@@ -69,38 +73,30 @@ public class ChessController {
 		if (InputUtility.isMouseLeftClicked())
 		{
 			mouse = InputUtility.getMousePosition();
-			ChessPiece piece = scene.gameBoard.shareObject.GameHolder.getInstance().getPieceFromMouse(mouse);
+			if (board.isBoardFlipped()) {
+				mouse = new Tuple<Integer, Integer>(7 - mouse.getI(), mouse.getJ(), null);
+			}
 			
-			if(selectedPiece != null)
-			{
-				mouse = InputUtility.getMousePosition();
-				piece = scene.gameBoard.shareObject.GameHolder.getInstance().getPieceFromMouse(mouse);
-				
-				if(selectedPiece != null)
-				{
-					if (piece == null || (piece != null && selectedPiece.getTeam() != piece.getTeam()))
-							if(movePiece(selectedPiece, mouse))
-								endTurn();			
+			ChessPiece piece = GameHolder.getInstance().getPieceFromMouse(mouse);
 
-					select(null);
-					System.gc();
-				}
-				else
-				{
-					if(piece != null)
-					{
-						if (getTurnTeam() != piece.getTeam())
-							return;
-						
-						selectedPiece = piece;
-						selectedPiece.setSelected(true);
+			if(selectedPiece != null) {		
+				if (piece == null || (piece != null && selectedPiece.getTeam() != piece.getTeam())) {
+					if (movePiece(selectedPiece, mouse)) {
+						if (piece != null) {
+							piece.Destroy();
+						}
+						select(null);
+					}
+				} else {
+					if (getTurnTeam() == piece.getTeam()) {
+						select(piece);
+					} else {
+						select(null);
 					}
 				}
 				
 				System.gc();
-			}
-			else
-			{
+			} else {
 				select(piece);
 			}
 		}			
@@ -116,17 +112,18 @@ public class ChessController {
 
 	private boolean movePiece(ChessPiece source, Tuple<Integer, Integer> mouse) {
 		synchronized (this) {
-			
-			if (normalChessGame.isMoveValid(new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ())))
-			{
+			if (normalChessGame.isMoveValid(new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ()))) {
 				normalChessGame.move(new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ()));
-				scene.gameBoard.shareObject.Animation.getInstance().startAnimate(source, mouse);
+				Animation.getInstance().startAnimate(
+					source, 
+					InputUtility.getMousePosition(), 
+					() -> {
+						source.setOnlyPosition(mouse.getI(), mouse.getJ());
+						endTurn();
+					}
+				);
 				return true;
-			}			
-			else
-			{
-				
-				System.out.println("ERROR");
+			} else {
 				SceneManager.showMessage("The move is not valid", () -> {});
 			}
 		}
