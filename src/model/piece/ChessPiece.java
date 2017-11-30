@@ -65,6 +65,7 @@ public abstract class ChessPiece extends Entity implements ChessGameInfo {
 		this.col = col;
 		this.team = team;
 		this.displayImage = displayImage;
+		this.z = 1;
 		
 		this.isdead = false;
 		

@@ -1,15 +1,15 @@
 package controller;
 
+import java.util.List;
+
 import helper.InputUtility;
 import helper.Team;
 import helper.Tuple;
 import javafx.animation.AnimationTimer;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
 import javafx.scene.layout.HBox;
 import model.ChessBoard.Move;
 import model.NormalChessGame;
+
 import model.piece.ChessPiece;
 import scene.gameBoard.ChessBoard;
 import scene.gameBoard.ChessDetail;
@@ -28,6 +28,7 @@ public class ChessController {
 	private long timePrevious;
 	
 	private ChessPiece selectedPiece;
+	
 	public boolean disable;
 	
 	public HBox getPane() {
@@ -39,13 +40,17 @@ public class ChessController {
 	}
 
 	public ChessController() {
-		normalChessGame = new NormalChessGame();
+		resetGame();
 		initialPane();
-
+	} 
+	
+	private void resetGame() {
+		normalChessGame = new NormalChessGame();
+		board = new ChessBoard();
 		board.setBoard(normalChessGame);
 		selectedPiece = null;		
 		disable = false;
-	} 
+	}
 	
 	public void startGame() {
 		animationTimer.start();
@@ -53,6 +58,16 @@ public class ChessController {
 	}
 	
 	public void endTurn() { 
+		
+		int result = normalChessGame.getGameResult();
+		if (result != NormalChessGame.GAME_RESULT_ONGOING) {
+			SceneManager.showMessage(NormalChessGame.getResultMessage(result), () -> {
+				SceneManager.setSceneSelectGame();
+				resetGame();
+			});
+			return;
+		} 
+		
 		if (board.isBoardFlipped() != (normalChessGame.getTurn() != normalChessGame.firstTurn)) {
 			flipBoard(); 
 		}
@@ -77,8 +92,8 @@ public class ChessController {
 		{
 			mouse = InputUtility.getMousePosition();
 			if (board.isBoardFlipped()) {
-				mouse = new Tuple<Integer, Integer>(7 - mouse.getI(), mouse.getJ(), null);
-			}
+				mouse = new Tuple<Integer, Integer>(7 - mouse.getI(), 7 - mouse.getJ(), null);
+			}	
 			
 			ChessPiece piece = GameHolder.getInstance().getPieceFromMouse(mouse);
 
@@ -137,7 +152,7 @@ public class ChessController {
 	private void initialPane() {
 		pane = new HBox();
 		detail = new ChessDetail(this);
-		board = new ChessBoard();		
+		
 		animationTimer = new AnimationTimer() {
 			public void handle(long now) {				
 				//Detail
@@ -150,6 +165,14 @@ public class ChessController {
 				Animation.getInstance().update(now);
 				GameHolder.getInstance().update();
 				board.paintComponent();
+				
+				if (selectedPiece != null) {
+					board.paintValidMoves(normalChessGame.getValidMoves(
+						selectedPiece.getI(), 
+						selectedPiece.getJ()
+					));
+				}
+				
 				update();
 				InputUtility.update();
 				

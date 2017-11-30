@@ -2,6 +2,7 @@ package scene.gameBoard;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.List;
 
 import helper.InputUtility;
 import helper.Team;
@@ -14,6 +15,8 @@ import model.ChessGameInfo.Piece;
 import model.piece.ChessPiece;
 import scene.gameBoard.shareObject.GameHolder;
 import scene.gameBoard.shareObject.IRenderable;
+import scene.gameBoard.view.ChessBackGround;
+import scene.gameBoard.view.ChessValidMoves;
 
 public class ChessBoard extends Canvas {
 	
@@ -23,7 +26,6 @@ public class ChessBoard extends Canvas {
 		this.setHeight(8 * GameHolder.size);
 		this.setWidth(8 * GameHolder.size);
 		
-		drawBackground();
 		addListenEvents();
 		
 		flipBoard = false;
@@ -36,27 +38,18 @@ public class ChessBoard extends Canvas {
 		{
 			if (tmp instanceof ChessPiece) {
 				ChessPiece piece = (ChessPiece) tmp;
-				piece.setPositionOnScreen(piece.getX(), GameHolder.size * 7 - piece.getY());
+				piece.setPositionOnScreen(GameHolder.size * 7 - piece.getX(), GameHolder.size * 7 - piece.getY());
+			}
+			
+			if (tmp instanceof ChessValidMoves) {
+				ChessValidMoves move = (ChessValidMoves) tmp;
+				move.setPositionOnScreen(GameHolder.size * 7 - move.getX(), GameHolder.size * 7 - move.getY());
 			}
 		}	
 	}
 	
 	public synchronized boolean isBoardFlipped() {
 		return flipBoard;
-	}
-	
-	private void drawBackground() {
-		for(int i=0;i<8;i++)
-			for(int j=0;j<8;j++)
-			{
-				this.getGraphicsContext2D().drawImage(
-					((i+j)%2 == 0)? GameHolder.bgDark: GameHolder.bgLight, 
-					i * GameHolder.size, 
-					j * GameHolder.size,
-					GameHolder.size,
-					GameHolder.size
-				);
-			}
 	}
 	
 	private void addListenEvents() {
@@ -88,11 +81,16 @@ public class ChessBoard extends Canvas {
 	}
 	
 	public void paintComponent() {
-		drawBackground();
 		
 		GraphicsContext gc = this.getGraphicsContext2D();
 		for (IRenderable tmp: GameHolder.getInstance().getEntity())
 		{
+			if (tmp instanceof ChessBackGround) {
+				ChessBackGround bg = (ChessBackGround) tmp;
+				if (bg.isVisible() && !bg.isDestroyed())
+					bg.draw(gc);
+			}
+			
 			if (tmp instanceof ChessPiece) {
 				ChessPiece piece = (ChessPiece) tmp;
 				if (piece.isVisible() && !piece.isDestroyed())
@@ -100,15 +98,29 @@ public class ChessBoard extends Canvas {
 			}
 		}
 	}
+	
+	public void paintValidMoves(boolean[][] moves) {
+
+		GraphicsContext gc = this.getGraphicsContext2D();
+		for (IRenderable tmp: GameHolder.getInstance().getEntity()) {
+			if (tmp instanceof ChessValidMoves) {
+				ChessValidMoves piece = (ChessValidMoves) tmp;
+				if (moves[piece.getI()][piece.getJ()] && piece.isVisible() && !piece.isDestroyed())
+					piece.draw(gc);
+			}
+		}
+		
+	}
 
 	public void setBoard(NormalChessGame game) {
 		ArrayList<IRenderable> entity = new ArrayList<IRenderable>();
+		
+		entity.add(new ChessBackGround());
 		
 		for (int i = 0; i < game.getBoard().getRows(); ++i) {
 			for (int j = 0; j < game.getBoard().getColumns(); ++j) {
 
 				char piece = game.getBoard().getAt(i, j);
-				
 				if (piece != Piece.EMPTY_SPACE) {
 				
 					Team team = NormalChessGame.getSide(piece);
@@ -127,6 +139,8 @@ public class ChessBoard extends Canvas {
 						e.printStackTrace();
 					}
 				}
+				
+				entity.add(new ChessValidMoves(i, j));
 			}
 		}
 		

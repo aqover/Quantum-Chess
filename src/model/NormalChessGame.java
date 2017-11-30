@@ -134,29 +134,34 @@ public class NormalChessGame implements ChessGameInfo {
 	 * Winner status
 	 */
 	
-	public int gameResult() {
+	public int getGameResult() {
 		
 		// white is being threaten
 		if (getTurn() == Team.PLAYER_WHITE && getPossibleMoves(Team.PLAYER_WHITE).size() == 0) {
 			if (King.isKingThreaten(this.getBoard(), Piece.WHITE_KING)) {
-				return GAME_RESULT_DRAW;
-			} else {
 				return GAME_RESULT_BLACK_WINS;
+			} else {
+				return GAME_RESULT_DRAW;
 			}
 		}
 		
 		// black is being threaten
 		if (getTurn() == Team.PLAYER_BLACK && getPossibleMoves(Team.PLAYER_BLACK).size() == 0) {
 			if (King.isKingThreaten(this.getBoard(), Piece.BLACK_KING)) {
-				return GAME_RESULT_DRAW;
-			} else {
 				return GAME_RESULT_WHITE_WINS;
+			} else {
+				return GAME_RESULT_DRAW;
 			}		
 		}
 		
 		return GAME_RESULT_ONGOING;
 	}
-	
+	public static String getResultMessage(int result) {
+		if (result == GAME_RESULT_DRAW) return "draw";
+		if (result == GAME_RESULT_WHITE_WINS) return "white wins";
+		if (result == GAME_RESULT_BLACK_WINS) return "black wins";
+		return "game is on going";
+	}
 	public static Team getSide(char ch) {
 		if (Character.isLowerCase(ch)) return Team.PLAYER_WHITE;
 		if (Character.isUpperCase(ch)) return Team.PLAYER_BLACK;
@@ -191,7 +196,20 @@ public class NormalChessGame implements ChessGameInfo {
 
 		return moves;
 	}
-
+	
+	public boolean[][] getValidMoves(int row, int col) {
+		
+		boolean[][] moves = new boolean[BOARD_SIZE][BOARD_SIZE];	
+		for (int i = 0; i < BOARD_SIZE; ++i) {
+			for (int j = 0; j < BOARD_SIZE; ++j) {
+				ChessBoard.Move move = new ChessBoard.Move(row, col, i, j);
+				moves[i][j] = this.isMoveValid(move);
+			}
+		}
+		
+		return moves;
+	}
+	
 	public ChessBoard getBoard(int version) throws IndexOutOfBoundsException {
 		return this.versions.get(version);
 	}
