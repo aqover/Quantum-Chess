@@ -10,7 +10,6 @@ public class Entity implements IRenderable {
 	protected double x, y;
 	protected int z;
 	protected boolean visible, destroyed;
-	protected boolean isSelected;
 	
 	protected Entity() {
 		visible = true;
@@ -42,14 +41,6 @@ public class Entity implements IRenderable {
 		return visible;
 	}
 
-	public boolean isSelected() {
-		return isSelected;
-	}
-
-	public void setSelected(boolean isSelected) {
-		this.isSelected = isSelected;
-	}
-
 	public void setZ(int z) {
 		this.z = z;
 	}
@@ -64,11 +55,6 @@ public class Entity implements IRenderable {
 		
 	}
 	
-	public void drawHover(GraphicsContext gc) {
-		gc.setLineWidth(GameHolder.LineWidth);
-		gc.setStroke(Color.WHITE);
-		gc.strokeRect(x,  y, GameHolder.size, GameHolder.size );
-	}
 
 	public void Destroy() {
 		destroyed = true;

@@ -1,5 +1,9 @@
 package controller;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
+
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -59,14 +63,35 @@ public final class SceneManager {
 		System.gc();
 	}
 	
+	public interface onFinish extends Runnable {
+		
+		default public void run() {}
+		default public void run(ButtonType btn) {}
+	}
 	
-	public static synchronized void showMessage(String msg, Runnable onDone) {
+	public static synchronized void showMessage(String msg, onFinish onDone) {
 		
 		if (disable) return;
 		disable = true;
 		
 		Alert alert = new Alert(AlertType.NONE, msg, ButtonType.OK);
 		alert.setOnHidden(e -> { onDone.run(); disable = false; });
+		alert.show();
+	}
+	
+	public static synchronized void showMessage(String msg, Collection<? extends ButtonType> btns, onFinish onDone) {
+		
+		if (disable) return;
+		disable = true;
+	
+		Alert alert = new Alert(AlertType.NONE, "");
+		alert.setHeaderText(msg);
+		alert.getButtonTypes().addAll(btns);
+		alert.setOnHidden((e) -> {
+			onDone.run(alert.getResult());
+			disable = false;
+		});
+		
 		alert.show();
 	}
 }

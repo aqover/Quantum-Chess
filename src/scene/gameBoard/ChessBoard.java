@@ -13,6 +13,7 @@ import javafx.scene.input.MouseEvent;
 import model.NormalChessGame;
 import model.ChessGameInfo.Piece;
 import model.piece.ChessPiece;
+import model.piece.Pawn;
 import scene.gameBoard.shareObject.GameHolder;
 import scene.gameBoard.shareObject.IRenderable;
 import scene.gameBoard.view.ChessBackGround;
@@ -112,6 +113,29 @@ public class ChessBoard extends Canvas {
 		
 	}
 
+	public void updatePawn(Constructor<? extends ChessPiece> constructor) {
+		
+		ArrayList<IRenderable> newPawns = new ArrayList<>();
+		
+		for (IRenderable tmp : GameHolder.getInstance().getEntity()) {
+			if (tmp instanceof Pawn) {
+				Pawn pawn = (Pawn) tmp;
+				if (pawn.getI() == 0 || pawn.getI() == 7) {
+					try {
+						ChessPiece npawn = (ChessPiece) constructor.newInstance(pawn.getI(), pawn.getJ(), pawn.getTeam());
+						npawn.setPositionOnScreen(pawn.getX(), pawn.getY());
+						newPawns.add(npawn);
+						pawn.Destroy();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		
+		GameHolder.getInstance().addEntity(newPawns);
+	}
+	
 	public void setBoard(NormalChessGame game) {
 		ArrayList<IRenderable> entity = new ArrayList<IRenderable>();
 		

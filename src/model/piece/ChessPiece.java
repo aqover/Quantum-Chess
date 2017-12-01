@@ -3,6 +3,7 @@ package model.piece;
 import helper.Team;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import model.ChessBoard;
 import model.ChessGameInfo;
 import scene.gameBoard.shareObject.GameHolder;
@@ -15,6 +16,9 @@ public abstract class ChessPiece extends Entity implements ChessGameInfo {
 	protected final Team team;
 	protected int row, col;
 	protected boolean isdead; 
+	
+	protected boolean isSelected;
+	protected boolean isLastMoved;
 	
 	public abstract boolean isValidMove(ChessBoard board, ChessBoard.Move move);
 	
@@ -36,11 +40,28 @@ public abstract class ChessPiece extends Entity implements ChessGameInfo {
 				y, 
 				GameHolder.size, 
 				GameHolder.size);
+			
+			if (this.isLastMoved) {
+				this.drawLastMoved(gc);
+			}
 			if (this.isSelected) {
 				this.drawHover(gc);
 			}
 		}
 	}
+	
+	public void drawLastMoved(GraphicsContext gc) {
+		gc.setLineWidth(GameHolder.LineWidth - 5);
+		gc.setStroke(Color.GREY);
+		gc.strokeRect(x,  y, GameHolder.size, GameHolder.size );
+	}
+	
+	public void drawHover(GraphicsContext gc) {
+		gc.setLineWidth(GameHolder.LineWidth);
+		gc.setStroke(Color.WHITE);
+		gc.strokeRect(x,  y, GameHolder.size, GameHolder.size );
+	}
+
 	
 	public Team getTeam() { return team; }
 	public int getRow() { return row; }
@@ -49,6 +70,23 @@ public abstract class ChessPiece extends Entity implements ChessGameInfo {
 	public int getJ() { return col; }
 	public boolean isDead() { return isdead; }
 	
+
+	public boolean isSelected() {
+		return isSelected;
+	}
+
+	public void setSelected(boolean isSelected) {
+		this.isSelected = isSelected;
+	}
+	
+	public boolean isLastMoved() {
+		return isLastMoved;
+	}
+	
+	public void setLastMoved(boolean isLastMoved) {
+		this.isLastMoved = isLastMoved;
+	}
+
 	public void setOnlyPosition(int row, int col) {
 		this.row = row;
 		this.col = col;

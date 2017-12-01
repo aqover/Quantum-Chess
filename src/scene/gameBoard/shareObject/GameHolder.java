@@ -1,8 +1,9 @@
 package scene.gameBoard.shareObject;
 
 import java.util.ArrayList;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.Comparator;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import helper.Tuple;
 import javafx.scene.image.Image;
@@ -34,14 +35,14 @@ public class GameHolder {
 		
 	public static boolean isTurnEnded;
 	
-	private Queue<IRenderable> entity = new ConcurrentLinkedQueue<IRenderable>();
+	private List<IRenderable> entity = new CopyOnWriteArrayList<IRenderable>();
 	
 	public static GameHolder getInstance() {
 		return instance;
 	}
 	
 	//Add or Get Entity
-	public Queue<IRenderable> getEntity() {
+	public List<IRenderable> getEntity() {
 		synchronized (this) {
 			return entity;
 		}
@@ -91,6 +92,13 @@ public class GameHolder {
 		synchronized (this) {	
 			this.entity.clear();
 			this.entity.addAll(entity);
+			this.entity.sort(new Comparator<IRenderable>() {
+				
+				@Override
+				public int compare(IRenderable a, IRenderable b) {
+					return a.getZ() - b.getZ();
+				}
+			});
 		}
 	}
 

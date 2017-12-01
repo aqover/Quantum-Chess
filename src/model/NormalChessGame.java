@@ -101,6 +101,33 @@ public class NormalChessGame implements ChessGameInfo {
 		return (new NormalChessGame(board)).isMoveValid(move);
 	}
 	
+	public Team isUpgradePawnAvailable() {
+		for (int i = 0; i < BOARD_SIZE; ++i) {
+			if (getBoard().getAt(0, i) == Piece.WHITE_PAWN) {
+				return Team.PLAYER_WHITE;
+			}
+			
+			if (getBoard().getAt(BOARD_SIZE-1, i) == Piece.BLACK_PAWN) {
+				return Team.PLAYER_BLACK;
+			}
+		}
+		return Team.NONE;
+	}
+	
+	private void setPosition(int i, int j, char piece) {
+		getBoard().setValue(i, j, piece);
+	}
+	public void upgradePawn(char whitePiece, char blackPiece) {
+		for (int i = 0; i < BOARD_SIZE; ++i) {
+			if (getBoard().getAt(0, i) == Piece.WHITE_PAWN) {
+				setPosition(0, i, whitePiece);
+			}
+			if (getBoard().getAt(BOARD_SIZE-1, i) == Piece.BLACK_PAWN) {
+				setPosition(BOARD_SIZE-1, i, blackPiece);
+			}
+		}
+	}
+	
 	// create new version and add
 	// return whether the move is successful
 	public boolean move(ChessBoard.Move move) {
@@ -162,15 +189,17 @@ public class NormalChessGame implements ChessGameInfo {
 		if (result == GAME_RESULT_BLACK_WINS) return "black wins";
 		return "game is on going";
 	}
+	
+	
+	/*
+	 * Getters
+	 */
 	public static Team getSide(char ch) {
 		if (Character.isLowerCase(ch)) return Team.PLAYER_WHITE;
 		if (Character.isUpperCase(ch)) return Team.PLAYER_BLACK;
 		return Team.NONE;
 	}
 	
-	/*
-	 * Getters
-	 */
 	public List<ChessBoard.Move> getPossibleMoves(Team player) { 
 
 		ChessBoard board = getBoard();

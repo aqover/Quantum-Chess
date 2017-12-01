@@ -1,16 +1,23 @@
 package controller;
 
-import java.util.List;
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 import helper.InputUtility;
 import helper.Team;
 import helper.Tuple;
 import javafx.animation.AnimationTimer;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.HBox;
 import model.ChessBoard.Move;
 import model.NormalChessGame;
-
+import model.piece.Bishop;
 import model.piece.ChessPiece;
+import model.piece.Knight;
+import model.piece.Queen;
+import model.piece.Rook;
 import scene.gameBoard.ChessBoard;
 import scene.gameBoard.ChessDetail;
 import scene.gameBoard.shareObject.Animation;
@@ -28,6 +35,7 @@ public class ChessController {
 	private long timePrevious;
 	
 	private ChessPiece selectedPiece;
+	private ChessPiece lastMovedPiece;
 	
 	public boolean disable;
 	
@@ -48,7 +56,8 @@ public class ChessController {
 		normalChessGame = new NormalChessGame();
 		board = new ChessBoard();
 		board.setBoard(normalChessGame);
-		selectedPiece = null;		
+		selectedPiece = null;
+		lastMovedPiece = null;
 		disable = false;
 	}
 	
@@ -57,17 +66,8 @@ public class ChessController {
 		timePrevious = System.nanoTime();
 	}
 	
-	public void endTurn() { 
-		
-		int result = normalChessGame.getGameResult();
-		if (result != NormalChessGame.GAME_RESULT_ONGOING) {
-			SceneManager.showMessage(NormalChessGame.getResultMessage(result), () -> {
-				SceneManager.setSceneSelectGame();
-				resetGame();
-			});
-			return;
-		} 
-		
+	public void endTurn() {
+		checkEndGame();
 		if (board.isBoardFlipped() != (normalChessGame.getTurn() != normalChessGame.firstTurn)) {
 			flipBoard(); 
 		}
@@ -106,7 +106,7 @@ public class ChessController {
 						select(null);
 					}
 				} else {
-					if (getTurnTeam() == piece.getTeam()) {
+					if (piece != selectedPiece && getTurnTeam() == piece.getTeam()) {
 						select(piece);
 					} else {
 						select(null);
@@ -120,6 +120,89 @@ public class ChessController {
 		}			
 	}
 
+	private void checkEndGame() {
+		int result = normalChessGame.getGameResult();
+		if (result != NormalChessGame.GAME_RESULT_ONGOING) {
+			SceneManager.showMessage(
+				NormalChessGame.getResultMessage(result), 
+				new SceneManager.onFinish() {
+					@Override
+					public void run() {
+						animationTimer.stop();
+						SceneManager.setSceneMainMenu();
+					}
+				}
+			);
+			return;
+		} 
+	}
+	private void checkUpdatePawn(Runnable onDone) {
+		
+		Team side = normalChessGame.isUpgradePawnAvailable();
+		if (side != Team.NONE) {
+			
+			ButtonType buttonTypeQueen = new ButtonType("Queen");
+			ButtonType buttonTypeKnight = new ButtonType("Knight");
+			ButtonType buttonTypeBishop = new ButtonType("Bishop");
+			ButtonType buttonTypeRook = new ButtonType("Rook");
+			
+			SceneManager.showMessage(
+				"Select new piece", 
+				Arrays.asList(
+					buttonTypeQueen, 
+					buttonTypeKnight,
+					buttonTypeBishop,
+					buttonTypeRook
+				),
+				new SceneManager.onFinish() {
+					@Override
+					public void run(ButtonType btn) {
+						
+						Class<? extends ChessPiece> pieceClass = null;
+						
+						if (btn == buttonTypeKnight) {
+							pieceClass = (Class<? extends ChessPiece>) Knight.class;
+							normalChessGame.upgradePawn(
+								NormalChessGame.Piece.WHITE_KNIGHT, 
+								NormalChessGame.Piece.BLACK_KNIGHT
+							);
+						} else if (btn == buttonTypeBishop) {
+							pieceClass = (Class<? extends ChessPiece>) Bishop.class;
+							normalChessGame.upgradePawn(
+								NormalChessGame.Piece.WHITE_BISHOP, 
+								NormalChessGame.Piece.BLACK_BISHOP
+							);
+						} else if (btn == buttonTypeRook) {
+							pieceClass = (Class<? extends ChessPiece>) Rook.class;
+							normalChessGame.upgradePawn(
+								NormalChessGame.Piece.WHITE_ROOK, 
+								NormalChessGame.Piece.BLACK_ROOK
+							);
+						} else {
+							pieceClass = (Class<? extends ChessPiece>) Queen.class;
+							normalChessGame.upgradePawn(
+								NormalChessGame.Piece.WHITE_QUEEN, 
+								NormalChessGame.Piece.BLACK_QUEEN
+							);
+
+						}
+
+						try {
+							Constructor<? extends ChessPiece> constructor = pieceClass.getConstructor(Integer.class, Integer.class, Team.class);
+							board.updatePawn(constructor);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						
+						onDone.run();
+					}
+				}
+			);
+		} else {
+			onDone.run();
+		}
+	}
+	
 	public void flipBoard() {
 		board.flipBoard();
 	}
@@ -131,18 +214,28 @@ public class ChessController {
 	private boolean movePiece(ChessPiece source, Tuple<Integer, Integer> mouse) {
 		synchronized (this) {
 			if (normalChessGame.isMoveValid(new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ()))) {
+				
 				normalChessGame.move(new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ()));
+
 				Animation.getInstance().startAnimate(
 					source, 
 					InputUtility.getMousePosition(), 
 					() -> {
+						
+						if (lastMovedPiece != null) {
+							lastMovedPiece.setLastMoved(false);
+						}
+						lastMovedPiece = source;
+						
+						source.setLastMoved(true);
+						
 						source.setOnlyPosition(mouse.getI(), mouse.getJ());
-						endTurn();
+						checkUpdatePawn(() -> { endTurn(); });
 					}
 				);
 				return true;
 			} else {
-				SceneManager.showMessage("The move is not valid", () -> {});
+				SceneManager.showMessage("The move is not valid", new SceneManager.onFinish() {});
 			}
 		}
 			
