@@ -67,6 +67,18 @@ public class NormalChessGame implements ChessGameInfo {
 		this.setVersion(this.versionIndex + offset_version);
 	}
 	
+	public boolean undo() {
+		if (this.versionIndex == 0) return false;
+		setVersion(this.versionIndex - 1);
+		return true;
+	}
+	
+	public boolean redo() {
+		if (this.versionIndex == versions.size()-1) return false;
+		setVersion(this.versionIndex + 1);
+		return true;
+		
+	}
 	/*
 	 * Move function
 	 */

@@ -81,7 +81,7 @@
             </VBox>
             <HBox prefHeight="42.0" prefWidth="170.0" spacing="5.0">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="170.0" style="-fx-background-color: #00B0FF;" text="Undo" textFill="WHITE">
+                  <Button mnemonicParsing="false" onMouseClicked="#handleUndo" prefHeight="40.0" prefWidth="170.0" style="-fx-background-color: #00B0FF;" text="Undo" textFill="WHITE">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -94,7 +94,7 @@
                         <Font size="14.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="170.0" style="-fx-background-color: #00B0FF;" text="Redo" textFill="WHITE">
+                  <Button mnemonicParsing="false" onMouseClicked="#handleRedo" prefHeight="40.0" prefWidth="170.0" style="-fx-background-color: #00B0FF;" text="Redo" textFill="WHITE">
                      <font>
                         <Font size="14.0" />
                      </font>

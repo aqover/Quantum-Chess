@@ -84,6 +84,16 @@ public class ChessController {
 		}
 	}
 	
+	private void changeLastMovedPiece(ChessPiece piece) {
+		if (lastMovedPiece != null) {
+			lastMovedPiece.setLastMoved(false);
+		}
+		lastMovedPiece = piece;
+		if (piece != null) {
+			lastMovedPiece.setLastMoved(true);
+		}
+	}
+	
 	public void update() {
 		if (Animation.getInstance().isAnimating())
 			return;
@@ -207,6 +217,37 @@ public class ChessController {
 		board.flipBoard();
 	}
 	
+	public void undo() {
+		System.out.println("undo");
+		
+		if (normalChessGame.undo()) {
+			if (board.isBoardFlipped()) {
+				board.setBoard(normalChessGame);
+				board.flipBoard();
+			} else {
+				board.setBoard(normalChessGame);
+			}
+			
+			select(null);
+			changeLastMovedPiece(null);
+		}
+	}
+	
+	public void redo() {
+		
+		if (normalChessGame.redo()) {
+			if (board.isBoardFlipped()) {
+				board.setBoard(normalChessGame);
+				board.flipBoard();
+			} else {
+				board.setBoard(normalChessGame);
+			}
+			
+			select(null);
+			changeLastMovedPiece(null);
+		}
+	}
+	
 	public Team getTurnTeam() {
 		return normalChessGame.getTurn();
 	}
@@ -230,7 +271,9 @@ public class ChessController {
 						source.setLastMoved(true);
 						
 						source.setOnlyPosition(mouse.getI(), mouse.getJ());
-						checkUpdatePawn(() -> { endTurn(); });
+						checkUpdatePawn(() -> { 
+							endTurn(); 
+						});
 					}
 				);
 				return true;

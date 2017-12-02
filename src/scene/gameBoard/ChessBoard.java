@@ -139,6 +139,7 @@ public class ChessBoard extends Canvas {
 	public void setBoard(NormalChessGame game) {
 		ArrayList<IRenderable> entity = new ArrayList<IRenderable>();
 		
+		flipBoard = false;
 		entity.add(new ChessBackGround());
 		
 		for (int i = 0; i < game.getBoard().getRows(); ++i) {

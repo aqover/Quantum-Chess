@@ -29,7 +29,17 @@ public class ChessDetail extends AnchorPane {
 	protected void handleFlipBoard(MouseEvent event) {
 		gameControl.flipBoard();
     }
-	
+
+	@FXML
+	protected void handleUndo(MouseEvent event) {
+		gameControl.undo();
+    }
+
+	@FXML
+	protected void handleRedo(MouseEvent event) {
+		gameControl.redo();
+    }
+
 	public void setName(String a, String b) {
 		labelNameA.setText(a);
 		labelNameB.setText(b);
