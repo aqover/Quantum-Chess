@@ -36,18 +36,25 @@ public class ChessOnlineController {
 	
 	private ChessPiece selectedPiece;
 	private ChessPiece lastMovedPiece;
-	
+	protected boolean isOnline;
+
 	public boolean disable;
+	private final Team playerTurn;
 	
 	public HBox getPane() {
 		return pane;
 	}
 		
+	public NormalChessGame getNormalChessGame() {
+		return normalChessGame;
+	}
+
 	public ChessOnlineDetail getDetail() {
 		return detail;
 	}
 
-	public ChessOnlineController() {
+	public ChessOnlineController(Team playerTurn) {
+		this.playerTurn = playerTurn;
 		resetGame();
 		initialPane();
 	} 
@@ -59,6 +66,7 @@ public class ChessOnlineController {
 		selectedPiece = null;
 		lastMovedPiece = null;
 		disable = false;
+		isOnline = false;
 	}
 	
 	public void startGame() {
@@ -68,9 +76,6 @@ public class ChessOnlineController {
 	
 	public void endTurn() {
 		checkEndGame();
-		if (board.isBoardFlipped() != (normalChessGame.getTurn() != normalChessGame.firstTurn)) {
-			flipBoard(); 
-		}
 	}
 	
 	private void select(ChessPiece piece) {
@@ -94,8 +99,15 @@ public class ChessOnlineController {
 		}
 	}
 	
+	public boolean isCurrentTurn() {
+		return this.playerTurn == normalChessGame.getTurn();
+	}
+	
 	public void update() {
 		if (Animation.getInstance().isAnimating())
+			return;
+		
+		if (!isCurrentTurn())
 			return;
 		
 		if (InputUtility.isMouseLeftClicked())
@@ -103,7 +115,7 @@ public class ChessOnlineController {
 			mouse = InputUtility.getMousePosition();
 			if (board.isBoardFlipped()) {
 				mouse = new Tuple<Integer, Integer>(7 - mouse.getI(), 7 - mouse.getJ(), null);
-			}	
+			}
 			
 			ChessPiece piece = GameHolder.getInstance().getPieceFromMouse(mouse);
 
@@ -212,47 +224,19 @@ public class ChessOnlineController {
 			onDone.run();
 		}
 	}
-	
-	public void flipBoard() {
+
+	protected void flipBoard() {
 		board.flipBoard();
 	}
-	
-	public void undo() {
-		System.out.println("undo");
 		
-		if (normalChessGame.undo()) {
-			if (board.isBoardFlipped()) {
-				board.setBoard(normalChessGame);
-				board.flipBoard();
-			} else {
-				board.setBoard(normalChessGame);
-			}
-			
-			select(null);
-			changeLastMovedPiece(null);
-		}
-	}
-	
-	public void redo() {
-		
-		if (normalChessGame.redo()) {
-			if (board.isBoardFlipped()) {
-				board.setBoard(normalChessGame);
-				board.flipBoard();
-			} else {
-				board.setBoard(normalChessGame);
-			}
-			
-			select(null);
-			changeLastMovedPiece(null);
-		}
-	}
-	
 	public Team getTurnTeam() {
 		return normalChessGame.getTurn();
 	}
 
-	private boolean movePiece(ChessPiece source, Tuple<Integer, Integer> mouse) {
+	public boolean movePiece(ChessPiece source, Tuple<Integer, Integer> mouse) {
+		
+		if (!isCurrentTurn()) return false;
+		
 		synchronized (this) {
 			if (normalChessGame.isMoveValid(new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ()))) {
 				

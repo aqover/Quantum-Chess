@@ -113,12 +113,14 @@ public class ChessBoard {
 			this.col1 = col1;
 			this.row2 = row2;
 			this.col2 = col2;
-			this.message = "";
+			this.message = Character.toString((char) (this.row1 + '1')) +
+				Character.toString((char) (this.col1 + 'A')) +
+				Character.toString((char) (this.row2 + '1')) +
+				Character.toString((char) (this.col2 + 'A'));
 		}
 		
 		public Move(String move) throws Exception {
 			this(move.charAt(0)-'1', move.charAt(1)-'A', move.charAt(2)-'1', move.charAt(3)-'A');
-			this.message = move;	
 			
 			if (move.length() != 4) {
 				throw new Exception("Move Invalid : " + move);

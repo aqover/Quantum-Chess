@@ -1,15 +1,16 @@
 package helper;
 
 import controller.ChessController;
+import controller.ChessOnlineController;
 import library.socket.TCPCommand;
 import model.piece.ChessPiece;
 import scene.gameBoard.shareObject.GameHolder;
 
 public class OnlineMethod {
 	
-	private ChessController control; 
+	private ChessOnlineController control; 
 	
-	public OnlineMethod(ChessController chess) {
+	public OnlineMethod(ChessOnlineController chess) {
 		control = chess;
 	}
 	

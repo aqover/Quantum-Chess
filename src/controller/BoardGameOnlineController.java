@@ -7,19 +7,21 @@ import library.socket.*;
 import model.piece.ChessPiece;
 import model.ChessBoard.Move;
 
-public class BoardGameOnlineController extends ChessController implements TCPListener, TCPCommand {
+public class BoardGameOnlineController extends ChessOnlineController implements TCPListener, TCPCommand {
 	
 	private TCPSocket socket;
 	private OnlineMethod onlineMethod;
 	
 	public BoardGameOnlineController(TCPSocket socket) {
-		super();
+		super((socket instanceof TCPServer) ? Team.PLAYER_WHITE : Team.PLAYER_BLACK);
 		super.isOnline = true;
 		
 		if (socket instanceof TCPServer)
 			this.getNormalChessGame().firstTurn = Team.PLAYER_WHITE;
-		else if (socket instanceof TCPClient)
-			this.getNormalChessGame().firstTurn = Team.PLAYER_BLACK;
+		else if (socket instanceof TCPClient) {
+			this.getNormalChessGame().firstTurn = Team.PLAYER_WHITE;
+			this.flipBoard();
+		}
 		
 		this.socket = socket;
 		onlineMethod = new OnlineMethod(this);
@@ -36,9 +38,6 @@ public class BoardGameOnlineController extends ChessController implements TCPLis
 		
 		return false;
 	}
-	
-
-
 
 	@Override
 	public void OnReceived(Command cmd, String value) {

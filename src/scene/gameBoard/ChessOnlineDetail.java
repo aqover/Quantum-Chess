@@ -2,7 +2,7 @@ package scene.gameBoard;
 
 import java.io.IOException;
 
-import controller.ChessController;
+import controller.ChessOnlineController;
 import helper.Team;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +16,7 @@ public class ChessOnlineDetail extends AnchorPane {
 	private long timePlayerA;
 	private long timePlayerB;
 	
-	private ChessController gameControl;
+	private ChessOnlineController gameControl;
 	
 	@FXML Label labelNameA;
 	@FXML Label labelTimeA;
@@ -24,35 +24,20 @@ public class ChessOnlineDetail extends AnchorPane {
 	@FXML Label labelTimeB;
 	@FXML RadioButton radioA;
 	@FXML RadioButton radioB;
-	
-	@FXML
-	protected void handleFlipBoard(MouseEvent event) {
-		gameControl.flipBoard();
-    }
-
-	@FXML
-	protected void handleUndo(MouseEvent event) {
-		gameControl.undo();
-    }
-
-	@FXML
-	protected void handleRedo(MouseEvent event) {
-		gameControl.redo();
-    }
 
 	public void setName(String a, String b) {
 		labelNameA.setText(a);
 		labelNameB.setText(b);
 	}
 	
-	public ChessOnlineDetail(ChessController gameControl) {
+	public ChessOnlineDetail(ChessOnlineController gameControl) {
 		super();
 		
 		this.gameControl = gameControl;		
 		timePlayerA = timePlayerB = 60*60*nanoSecond; //unit in nanosecond, 60 mins;
 		
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("ChessDetail.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("ChessOnlineDetail.fxml"));
 			loader.setRoot(this);
 			loader.setController(this);
 			loader.load();
@@ -85,5 +70,19 @@ public class ChessOnlineDetail extends AnchorPane {
 			timePlayerB = timePlayerB - decreseTime;
 	}
 	
-	
+	public long getTimePlayerW() {
+		return timePlayerA;
+	}
+
+	public long getTimePlayerB() {
+		return timePlayerB;
+	}
+
+	public void setTimePlayerW(long timePlayerW) {
+		this.timePlayerA = timePlayerW;
+	}
+
+	public void setTimePlayerB(long timePlayerB) {
+		this.timePlayerB = timePlayerB;
+	}
 }
