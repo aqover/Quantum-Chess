@@ -10,7 +10,7 @@ import javafx.scene.layout.Pane;
 public class HTPController extends Pane {
 	public HTPController() {
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("../scene/HTP.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/scene/HTP.fxml"));
 			loader.setRoot(this);
 			loader.setController(this);
 			loader.load();

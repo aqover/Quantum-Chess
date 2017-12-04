@@ -2,24 +2,26 @@ package library.socket;
 
 import java.io.*;
 import java.net.*;
-import java.util.Set;
-
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import javafx.application.Platform;
 import library.socket.TCPCommand.Command;
 
-public class TCPServer implements Runnable, TCPSocket {
-	private ServerSocket server;
-	private Socket client;
-	private BufferedReader inFromClient;
-	private DataOutputStream outToClient;
+public class TCPServer extends Thread implements TCPSocket {
+	
+	private static ServerSocket server;
+	private static Socket client;
 	
 	private int port;
 	
-	private Set<TCPListener> listeners;
+	private ArrayList<TCPListener> listeners = new ArrayList<TCPListener>();
 	public void addListener(TCPListener listener) { listeners.add(listener); }
 	
-	public TCPServer(int port) { this.port = port;}
+	public TCPServer(int port) {
+		this.port = port;
+	}
 	
-	public boolean isClientConnected() {
+	public boolean isConnected() {
 		return (client != null && client.isConnected());
 	}
 	
@@ -29,30 +31,26 @@ public class TCPServer implements Runnable, TCPSocket {
 			server = new ServerSocket(port);
 			client = server.accept();
 			
-			inFromClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
-			outToClient = new DataOutputStream(client.getOutputStream());
-			
-			for(TCPListener listener: listeners)
-				listener.OnConnected();
+			OnConnected();
+		}
+		catch (IOException ex) {
+			System.out.println("IOException " + ex);
 		}
 		catch (Exception ex) { 
 			close();
 		}
-		
+				
 		String msg;
 		Command cmd;
 		int len;
-		while(isClientConnected())
+		while(isConnected())
 		{
 			msg = read();
 			if (msg != null)
 			{
-				for(TCPListener listener: listeners)
-				{
-					len = Integer.getInteger(msg.substring(0, 3));
-					cmd = Command.valueOf(Integer.getInteger(msg.substring(3, 5)));
-					listener.OnReceived(cmd, msg.substring(5, len - 5));
-				}
+				len = Integer.parseInt(msg.substring(0, 3));
+				cmd = Command.valueOf(Integer.parseInt(msg.substring(3, 5)));
+				OnReceived(cmd, msg.substring(5, 3+len));
 			}
 		}
 		
@@ -64,7 +62,14 @@ public class TCPServer implements Runnable, TCPSocket {
 		if (client == null) return null;
 		
 		try {
-			return inFromClient.readLine();
+			if (client.getInputStream().available() > 0)
+			{
+				byte[] buf = new byte[client.getInputStream().available()];
+				if (client.getInputStream().read(buf) <= 0)
+					return null;
+				
+				return new String(buf, "UTF-16");
+			}
 		}
 		catch (IOException ex) { 
 			close();
@@ -79,9 +84,8 @@ public class TCPServer implements Runnable, TCPSocket {
 		
 		String text = String.format("%03d%s", msg.length(), msg);
 		try {
-			outToClient.writeBytes(text);
-			for(TCPListener listener: listeners)
-				listener.OnSended(text);
+			client.getOutputStream().write(text.getBytes(StandardCharsets.UTF_16));
+			OnSended(text);
 			return msg.length();
 		}
 		catch (IOException ex) { 
@@ -92,15 +96,46 @@ public class TCPServer implements Runnable, TCPSocket {
 	}
 		
 	public void close() {
-		if (server == null || client == null) return;
-		
-		try { client.close(); } catch (IOException ex) { }
-		try { server.close(); } catch (IOException ex) { }
+		if (client != null) try { client.close(); } catch (IOException ex) { }
+		if (server != null) try { server.close(); } catch (IOException ex) { }
 		
 		client = null;
 		server = null;
 		
+		OnClosed();
+	}
+
+	@Override
+	public void destroy() {
+		// TODO Auto-generated method stub
+		close();
+	}
+
+	private void OnConnected() {
+		for(TCPListener listener: listeners) 
+			Platform.runLater(()->{
+				listener.OnConnected();
+			});
+	}
+
+	private void OnSended(String text) {
+		for(TCPListener listener: listeners) 
+			Platform.runLater(()->{
+				listener.OnSended(text);
+			});
+	}
+
+	private void OnReceived(Command cmd, String msg) {
 		for(TCPListener listener: listeners)
-			listener.OnClosed();
+			Platform.runLater(()->{
+				listener.OnReceived(cmd, msg);
+			});
+	}
+
+	private void OnClosed() {
+		for(TCPListener listener: listeners) 
+			Platform.runLater(()->{
+				listener.OnClosed();
+			});
 	}
 }

@@ -9,7 +9,7 @@ import model.piece.King;
 
 public class NormalChessGame implements ChessGameInfo {
 
-	public final Team firstTurn;
+	public Team firstTurn;
 		
 	// for undo state
 	private int versionIndex;

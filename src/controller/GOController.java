@@ -1,13 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import helper.ThreadCompleteListener;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,10 +11,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-
+import library.socket.TCPClient;
+import library.socket.TCPCommand.Command;
+import library.socket.TCPListener;
 import library.socket.TCPServer;
+import library.socket.TCPSocket;
 
-public class GOController extends Pane implements ThreadCompleteListener {
+public class GOController extends Pane implements TCPListener {
+	
+	private static final GOController instance = new GOController();
 
 	@FXML
 	TextField ip;
@@ -35,12 +33,16 @@ public class GOController extends Pane implements ThreadCompleteListener {
 	Label time;
 
 	private static final long timeout = 30000000000l; // 30 second
-	private TCPServer server;
+	private static TCPSocket socket;
+	private ChessController chessControl;
 	private AcceptClient waiting;
+	
+	private static String nameWhite;
+	private static String nameBlack;
 
 	public GOController() {
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("../scene/GameOnline.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/scene/GameOnline.fxml"));
 			loader.setRoot(this);
 			loader.setController(this);
 			loader.load();
@@ -56,7 +58,6 @@ public class GOController extends Pane implements ThreadCompleteListener {
 
 	@FXML
 	public void startGame(MouseEvent arg0) {
-		// System.out.println(playerA.getText());
 
 		if (ip.getText().equals("")) {
 			showAlert(AlertType.WARNING, "Please, insert ip:port server.");
@@ -67,20 +68,14 @@ public class GOController extends Pane implements ThreadCompleteListener {
 			showAlert(AlertType.WARNING, "Please, insert a name.");
 			return;
 		}
-
-	}
-
-	@FXML
-	public void startServer(MouseEvent arg0) {
-		if (ip.getText().equals("")) {
-			showAlert(AlertType.WARNING, "Please, insert ip:port server.");
-			return;
-		}
 		
+		nameBlack = name.getText();
+		String host = ip.getText().split(":")[0];
 		String port = ip.getText().split(":")[1];
 
 		try {
-			server = new TCPServer(Integer.parseInt(port));
+			socket = new TCPClient(host, Integer.parseInt(port));
+			((TCPClient) socket).addListener(instance);
 		} catch (NumberFormatException ex) {
 			showAlert(AlertType.WARNING, "The ip or port invalid.");
 			return;
@@ -91,7 +86,40 @@ public class GOController extends Pane implements ThreadCompleteListener {
 		}
 		
 		waiting = new AcceptClient();
-		waiting.addListener(this);
+		waiting.addListener(() -> {linkReady(waiting);});
+		waiting.start();
+	}
+
+	@FXML
+	public void startServer(MouseEvent arg0) {
+		if (ip.getText().equals("")) {
+			showAlert(AlertType.WARNING, "Please, insert ip:port server.");
+			return;
+		}
+		
+		if (name.getText().equals("")) {
+			showAlert(AlertType.WARNING, "Please, insert a name.");
+			return;
+		}
+		nameWhite = name.getText();		
+		String port = ip.getText().split(":")[1];
+		
+		try {
+			socket = new TCPServer(Integer.parseInt(port));			
+			((TCPServer) socket).addListener(instance);
+
+		} catch (NumberFormatException ex) {
+			showAlert(AlertType.WARNING, "The ip or port invalid.");
+			return;
+			
+		} catch (Exception e) {
+			System.out.println(e);
+			showAlert(AlertType.WARNING, "System error, Contact the adminstrator.");
+			return;
+		}
+		
+		waiting = new AcceptClient();
+		waiting.addListener(() -> {linkReady(waiting);});
 		waiting.start();
 	}
 
@@ -110,78 +138,105 @@ public class GOController extends Pane implements ThreadCompleteListener {
 		modal.setVisible(show);
 	}
 	
-	@Override
-	public void notifyOfThreadComplete(Thread thread) {
+	public void linkReady(Thread thread) {
 		if (((AcceptClient) thread).isSuccess())
 		{
-			
+			this.startGame(nameWhite, nameBlack);
 		}
 		else
 		{
-			server.close();
+			Platform.runLater(()->{
+				((TCPServer) socket).destroy();
+				socket = null;
+			});			
 		}
 	}
 
+	public void startGame(String w, String b) {
+		chessControl = new BoardGameOnlineController(socket);
+        chessControl.getDetail().setName(w, b);
+        chessControl.startGame();
+		SceneManager.setScene(chessControl.getPane());
+	}
+	
 	private class AcceptClient extends Thread {
 
-		private ExecutorService executor;
-		private long startTimeout;
-		
+		private long startTimeout;		
 		private boolean isSuccess;
-
-		private final Set<ThreadCompleteListener> listeners = new CopyOnWriteArraySet<ThreadCompleteListener>();
-
-		public final void addListener(final ThreadCompleteListener listener) {
-			listeners.add(listener);
-		}
-
-		private final void notifyListeners() {
-			for (ThreadCompleteListener listener : listeners) {
-				listener.notifyOfThreadComplete(this);
-			}
-		}
+		private Runnable onDone;
 		
-		public boolean isSuccess() {
-			return isSuccess;
-		}
+		public boolean isSuccess() { return isSuccess; }
 
-		public AcceptClient() {
-			executor = Executors.newSingleThreadExecutor();
-			executor.submit(server);
-			isSuccess = false;
-		}
+		public AcceptClient() { isSuccess = false;}
+		public void addListener(Runnable onDone) {this.onDone = onDone;}
 
 		@Override
 		public final void run() {
 			setShowModal(true);
 			startTimeout = System.nanoTime();
-
-			while (System.nanoTime() - startTimeout < timeout) {
+			
+			((Thread) socket).start();
+			while ((System.nanoTime() - startTimeout) < timeout) {
+				
 				Platform.runLater(() -> {
 					time.setText(String.format("%d", (timeout - (System.nanoTime() - startTimeout)) / 1000000000l));
 				});
 				
-				try {
-					sleep(1000);
-				} catch (InterruptedException e) { }
+				if (socket.isConnected())
+				{
+					if (socket instanceof TCPClient)
+					{
+						if (nameWhite != null)
+							break;
+					}
+					else if (socket instanceof TCPServer)
+					{
+						if (nameBlack != null)
+							break;
+					}						
+				}
+				
+				try { sleep(1000); } catch (InterruptedException e) { }
 			}
 			
-			if (System.nanoTime() - startTimeout < timeout)
-			{
-				isSuccess = true;
-			}
+			isSuccess = ((System.nanoTime() - startTimeout) < timeout);
 			
-			executor.shutdownNow();
 			setShowModal(false);
-			notifyListeners();
+			Platform.runLater(()->{
+				onDone.run();
+			});			
 		}
 
 		@Override
 		public void destroy() {
 			// TODO Auto-generated method stub
-			startTimeout = System.nanoTime() - timeout;	
-			executor.shutdownNow();
+			startTimeout = System.nanoTime() - timeout;
 		}
 		
+	}
+
+	@Override
+	public void OnReceived(Command cmd, String value) {
+		if (cmd == Command.NAME_PLAYER) {
+			if (socket instanceof TCPServer)
+				nameBlack = value;
+			else if(socket instanceof TCPClient)
+				nameWhite = value;
+		}
+	}
+
+	@Override
+	public void OnSended(String msg) { }
+
+	@Override
+	public void OnClosed() { }
+
+	@Override 
+	public void OnConnected() {
+		if (socket instanceof TCPServer)
+			socket.write(Command.NAME_PLAYER.toString() + nameWhite);
+		else if(socket instanceof TCPClient)
+			socket.write(Command.NAME_PLAYER.toString() + nameBlack);
+				
 	}
 }

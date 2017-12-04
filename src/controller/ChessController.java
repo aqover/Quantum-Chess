@@ -16,21 +16,27 @@ import scene.gameBoard.shareObject.GameHolder;
 public class ChessController {
 	
 	private HBox pane;
-	private NormalChessGame normalChessGame;
-	private ChessDetail detail;
 	private ChessBoard board;
+	private ChessDetail detail;	
+	private NormalChessGame normalChessGame;
 	private AnimationTimer animationTimer;
 	private Tuple<Integer, Integer> mouse;
+	private ChessPiece selectedPiece;
 	
 	private long timePrevious;
 	
-	private ChessPiece selectedPiece;
+	protected boolean isOnline;
+	
 	public boolean disable;
 	
 	public HBox getPane() {
 		return pane;
 	}
 		
+	public NormalChessGame getNormalChessGame() {
+		return normalChessGame;
+	}
+
 	public ChessDetail getDetail() {
 		return detail;
 	}
@@ -42,6 +48,7 @@ public class ChessController {
 		board.setBoard(normalChessGame);
 		selectedPiece = null;		
 		disable = false;
+		isOnline = false;
 	} 
 	
 	public void startGame() {
@@ -51,18 +58,8 @@ public class ChessController {
 	
 	public void endTurn() { 
 		if (board.isBoardFlipped() != (normalChessGame.getTurn() != normalChessGame.firstTurn)) {
-			flipBoard(); 
-		}
-	}
-	
-	private void select(ChessPiece piece) {
-		if (selectedPiece != null) {
-			selectedPiece.setSelected(false);	
-			selectedPiece = null;
-		}
-		if (piece != null && piece.getTeam() == normalChessGame.getTurn()) {
-			selectedPiece = piece;
-			selectedPiece.setSelected(true);
+			if (isOnline == false)
+				flipBoard(); 
 		}
 	}
 	
@@ -109,8 +106,19 @@ public class ChessController {
 	public Team getTurnTeam() {
 		return normalChessGame.getTurn();
 	}
+	
+	private void select(ChessPiece piece) {
+		if (selectedPiece != null) {
+			selectedPiece.setSelected(false);	
+			selectedPiece = null;
+		}
+		if (piece != null && piece.getTeam() == normalChessGame.getTurn()) {
+			selectedPiece = piece;
+			selectedPiece.setSelected(true);
+		}
+	}
 
-	private boolean movePiece(ChessPiece source, Tuple<Integer, Integer> mouse) {
+	public boolean movePiece(ChessPiece source, Tuple<Integer, Integer> mouse) {
 		synchronized (this) {
 			if (normalChessGame.isMoveValid(new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ()))) {
 				normalChessGame.move(new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ()));
@@ -131,7 +139,7 @@ public class ChessController {
 		return false;
 	}
 
-	private void initialPane() {
+	protected void initialPane() {
 		pane = new HBox();
 		detail = new ChessDetail(this);
 		board = new ChessBoard();		

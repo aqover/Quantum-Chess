@@ -18,7 +18,7 @@ public class GFController extends Pane {
 	
 	public GFController() {
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("../scene/GameOffline.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/scene/GameOffline.fxml"));
 			loader.setRoot(this);
 			loader.setController(this);
 			loader.load();

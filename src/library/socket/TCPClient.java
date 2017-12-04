@@ -2,31 +2,27 @@ package library.socket;
 
 import java.io.*;
 import java.net.*;
-import java.util.Set;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
+import javafx.application.Platform;
 import library.socket.TCPCommand.Command;
 
-public class TCPClient implements Runnable, TCPSocket {	
-	private Socket socket;
-	private DataOutputStream bufferStream;
-	private BufferedReader buffer;
+public class TCPClient extends Thread implements Runnable, TCPSocket {	
+	private static Socket socket;
 	
 	private String host;
 	private int port;
 		
-	private Set<TCPListener> listeners;
+	private ArrayList<TCPListener> listeners = new ArrayList<TCPListener>();
 	public void addListener(TCPListener listener) { listeners.add(listener); }
 	
 	public TCPClient(String host, int port) { this.host = host; this.port = port; }
 	
 	public void connect() {		
 		try {
-			socket = new Socket(host, port);
-			bufferStream = new DataOutputStream(socket.getOutputStream());
-			buffer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			
-			for(TCPListener listener: listeners)
-				listener.OnConnected();
+			socket = new Socket(host, port);			
+			OnConnected();
 		}
 		catch (Exception ex)
 		{
@@ -45,8 +41,14 @@ public class TCPClient implements Runnable, TCPSocket {
 			return null;
 		
 		try {
-			if (buffer.ready())
-				return buffer.readLine();
+			if (socket.getInputStream().available() > 0)
+			{
+				byte[] buf = new byte[socket.getInputStream().available()];
+				if (socket.getInputStream().read(buf) <= 0)
+					return null;
+				
+				return new String(buf, "UTF-16");
+			}
 		} catch (IOException e) { 
 			close();
 		}
@@ -62,9 +64,8 @@ public class TCPClient implements Runnable, TCPSocket {
 		
 		String text = String.format("%03d%s", msg.length(), msg);
 		try {
-			bufferStream.writeBytes(text);
-			for(TCPListener listener: listeners)
-				listener.OnSended(text);
+			socket.getOutputStream().write(text.getBytes(StandardCharsets.UTF_16));
+			OnSended(text);
 			return msg.length();
 		}
 		catch (IOException ex) { 
@@ -87,16 +88,9 @@ public class TCPClient implements Runnable, TCPSocket {
 			msg = read();
 			if (msg != null)
 			{
-				for(TCPListener listener: listeners)
-				{
-//					while (msg.length() > 0)
-//					{
-						len = Integer.getInteger(msg.substring(0, 3));
-						cmd = Command.valueOf(Integer.getInteger(msg.substring(3, 5)));
-						listener.OnReceived(cmd, msg.substring(5, len - 5));
-//						msg = msg.substring(0, 5 + len);
-//					}
-				}
+				len = Integer.parseInt(msg.substring(0, 3));
+				cmd = Command.valueOf(Integer.parseInt(msg.substring(3, 5)));
+				OnReceived(cmd, msg.substring(5, 3+len));
 			}
 		}
 		
@@ -104,14 +98,44 @@ public class TCPClient implements Runnable, TCPSocket {
 	}
 	
 	public void close() {
-		if (socket == null) return;
-		
-		try { socket.close(); } catch (IOException e) { }
+		if (socket != null) try { socket.close(); } catch (IOException e) { }
 		
 		socket = null;
-		
+		OnClosed();
+	}
+
+	@Override
+	public void destroy() {
+		// TODO Auto-generated method stub
+		close();
+	}
+	
+	private void OnConnected() {
+		for(TCPListener listener: listeners) 
+			Platform.runLater(()->{
+				listener.OnConnected();
+			});
+	}
+
+	private void OnSended(String text) {
+		for(TCPListener listener: listeners) 
+			Platform.runLater(()->{
+				listener.OnSended(text);
+			});
+	}
+
+	private void OnReceived(Command cmd, String msg) {
 		for(TCPListener listener: listeners)
-			listener.OnClosed();
+			Platform.runLater(()->{
+				listener.OnReceived(cmd, msg);
+			});
+	}
+
+	private void OnClosed() {
+		for(TCPListener listener: listeners) 
+			Platform.runLater(()->{
+				listener.OnClosed();
+			});
 	}
 
 }

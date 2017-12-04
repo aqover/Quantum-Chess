@@ -15,7 +15,8 @@ public interface TCPCommand {
 		WHITE_DRAW(11),
 		WHITE_SURRENDER(12),
 		WHITE_END_TURN(13),
-		GAME_RESULT(14);
+		GAME_RESULT(14),
+		NAME_PLAYER(15);
 		
 		private final int id;
 		Command(int id) {

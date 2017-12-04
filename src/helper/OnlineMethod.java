@@ -1,15 +1,28 @@
 package helper;
 
+import controller.ChessController;
 import library.socket.TCPCommand;
+import model.piece.ChessPiece;
+import scene.gameBoard.shareObject.GameHolder;
 
 public class OnlineMethod {
 	
-	public OnlineMethod() {
-		
+	private ChessController control; 
+	
+	public OnlineMethod(ChessController chess) {
+		control = chess;
 	}
 	
 	public void move(String move) {
+		int si = move.charAt(0)-'1';
+		int sj = move.charAt(1)-'A';
+		int mi = move.charAt(2)-'1';
+		int mj = move.charAt(3)-'A';
 		
+		ChessPiece source = GameHolder.getInstance().getPieceFromMouse(new Tuple<Integer, Integer>(7 - si, sj, null));
+		Tuple<Integer, Integer> mouse = new Tuple<Integer, Integer>(7 - mi, mj, null);
+		
+		control.movePiece(source, mouse);
 	}
 	
 	public void setVersion(String sBoard) {
@@ -19,9 +32,9 @@ public class OnlineMethod {
 	}
 	
 	public String getVersion() {
-		int row = 8;
-		int col = 8;
-		String[] rows = null;
+		int row = control.getNormalChessGame().getBoard().getRows();
+		int col = control.getNormalChessGame().getBoard().getColumns();
+		String[] rows = control.getNormalChessGame().getBoard().getBoard();
 		
 		String board = String.format("%d%d", row, col);
 		for(String tmp: rows) board += tmp;
@@ -34,20 +47,20 @@ public class OnlineMethod {
 		
 		if (team == Team.PLAYER_BLACK)
 		{
-			
+			control.getDetail().setTimePlayerB(time);
 		}
 		else if (team == Team.PLAYER_WHITE)
 		{
-			
+			control.getDetail().setTimePlayerW(time);
 		}
 	}
 	
 	public String getTime(Team team) {
 		long time = 0l;
 		if (team == Team.PLAYER_BLACK)
-			time = 0l;
+			time = control.getDetail().getTimePlayerB();
 		else if(team == Team.PLAYER_WHITE)
-			time = 0l;
+			time = control.getDetail().getTimePlayerW();
 		
 		String sTime = String.format("%ld", time);
 		int lTime = sTime.length();

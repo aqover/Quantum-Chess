@@ -2,9 +2,10 @@ package controller;
 
 import helper.OnlineMethod;
 import helper.Team;
-import library.socket.TCPCommand;
-import library.socket.TCPListener;
-import library.socket.TCPSocket;
+import helper.Tuple;
+import library.socket.*;
+import model.piece.ChessPiece;
+import model.ChessBoard.Move;
 
 public class BoardGameOnlineController extends ChessController implements TCPListener, TCPCommand {
 	
@@ -12,14 +13,32 @@ public class BoardGameOnlineController extends ChessController implements TCPLis
 	private OnlineMethod onlineMethod;
 	
 	public BoardGameOnlineController(TCPSocket socket) {
+		super();
+		super.isOnline = true;
+		
+		if (socket instanceof TCPServer)
+			this.getNormalChessGame().firstTurn = Team.PLAYER_WHITE;
+		else if (socket instanceof TCPClient)
+			this.getNormalChessGame().firstTurn = Team.PLAYER_BLACK;
+		
 		this.socket = socket;
-		onlineMethod = new OnlineMethod();
+		onlineMethod = new OnlineMethod(this);
 	}
 	
-	private void sendResponde(Command command, TCPResponde result) {
-		String msg = String.format("%s%s", command.toString(), result.toString());
-		socket.write(msg);
+	@Override
+	public boolean movePiece(ChessPiece source, Tuple<Integer, Integer> mouse) {
+		// TODO Auto-generated method stub
+		if (super.movePiece(source, mouse))
+		{
+			socket.write(new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ()).toString());
+			return true;
+		}
+		
+		return false;
 	}
+	
+
+
 
 	@Override
 	public void OnReceived(Command cmd, String value) {
@@ -65,6 +84,7 @@ public class BoardGameOnlineController extends ChessController implements TCPLis
 			onlineMethod.surrender(Team.PLAYER_WHITE);
 		}
 		else if (cmd == Command.GAME_RESULT) { }
+		
 	}
 
 	@Override public void OnSended(String msg) { }
