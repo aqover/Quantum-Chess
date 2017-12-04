@@ -126,21 +126,21 @@ public class GameHolder {
 	}
 	
 	public static void loadResource() {
-		bb = new Image("file:res/merida/bb.png");
-		bk = new Image("file:res/merida/bk.png");
-		bn = new Image("file:res/merida/bn.png");
-		bp = new Image("file:res/merida/bp.png");
-		bq = new Image("file:res/merida/bq.png");
-		br = new Image("file:res/merida/br.png");
-		wb = new Image("file:res/merida/wb.png");
-		wk = new Image("file:res/merida/wk.png");
-		wn = new Image("file:res/merida/wn.png");
-		wp = new Image("file:res/merida/wp.png");
-		wq = new Image("file:res/merida/wq.png");
-		wr = new Image("file:res/merida/wr.png");
+		bb = new Image("merida/bb.png");
+		bk = new Image("merida/bk.png");
+		bn = new Image("merida/bn.png");
+		bp = new Image("merida/bp.png");
+		bq = new Image("merida/bq.png");
+		br = new Image("merida/br.png");
+		wb = new Image("merida/wb.png");
+		wk = new Image("merida/wk.png");
+		wn = new Image("merida/wn.png");
+		wp = new Image("merida/wp.png");
+		wq = new Image("merida/wq.png");
+		wr = new Image("merida/wr.png");
 		
-		bgDark = new Image("file:res/square_dark.jpg");
-		bgLight = new Image("file:res/square_light.jpg");
+		bgDark = new Image("square_dark.jpg");
+		bgLight = new Image("square_light.jpg");
 	}
 	
 }

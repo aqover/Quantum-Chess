@@ -11,7 +11,7 @@ public class SelectGameController extends Pane {
 	
 	public SelectGameController() {
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("../scene/SelectGameType.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/scene/SelectGameType.fxml"));
 			loader.setRoot(this);
 			loader.setController(this);
 			loader.load();

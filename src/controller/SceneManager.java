@@ -7,7 +7,6 @@ import java.util.Optional;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -25,8 +24,8 @@ public final class SceneManager {
 	static {
 		mainMenu = new Scene(new MainMenuController());
 		selectGame = new Scene(new SelectGameController());
-		gameOffline = new Scene(new GameOfflineController());
-		gameOnline = new Scene(new GameOnlineController());
+		gameOffline = new Scene(new GFController());
+		gameOnline = new Scene(new GOController());
 		
 		disable = false;
 	}

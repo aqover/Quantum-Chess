@@ -18,12 +18,12 @@ public class MainMenuController extends Pane {
 	
 	public MainMenuController() {		
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("../scene/MainMenu.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/scene/MainMenu.fxml"));
 			loader.setRoot(this);
 			loader.setController(this);
 			loader.load();
 		} catch (IOException ex) {
-            System.out.print(ex);
+           ex.printStackTrace();
         }
 	}
 	

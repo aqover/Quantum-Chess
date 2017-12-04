@@ -84,6 +84,22 @@ public class ChessDetail extends AnchorPane {
 		else if (gameControl.getTurnTeam() == Team.PLAYER_BLACK)
 			timePlayerB = timePlayerB - decreseTime;
 	}
+
+	public long getTimePlayerW() {
+		return timePlayerA;
+	}
+
+	public long getTimePlayerB() {
+		return timePlayerB;
+	}
+
+	public void setTimePlayerW(long timePlayerW) {
+		this.timePlayerA = timePlayerW;
+	}
+
+	public void setTimePlayerB(long timePlayerB) {
+		this.timePlayerB = timePlayerB;
+	}
 	
 	
 }

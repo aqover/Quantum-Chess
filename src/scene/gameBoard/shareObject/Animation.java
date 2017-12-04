@@ -1,9 +1,10 @@
 package scene.gameBoard.shareObject;
 
 import helper.Tuple;
+import javafx.animation.AnimationTimer;
 import model.piece.ChessPiece;
 
-public class Animation {	
+public class Animation extends AnimationTimer {	
 	private static final Animation instance = new Animation();
 	
 	private Runnable onFinished;
@@ -26,6 +27,11 @@ public class Animation {
 		sink = null;
 		startNanoTime = stopNanoTime = System.nanoTime();
 		tmpTime = tmpX = tmpY = tmpDistance = 0.0;
+	}
+	
+	public Animation(ChessPiece source, Tuple<Integer, Integer> mouse, Runnable onFinished) {		
+		this();
+		startAnimate(source, mouse, onFinished);
 	}
 
 	public boolean isAnimating() {
@@ -75,5 +81,12 @@ public class Animation {
 //		double y = Math.pow((source.getI() - sink.getI()), 2.0);
 //		return Math.sqrt(x+y);
 		return Math.hypot(source.getJ() - sink.getJ(), source.getI() - sink.getI());
+	}
+
+	@Override
+	public void handle(long now) {
+		// TODO Auto-generated method stub
+		update(now);
+		GameHolder.getInstance().update();
 	}
 }
