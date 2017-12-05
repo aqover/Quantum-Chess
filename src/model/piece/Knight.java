@@ -16,7 +16,7 @@ public class Knight extends ChessPiece {
 	}
 	
 	public char getWhitePiece() { return Piece.WHITE_KNIGHT; }
-	public char getBlackPiece() { return Piece.BLACK_KINGHT; }
+	public char getBlackPiece() { return Piece.BLACK_KNIGHT; }
 
 	public Knight(Integer row, Integer col, Team team) {
 		super(row, col, team, (team != Team.NONE ? 
