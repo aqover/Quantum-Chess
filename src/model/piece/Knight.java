@@ -4,6 +4,7 @@ import helper.Team;
 import model.ChessBoard;
 import model.NormalChessGame;
 import model.ChessBoard.Move;
+import model.ChessGameInfo.Piece;
 import scene.gameBoard.shareObject.GameHolder;
 
 public class Knight extends ChessPiece {
@@ -14,6 +15,9 @@ public class Knight extends ChessPiece {
 		return instance;
 	}
 	
+	public char getWhitePiece() { return Piece.WHITE_KNIGHT; }
+	public char getBlackPiece() { return Piece.BLACK_KINGHT; }
+
 	public Knight(Integer row, Integer col, Team team) {
 		super(row, col, team, (team != Team.NONE ? 
 			team == Team.PLAYER_WHITE ? GameHolder.wn : GameHolder.bn 

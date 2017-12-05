@@ -22,8 +22,7 @@ public class ChessValidMoves extends Entity {
 	
 	@Override
 	public void draw(GraphicsContext gc) {
-		
-		gc.setFill(Color.WHITE);
+		gc.setFill(Color.rgb(255, 0, 0, 0.5));
 		gc.fillOval(x + h/4, y + h/4, h/2, h/2);
 	}
 

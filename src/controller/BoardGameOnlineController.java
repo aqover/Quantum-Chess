@@ -1,41 +1,104 @@
 package controller;
 
+import java.util.Arrays;
+
+import helper.InputUtility;
 import helper.OnlineMethod;
 import helper.Team;
 import helper.Tuple;
+import javafx.scene.control.ButtonType;
 import library.socket.*;
+import model.piece.Bishop;
 import model.piece.ChessPiece;
+import model.piece.Knight;
+import model.piece.Queen;
+import model.piece.Rook;
 import model.ChessBoard.Move;
 
-public class BoardGameOnlineController extends ChessOnlineController implements TCPListener, TCPCommand {
+public class BoardGameOnlineController extends ChessController implements TCPListener, TCPCommand {
 	
+	private final Team playerTurn;
+
 	private TCPSocket socket;
 	private OnlineMethod onlineMethod;
 	
 	public BoardGameOnlineController(TCPSocket socket) {
-		super((socket instanceof TCPServer) ? Team.PLAYER_WHITE : Team.PLAYER_BLACK);
-		super.isOnline = true;
-		
-		if (socket instanceof TCPServer)
-			this.getNormalChessGame().firstTurn = Team.PLAYER_WHITE;
-		else if (socket instanceof TCPClient) {
-			this.getNormalChessGame().firstTurn = Team.PLAYER_WHITE;
-			this.flipBoard();
-		}
-		
+		super();
+		this.playerTurn = (socket instanceof TCPServer) ? Team.PLAYER_WHITE : Team.PLAYER_BLACK;
 		this.socket = socket;
-		onlineMethod = new OnlineMethod(this);
+		this.onlineMethod = new OnlineMethod(this);
+
+		if (this.playerTurn == Team.PLAYER_BLACK) {
+			flipBoard();
+		}
+	}
+	
+	public boolean isCurrentTurn() {
+		return playerTurn == getTurn();
+	}
+	
+	@Override
+	public void endTurn() {
+		checkEndGame();
+	}
+
+	@Override
+	public void update() {
+		if (isCurrentTurn()) {
+			super.update();
+		}
+	}
+
+	@Override
+	protected void checkUpdatePawn(Runnable onDone) {
+		if (isCurrentTurn() && getNormalChessGame().isUpgradePawnAvailable()) {
+				
+			ButtonType buttonTypeQueen = new ButtonType("Queen");
+			ButtonType buttonTypeKnight = new ButtonType("Knight");
+			ButtonType buttonTypeBishop = new ButtonType("Bishop");
+			ButtonType buttonTypeRook = new ButtonType("Rook");
+			
+			SceneManager.showMessage(
+				"Select new piece", 
+				Arrays.asList(
+					buttonTypeQueen, 
+					buttonTypeKnight,
+					buttonTypeBishop,
+					buttonTypeRook
+				),
+				new SceneManager.onFinish() {
+					@Override
+					public void run(ButtonType btn) {
+						
+						// TODO send message to other players
+						
+						if (btn == buttonTypeKnight) {
+							updatePawn(Knight.getInstance());
+						} else if (btn == buttonTypeBishop) {
+							updatePawn(Bishop.getInstance());
+						} else if (btn == buttonTypeRook) {
+							updatePawn(Rook.getInstance());
+						} else {
+							updatePawn(Queen.getInstance());
+						}
+
+						onDone.run();
+					}
+				}
+			);
+
+		} else {
+			onDone.run();
+		}
 	}
 	
 	@Override
 	public boolean movePiece(ChessPiece source, Tuple<Integer, Integer> mouse) {
-		// TODO Auto-generated method stub
-		if (super.movePiece(source, mouse))
-		{
+		if (super.movePiece(source, mouse)) {
+			// TODO send message to the other team
 			socket.write(new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ()).toString());
 			return true;
-		}
-		
+		}		
 		return false;
 	}
 

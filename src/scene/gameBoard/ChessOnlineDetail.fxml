@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -97,6 +98,18 @@
                </padding>
                <VBox.margin>
                   <Insets top="-5.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox prefHeight="43.0" prefWidth="200.0">
+               <children>
+                  <TextField alignment="CENTER" prefHeight="30.0" prefWidth="200.0" promptText="Message (Enter to send)">
+                     <HBox.margin>
+                        <Insets left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </TextField>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" />
                </VBox.margin>
             </HBox>
          </children>

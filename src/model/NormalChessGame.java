@@ -113,17 +113,17 @@ public class NormalChessGame implements ChessGameInfo {
 		return (new NormalChessGame(board)).isMoveValid(move);
 	}
 	
-	public Team isUpgradePawnAvailable() {
+	public boolean isUpgradePawnAvailable() {
 		for (int i = 0; i < BOARD_SIZE; ++i) {
 			if (getBoard().getAt(0, i) == Piece.WHITE_PAWN) {
-				return Team.PLAYER_WHITE;
+				return true;
 			}
 			
 			if (getBoard().getAt(BOARD_SIZE-1, i) == Piece.BLACK_PAWN) {
-				return Team.PLAYER_BLACK;
+				return true;
 			}
 		}
-		return Team.NONE;
+		return false;
 	}
 	
 	private void setPosition(int i, int j, char piece) {

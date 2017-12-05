@@ -3,6 +3,7 @@ package model.piece;
 import helper.Team;
 import model.ChessBoard;
 import model.NormalChessGame;
+import model.ChessGameInfo.Piece;
 import scene.gameBoard.shareObject.GameHolder;
 
 public class Pawn extends ChessPiece {
@@ -20,6 +21,8 @@ public class Pawn extends ChessPiece {
 		);
 	}
 
+	public char getWhitePiece() { return Piece.WHITE_PAWN; }
+	public char getBlackPiece() { return Piece.BLACK_PAWN; }
 	
 	@Override
 	public boolean isValidMove(ChessBoard board, ChessBoard.Move move) {

@@ -1,16 +1,15 @@
 package helper;
 
 import controller.ChessController;
-import controller.ChessOnlineController;
 import library.socket.TCPCommand;
 import model.piece.ChessPiece;
 import scene.gameBoard.shareObject.GameHolder;
 
 public class OnlineMethod {
 	
-	private ChessOnlineController control; 
+	private ChessController control; 
 	
-	public OnlineMethod(ChessOnlineController chess) {
+	public OnlineMethod(ChessController chess) {
 		control = chess;
 	}
 	
@@ -20,8 +19,8 @@ public class OnlineMethod {
 		int mi = move.charAt(2)-'1';
 		int mj = move.charAt(3)-'A';
 		
-		ChessPiece source = GameHolder.getInstance().getPieceFromMouse(new Tuple<Integer, Integer>(7 - si, sj, null));
-		Tuple<Integer, Integer> mouse = new Tuple<Integer, Integer>(7 - mi, mj, null);
+		ChessPiece source = GameHolder.getInstance().getPieceFromMouse(new Tuple<Integer, Integer>(7 - si, sj));
+		Tuple<Integer, Integer> mouse = new Tuple<Integer, Integer>(7 - mi, mj);
 		
 		control.movePiece(source, mouse);
 	}

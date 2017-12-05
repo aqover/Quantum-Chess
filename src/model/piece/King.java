@@ -4,6 +4,7 @@ import helper.Team;
 import model.ChessBoard;
 import model.NormalChessGame;
 import model.ChessBoard.Move;
+import model.ChessGameInfo.Piece;
 import scene.gameBoard.shareObject.GameHolder;
 
 public class King extends ChessPiece {
@@ -21,7 +22,9 @@ public class King extends ChessPiece {
 		);
 	}
 
-	
+	public char getWhitePiece() { return Piece.WHITE_KING; }
+	public char getBlackPiece() { return Piece.BLACK_KING; }
+
 	@Override
 	public boolean isValidMove(ChessBoard board, Move move) {
 

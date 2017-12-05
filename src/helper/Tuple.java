@@ -3,12 +3,10 @@ package helper;
 public class Tuple<X, Y> {
 	private final X i;
 	private final Y j;
-	private final Team team;
 	
-	public Tuple(X i, Y j, Team team) {
+	public Tuple(X i, Y j) {
 		this.i = i;
 		this.j = j;
-		this.team = team;
 	}
 
 	@Override
@@ -20,7 +18,7 @@ public class Tuple<X, Y> {
 		
 		@SuppressWarnings("unchecked")
 		Tuple<Integer, Integer> tuple = (Tuple<Integer, Integer>) obj;
-		return (i == tuple.getI() && j == tuple.getJ() && team == tuple.getTeam());
+		return (i == tuple.getI() && j == tuple.getJ());
 	}
 
 	public X getI() {
@@ -29,9 +27,5 @@ public class Tuple<X, Y> {
 	
 	public Y getJ() {
 		return j;
-	}
-	
-	public Team getTeam() {
-		return team;
 	}
 }

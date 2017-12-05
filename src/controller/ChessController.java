@@ -34,16 +34,19 @@ public class ChessController {
 	
 	private long timePrevious;
 	
-	private ChessPiece selectedPiece;
-	private ChessPiece lastMovedPiece;
-	protected boolean isOnline;
+	protected ChessPiece selectedPiece;
+	protected ChessPiece lastMovedPiece;
 	
 	public boolean disable;
 	
 	public HBox getPane() {
 		return pane;
 	}
-		
+	
+	public ChessBoard getBoard() {
+		return board;
+	}
+	
 	public NormalChessGame getNormalChessGame() {
 		return normalChessGame;
 	}
@@ -64,7 +67,6 @@ public class ChessController {
 		selectedPiece = null;
 		lastMovedPiece = null;
 		disable = false;
-		isOnline = false;
 	} 
 
 	public void startGame() {
@@ -75,8 +77,7 @@ public class ChessController {
 	public void endTurn() {
 		checkEndGame();
 		if (board.isBoardFlipped() != (normalChessGame.getTurn() != normalChessGame.firstTurn)) {
-			if (isOnline == false)
-				flipBoard(); 
+			flipBoard(); 
 		}
 	}
 	
@@ -94,11 +95,10 @@ public class ChessController {
 		if (Animation.getInstance().isAnimating())
 			return;
 		
-		if (InputUtility.isMouseLeftClicked())
-		{
+		if (InputUtility.isMouseLeftClicked()) {
 			mouse = InputUtility.getMousePosition();
 			if (board.isBoardFlipped()) {
-				mouse = new Tuple<Integer, Integer>(7 - mouse.getI(), 7 - mouse.getJ(), null);
+				mouse = new Tuple<Integer, Integer>(7 - mouse.getI(), 7 - mouse.getJ());
 			}	
 			
 			ChessPiece piece = GameHolder.getInstance().getPieceFromMouse(mouse);
@@ -112,7 +112,7 @@ public class ChessController {
 						select(null);
 					}
 				} else {
-					if (piece != selectedPiece && getTurnTeam() == piece.getTeam()) {
+					if (piece != selectedPiece && getTurn() == piece.getTeam()) {
 						select(piece);
 					} else {
 						select(null);
@@ -126,7 +126,7 @@ public class ChessController {
 		}			
 	}
 
-	private void checkEndGame() {
+	protected void checkEndGame() {
 		int result = normalChessGame.getGameResult();
 		if (result != NormalChessGame.GAME_RESULT_ONGOING) {
 			SceneManager.showMessage(
@@ -139,74 +139,60 @@ public class ChessController {
 					}
 				}
 			);
-			return;
 		} 
 	}
-	private void checkUpdatePawn(Runnable onDone) {
-		
-		Team side = normalChessGame.isUpgradePawnAvailable();
-		if (side != Team.NONE) {
-			
-			ButtonType buttonTypeQueen = new ButtonType("Queen");
-			ButtonType buttonTypeKnight = new ButtonType("Knight");
-			ButtonType buttonTypeBishop = new ButtonType("Bishop");
-			ButtonType buttonTypeRook = new ButtonType("Rook");
-			
-			SceneManager.showMessage(
-				"Select new piece", 
-				Arrays.asList(
-					buttonTypeQueen, 
-					buttonTypeKnight,
-					buttonTypeBishop,
-					buttonTypeRook
-				),
-				new SceneManager.onFinish() {
-					@Override
-					public void run(ButtonType btn) {
-						
-						Class<? extends ChessPiece> pieceClass = null;
-						
-						if (btn == buttonTypeKnight) {
-							pieceClass = (Class<? extends ChessPiece>) Knight.class;
-							normalChessGame.upgradePawn(
-								NormalChessGame.Piece.WHITE_KNIGHT, 
-								NormalChessGame.Piece.BLACK_KNIGHT
-							);
-						} else if (btn == buttonTypeBishop) {
-							pieceClass = (Class<? extends ChessPiece>) Bishop.class;
-							normalChessGame.upgradePawn(
-								NormalChessGame.Piece.WHITE_BISHOP, 
-								NormalChessGame.Piece.BLACK_BISHOP
-							);
-						} else if (btn == buttonTypeRook) {
-							pieceClass = (Class<? extends ChessPiece>) Rook.class;
-							normalChessGame.upgradePawn(
-								NormalChessGame.Piece.WHITE_ROOK, 
-								NormalChessGame.Piece.BLACK_ROOK
-							);
-						} else {
-							pieceClass = (Class<? extends ChessPiece>) Queen.class;
-							normalChessGame.upgradePawn(
-								NormalChessGame.Piece.WHITE_QUEEN, 
-								NormalChessGame.Piece.BLACK_QUEEN
-							);
+	
+	protected void updatePawn(ChessPiece piece) {
+		normalChessGame.upgradePawn(
+			piece.getWhitePiece(), 
+			piece.getBlackPiece()
+		);
 
-						}
-
-						try {
-							Constructor<? extends ChessPiece> constructor = pieceClass.getConstructor(Integer.class, Integer.class, Team.class);
-							board.updatePawn(constructor);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						
-						onDone.run();
-					}
-				}
-			);
-		} else {
-			onDone.run();
+		try {
+			Constructor<? extends ChessPiece> constructor = piece.getClass().getConstructor(Integer.class, Integer.class, Team.class);
+			board.updatePawn(constructor);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+	}
+	protected void checkUpdatePawn(Runnable onDone) {
+		
+		if (!normalChessGame.isUpgradePawnAvailable()) {
+			onDone.run();
+			return;
+		}
+			
+		ButtonType buttonTypeQueen = new ButtonType("Queen");
+		ButtonType buttonTypeKnight = new ButtonType("Knight");
+		ButtonType buttonTypeBishop = new ButtonType("Bishop");
+		ButtonType buttonTypeRook = new ButtonType("Rook");
+		
+		SceneManager.showMessage(
+			"Select new piece", 
+			Arrays.asList(
+				buttonTypeQueen, 
+				buttonTypeKnight,
+				buttonTypeBishop,
+				buttonTypeRook
+			),
+			new SceneManager.onFinish() {
+				@Override
+				public void run(ButtonType btn) {
+					
+					if (btn == buttonTypeKnight) {
+						updatePawn(Knight.getInstance());
+					} else if (btn == buttonTypeBishop) {
+						updatePawn(Bishop.getInstance());
+					} else if (btn == buttonTypeRook) {
+						updatePawn(Rook.getInstance());
+					} else {
+						updatePawn(Queen.getInstance());
+					}
+
+					onDone.run();
+				}
+			}
+		);
 	}
 	
 	public void flipBoard() {
@@ -244,7 +230,7 @@ public class ChessController {
 		}
 	}
 	
-	public Team getTurnTeam() {
+	public Team getTurn() {
 		return normalChessGame.getTurn();
 	}
 	
@@ -260,33 +246,31 @@ public class ChessController {
 	}
 
 	public boolean movePiece(ChessPiece source, Tuple<Integer, Integer> mouse) {
-		synchronized (this) {
-			if (normalChessGame.isMoveValid(new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ()))) {
-				
-				normalChessGame.move(new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ()));
+		if (normalChessGame.isMoveValid(new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ()))) {
+			
+			normalChessGame.move(new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ()));
 
-				Animation.getInstance().startAnimate(
-					source, 
-					InputUtility.getMousePosition(), 
-					() -> {
-						
-						if (lastMovedPiece != null) {
-							lastMovedPiece.setLastMoved(false);
-						}
-						lastMovedPiece = source;
-						
-						source.setLastMoved(true);
-						
-						source.setOnlyPosition(mouse.getI(), mouse.getJ());
-						checkUpdatePawn(() -> { 
-							endTurn(); 
-						});
+			Animation.getInstance().startAnimate(
+				source, 
+				InputUtility.getMousePosition(), 
+				() -> {
+					
+					if (lastMovedPiece != null) {
+						lastMovedPiece.setLastMoved(false);
 					}
-				);
-				return true;
-			} else {
-				SceneManager.showMessage("The move is not valid", new SceneManager.onFinish() {});
-			}
+					lastMovedPiece = source;
+					
+					source.setLastMoved(true);
+					
+					source.setOnlyPosition(mouse.getI(), mouse.getJ());
+					checkUpdatePawn(() -> { 
+						endTurn(); 
+					});
+				}
+			);
+			return true;
+		} else {
+			SceneManager.showMessage("The move is not valid", new SceneManager.onFinish() {});
 		}
 			
 		return false;
@@ -298,11 +282,10 @@ public class ChessController {
 		
 		animationTimer = new AnimationTimer() {
 			public void handle(long now) {				
+
 				//Detail
 				detail.update();
 				detail.decreseTime(now - timePrevious);
-				
-				//Chat
 				
 				// Board game
 				Animation.getInstance().update(now);

@@ -33,6 +33,9 @@ public abstract class ChessPiece extends Entity implements ChessGameInfo {
 		throw new NoPieceException(piece);
 	}
 	
+	public abstract char getWhitePiece();
+	public abstract char getBlackPiece();
+	
 	public void draw(GraphicsContext gc) {
 		if (displayImage != null && isVisible()) {
 			gc.drawImage(displayImage, 
@@ -51,15 +54,13 @@ public abstract class ChessPiece extends Entity implements ChessGameInfo {
 	}
 	
 	public void drawLastMoved(GraphicsContext gc) {
-		gc.setLineWidth(GameHolder.LineWidth - 5);
-		gc.setStroke(Color.GREY);
-		gc.strokeRect(x,  y, GameHolder.size, GameHolder.size );
+		gc.setFill(Color.rgb(255, 255, 0, 0.3));
+		gc.fillRect(x,  y, GameHolder.size, GameHolder.size);
 	}
 	
 	public void drawHover(GraphicsContext gc) {
-		gc.setLineWidth(GameHolder.LineWidth);
-		gc.setStroke(Color.WHITE);
-		gc.strokeRect(x,  y, GameHolder.size, GameHolder.size );
+		gc.setFill(Color.rgb(100, 100, 0, 0.5));
+		gc.fillRect(x,  y, GameHolder.size, GameHolder.size);
 	}
 
 	

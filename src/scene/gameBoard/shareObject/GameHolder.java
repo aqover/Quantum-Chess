@@ -53,7 +53,7 @@ public class GameHolder {
 			for(IRenderable en : entity) {
 				if (en instanceof ChessPiece) {
 					ChessPiece piece = (ChessPiece) en;
-					if (piece.getI() == target.getI() && piece.getJ() == target.getJ() && piece.getTeam() == target.getTeam()) {
+					if (piece.getI() == target.getI() && piece.getJ() == target.getJ()) {
 						return piece;				
 					}
 				}

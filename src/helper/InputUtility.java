@@ -40,12 +40,12 @@ public class InputUtility {
 	public static Tuple<Integer, Integer> getMousePosition() {
 		int i = (int) (mouseY / GameHolder.size);
 		int j = (int) (mouseX / GameHolder.size);
-		return new Tuple<Integer, Integer>(i, j, Team.NONE);
+		return new Tuple<Integer, Integer>(i, j);
 	}
 	
 	public static Tuple<Integer, Integer> getMousePosition(double x, double y) {
 		int i = (int) (y / GameHolder.size);
 		int j = (int) (x / GameHolder.size);
-		return new Tuple<Integer, Integer>(i, j, Team.NONE);
+		return new Tuple<Integer, Integer>(i, j);
 	}
 }

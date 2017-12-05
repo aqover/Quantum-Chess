@@ -62,12 +62,12 @@ public class ChessDetail extends AnchorPane {
 	}
 	
 	public void update() {
-		if (gameControl.getTurnTeam() == Team.PLAYER_WHITE)
+		if (gameControl.getTurn() == Team.PLAYER_WHITE)
 		{
 			radioA.setSelected(true);
 			radioB.setSelected(false);
 		}
-		else if (gameControl.getTurnTeam() == Team.PLAYER_BLACK)
+		else if (gameControl.getTurn() == Team.PLAYER_BLACK)
 		{
 			radioA.setSelected(false);
 			radioB.setSelected(true);
@@ -79,9 +79,9 @@ public class ChessDetail extends AnchorPane {
 	
 	public void decreseTime(long decreseTime)
 	{
-		if (gameControl.getTurnTeam() == Team.PLAYER_WHITE)
+		if (gameControl.getTurn() == Team.PLAYER_WHITE)
 			timePlayerA = timePlayerA - decreseTime;
-		else if (gameControl.getTurnTeam() == Team.PLAYER_BLACK)
+		else if (gameControl.getTurn() == Team.PLAYER_BLACK)
 			timePlayerB = timePlayerB - decreseTime;
 	}
 

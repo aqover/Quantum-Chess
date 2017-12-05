@@ -2,7 +2,7 @@ package scene.gameBoard;
 
 import java.io.IOException;
 
-import controller.ChessOnlineController;
+import controller.BoardGameOnlineController;
 import helper.Team;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +16,7 @@ public class ChessOnlineDetail extends AnchorPane {
 	private long timePlayerA;
 	private long timePlayerB;
 	
-	private ChessOnlineController gameControl;
+	private BoardGameOnlineController gameControl;
 	
 	@FXML Label labelNameA;
 	@FXML Label labelTimeA;
@@ -30,7 +30,7 @@ public class ChessOnlineDetail extends AnchorPane {
 		labelNameB.setText(b);
 	}
 	
-	public ChessOnlineDetail(ChessOnlineController gameControl) {
+	public ChessOnlineDetail(BoardGameOnlineController gameControl) {
 		super();
 		
 		this.gameControl = gameControl;		
@@ -47,12 +47,12 @@ public class ChessOnlineDetail extends AnchorPane {
 	}
 	
 	public void update() {
-		if (gameControl.getTurnTeam() == Team.PLAYER_WHITE)
+		if (gameControl.getTurn() == Team.PLAYER_WHITE)
 		{
 			radioA.setSelected(true);
 			radioB.setSelected(false);
 		}
-		else if (gameControl.getTurnTeam() == Team.PLAYER_BLACK)
+		else if (gameControl.getTurn() == Team.PLAYER_BLACK)
 		{
 			radioA.setSelected(false);
 			radioB.setSelected(true);
@@ -64,9 +64,9 @@ public class ChessOnlineDetail extends AnchorPane {
 	
 	public void decreseTime(long decreseTime)
 	{
-		if (gameControl.getTurnTeam() == Team.PLAYER_WHITE)
+		if (gameControl.getTurn() == Team.PLAYER_WHITE)
 			timePlayerA = timePlayerA - decreseTime;
-		else if (gameControl.getTurnTeam() == Team.PLAYER_BLACK)
+		else if (gameControl.getTurn() == Team.PLAYER_BLACK)
 			timePlayerB = timePlayerB - decreseTime;
 	}
 	

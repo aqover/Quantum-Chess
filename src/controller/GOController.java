@@ -34,7 +34,7 @@ public class GOController extends Pane implements TCPListener {
 
 	private static final long timeout = 30000000000l; // 30 second
 	private static TCPSocket socket;
-	private ChessOnlineController chessControl;
+	private ChessController chessControl;
 	private AcceptClient waiting;
 	
 	private static String nameWhite;
