@@ -9,7 +9,8 @@ import model.piece.King;
 
 public class NormalChessGame implements ChessGameInfo {
 
-	public Team firstTurn;
+	// first turn
+	public final Team firstTurn;
 		
 	// for undo state
 	private int versionIndex;
@@ -36,7 +37,7 @@ public class NormalChessGame implements ChessGameInfo {
 	}
 	
 	public NormalChessGame() {
-		this("RNBQKBNR" + "PPPPPPPP" + "........" + "........" + "........" + "........" + "pppppppp" + "rnbqkbnr");
+		this("RNBQKBNR" + "!@#$%^&*" + "........" + "........" + "........" + "........" + "12345678" + "rnbqkbnr");
 	}
 	
 	// copy constructor
@@ -126,7 +127,7 @@ public class NormalChessGame implements ChessGameInfo {
 		return false;
 	}
 	
-	private void setPosition(int i, int j, char piece) {
+	protected void setPosition(int i, int j, char piece) {
 		getBoard().setValue(i, j, piece);
 	}
 	public void upgradePawn(char whitePiece, char blackPiece) {
@@ -207,8 +208,8 @@ public class NormalChessGame implements ChessGameInfo {
 	 * Getters
 	 */
 	public static Team getSide(char ch) {
-		if (Character.isLowerCase(ch)) return Team.PLAYER_WHITE;
-		if (Character.isUpperCase(ch)) return Team.PLAYER_BLACK;
+		if (Piece.isWhite(ch)) return Team.PLAYER_WHITE;
+		if (Piece.isBlack(ch)) return Team.PLAYER_BLACK;
 		return Team.NONE;
 	}
 	

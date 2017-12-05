@@ -50,7 +50,7 @@ public class BoardGameOnlineController extends ChessController implements TCPLis
 	}
 
 	@Override
-	protected void checkUpdatePawn(Runnable onDone) {
+	protected void checkUpgradePawn(Runnable onDone) {
 		if (isCurrentTurn() && getNormalChessGame().isUpgradePawnAvailable()) {
 				
 			ButtonType buttonTypeQueen = new ButtonType("Queen");
@@ -73,13 +73,13 @@ public class BoardGameOnlineController extends ChessController implements TCPLis
 						// TODO send message to other players
 						
 						if (btn == buttonTypeKnight) {
-							updatePawn(Knight.getInstance());
+							upgradePawn(Knight.getInstance());
 						} else if (btn == buttonTypeBishop) {
-							updatePawn(Bishop.getInstance());
+							upgradePawn(Bishop.getInstance());
 						} else if (btn == buttonTypeRook) {
-							updatePawn(Rook.getInstance());
+							upgradePawn(Rook.getInstance());
 						} else {
-							updatePawn(Queen.getInstance());
+							upgradePawn(Queen.getInstance());
 						}
 
 						onDone.run();

@@ -1,13 +1,16 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import helper.Team;
+import model.ChessGameInfo.Piece;
+import model.piece.King;
 
 public class QuantumChessGame implements ChessGameInfo {
 
 	// player turn
-	protected final Team firstTurn;
+	public final Team firstTurn;
 	
 	// for all version
 	private ArrayList<QuantumBoard> possibleBoards;
@@ -90,6 +93,45 @@ public class QuantumChessGame implements ChessGameInfo {
 		}
 	}
 	
+	protected boolean checkBoard(int i, int j, char piece) {
+		if (getDisplayBoard().getAt(i, j) != piece) return false;
+		if (piece == Piece.EMPTY_SPACE) return true;
+		measure(
+			(ArrayList<Integer>) Arrays.asList(i),
+			(ArrayList<Integer>) Arrays.asList(j)
+		);
+		return getDisplayBoard().getAt(i, j) == piece;
+	}
+	
+	protected void setPosition(int i, int j, char piece) {
+		for (QuantumBoard qboard : possibleBoards) {
+			qboard.board.setValue(i, j, piece);
+		}
+	}
+	
+	public void upgradePawn(char whitePiece, char blackPiece) {
+		for (int i = 0; i < BOARD_SIZE; ++i) {
+			if (checkBoard(0, i, Piece.WHITE_PAWN)) {
+				setPosition(0, i, whitePiece);
+			}
+			if (checkBoard(BOARD_SIZE-1, i, Piece.BLACK_PAWN)) {
+				setPosition(BOARD_SIZE-1, i, blackPiece);
+			}
+		}
+	}
+	
+	public boolean isUpgradePawnAvailable() {
+		for (int i = 0; i < BOARD_SIZE; ++i) {
+			if (checkBoard(0, i, Piece.WHITE_PAWN)) {
+				return true;
+			}
+			if (checkBoard(BOARD_SIZE-1, i, Piece.BLACK_PAWN)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	// actual move
 	public void move(QuantumMove qmove) {
 		
@@ -169,6 +211,31 @@ public class QuantumChessGame implements ChessGameInfo {
 			(this.firstTurn == Team.PLAYER_WHITE ? Team.PLAYER_BLACK : Team.PLAYER_WHITE);
 	}
 
+	public ChessBoard getDisplayBoard() {
+		return displayBoard;
+	}
+	
+	public int getGameResult() {
+		
+		// white king is dead
+		if (isDead(Piece.WHITE_KING)) {
+			return GAME_RESULT_BLACK_WINS;
+		}
+		
+		// black king is dead
+		if (isDead(Piece.BLACK_KING)) {
+			return GAME_RESULT_WHITE_WINS;
+		}
+		
+		return GAME_RESULT_ONGOING;
+	}
+	public static String getResultMessage(int result) {
+		if (result == GAME_RESULT_DRAW) return "draw";
+		if (result == GAME_RESULT_WHITE_WINS) return "white wins";
+		if (result == GAME_RESULT_BLACK_WINS) return "black wins";
+		return "game is on going";
+	}
+	
 	private void resetGame() {
 
 		this.currentGame.setVersion(0);
@@ -181,7 +248,7 @@ public class QuantumChessGame implements ChessGameInfo {
 		return Math.random() <= prob;
 	}
 	
-	private class QuantumBoard {
+	private static class QuantumBoard {
 		
 		private double prob;
 		public final ChessBoard board;
@@ -200,7 +267,7 @@ public class QuantumChessGame implements ChessGameInfo {
 		}
 	}
 	
-	public class QuantumMove {
+	public static class QuantumMove {
 		
 		public final double prob;
 		public final ChessBoard.Move move;

@@ -26,5 +26,28 @@ public interface ChessGameInfo {
 		public static final char BLACK_PAWN = 'P';
 		
 		public static final char EMPTY_SPACE = '.';
+		
+		public static final String WHITE_PAWN_LIST = "12345678";
+		public static final String BLACK_PAWN_LIST = "!@#$%^&*";
+		
+		public static boolean isWhitePawn(char ch) {
+			return WHITE_PAWN_LIST.indexOf(ch) != -1;
+		}
+		
+		public static boolean isBlackPawn(char ch) {
+			return BLACK_PAWN_LIST.indexOf(ch) != -1;
+		}
+		
+		public static boolean isPawn(char ch) {
+			return isWhitePawn(ch) || isBlackPawn(ch);
+		}
+		
+		public static boolean isWhite(char ch) {
+			return Character.isLowerCase(ch) || isWhitePawn(ch);
+		}
+		
+		public static boolean isBlack(char ch) {
+			return Character.isUpperCase(ch) || isBlackPawn(ch);
+		}
 	}
 }

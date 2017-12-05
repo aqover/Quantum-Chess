@@ -12,7 +12,8 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.HBox;
 import model.ChessBoard.Move;
-import model.NormalChessGame;
+import model.QuantumChessGame;
+import model.QuantumChessGame.QuantumMove;
 import model.piece.Bishop;
 import model.piece.ChessPiece;
 import model.piece.Knight;
@@ -23,12 +24,12 @@ import scene.gameBoard.ChessDetail;
 import scene.gameBoard.shareObject.Animation;
 import scene.gameBoard.shareObject.GameHolder;
 
-public class ChessController {
+public class QuantumChessController extends ChessController {
 	
 	private HBox pane;
 	private ChessBoard board;
 	private ChessDetail detail;	
-	private NormalChessGame normalChessGame;
+	private QuantumChessGame quantumChessGame;
 	private AnimationTimer animationTimer;
 	private Tuple<Integer, Integer> mouse;
 	
@@ -47,23 +48,23 @@ public class ChessController {
 		return board;
 	}
 	
-	public NormalChessGame getNormalChessGame() {
-		return normalChessGame;
+	public QuantumChessGame getQuantumChessGame() {
+		return quantumChessGame;
 	}
 
 	public ChessDetail getDetail() {
 		return detail;
 	}
 
-	public ChessController() {
+	public QuantumChessController() {
 		resetGame();
 		initialPane();
 	} 
 	
 	private void resetGame() {
-		normalChessGame = new NormalChessGame();
+		quantumChessGame = new QuantumChessGame();
 		board = new ChessBoard();
-		board.setBoard(normalChessGame);
+		board.setBoard(quantumChessGame);
 		selectedPiece = null;
 		lastMovedPiece = null;
 		disable = false;
@@ -76,7 +77,7 @@ public class ChessController {
 	
 	public void endTurn() {
 		checkEndGame();
-		if (board.isBoardFlipped() != (normalChessGame.getTurn() != normalChessGame.firstTurn)) {
+		if (board.isBoardFlipped() != (quantumChessGame.getTurn() != quantumChessGame.firstTurn)) {
 			flipBoard(); 
 		}
 	}
@@ -127,10 +128,10 @@ public class ChessController {
 	}
 
 	protected void checkEndGame() {
-		int result = normalChessGame.getGameResult();
-		if (result != NormalChessGame.GAME_RESULT_ONGOING) {
+		int result = quantumChessGame.getGameResult();
+		if (result != QuantumChessGame.GAME_RESULT_ONGOING) {
 			SceneManager.showMessage(
-				NormalChessGame.getResultMessage(result), 
+				QuantumChessGame.getResultMessage(result), 
 				new SceneManager.onFinish() {
 					@Override
 					public void run() {
@@ -142,11 +143,11 @@ public class ChessController {
 		} 
 	}
 	
-	protected void upgradePawn(ChessPiece piece) {
-		normalChessGame.upgradePawn(
-			piece.getWhitePiece(), 
-			piece.getBlackPiece()
-		);
+	protected void updatePawn(ChessPiece piece) {
+		quantumChessGame.upgradePawn(
+				piece.getWhitePiece(), 
+				piece.getBlackPiece()
+			);
 
 		try {
 			Constructor<? extends ChessPiece> constructor = piece.getClass().getConstructor(Integer.class, Integer.class, Team.class);
@@ -155,9 +156,9 @@ public class ChessController {
 			e.printStackTrace();
 		}
 	}
-	protected void checkUpgradePawn(Runnable onDone) {
+	protected void checkUpdatePawn(Runnable onDone) {
 		
-		if (!normalChessGame.isUpgradePawnAvailable()) {
+		if (!quantumChessGame.isUpgradePawnAvailable()) {
 			onDone.run();
 			return;
 		}
@@ -180,13 +181,13 @@ public class ChessController {
 				public void run(ButtonType btn) {
 					
 					if (btn == buttonTypeKnight) {
-						upgradePawn(Knight.getInstance());
+						updatePawn(Knight.getInstance());
 					} else if (btn == buttonTypeBishop) {
-						upgradePawn(Bishop.getInstance());
+						updatePawn(Bishop.getInstance());
 					} else if (btn == buttonTypeRook) {
-						upgradePawn(Rook.getInstance());
+						updatePawn(Rook.getInstance());
 					} else {
-						upgradePawn(Queen.getInstance());
+						updatePawn(Queen.getInstance());
 					}
 
 					onDone.run();
@@ -198,40 +199,9 @@ public class ChessController {
 	public void flipBoard() {
 		board.flipBoard();
 	}
-	
-	public void undo() {
-		System.out.println("undo");
 		
-		if (normalChessGame.undo()) {
-			if (board.isBoardFlipped()) {
-				board.setBoard(normalChessGame);
-				board.flipBoard();
-			} else {
-				board.setBoard(normalChessGame);
-			}
-			
-			select(null);
-			changeLastMovedPiece(null);
-		}
-	}
-	
-	public void redo() {
-		
-		if (normalChessGame.redo()) {
-			if (board.isBoardFlipped()) {
-				board.setBoard(normalChessGame);
-				board.flipBoard();
-			} else {
-				board.setBoard(normalChessGame);
-			}
-			
-			select(null);
-			changeLastMovedPiece(null);
-		}
-	}
-	
 	public Team getTurn() {
-		return normalChessGame.getTurn();
+		return quantumChessGame.getTurn();
 	}
 	
 	private void select(ChessPiece piece) {
@@ -239,16 +209,17 @@ public class ChessController {
 			selectedPiece.setSelected(false);	
 			selectedPiece = null;
 		}
-		if (piece != null && piece.getTeam() == normalChessGame.getTurn()) {
+		if (piece != null && piece.getTeam() == quantumChessGame.getTurn()) {
 			selectedPiece = piece;
 			selectedPiece.setSelected(true);
 		}
 	}
 
 	public boolean movePiece(ChessPiece source, Tuple<Integer, Integer> mouse) {
-		if (normalChessGame.isMoveValid(new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ()))) {
-			
-			normalChessGame.move(new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ()));
+		
+		Move move = new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ());
+		if (quantumChessGame.successProb(move) > 0) {
+			quantumChessGame.move(new QuantumMove(0.5, move));
 
 			Animation.getInstance().startAnimate(
 				source, 
@@ -263,7 +234,7 @@ public class ChessController {
 					source.setLastMoved(true);
 					
 					source.setOnlyPosition(mouse.getI(), mouse.getJ());
-					checkUpgradePawn(() -> { 
+					checkUpdatePawn(() -> { 
 						endTurn(); 
 					});
 				}
@@ -292,12 +263,12 @@ public class ChessController {
 				GameHolder.getInstance().update();
 				board.paintComponent();
 				
-				if (selectedPiece != null) {
-					board.paintValidMoves(normalChessGame.getValidMoves(
-						selectedPiece.getI(), 
-						selectedPiece.getJ()
-					));
-				}
+//				if (selectedPiece != null) {
+//					board.paintValidMoves(quantumChessGame.getValidMoves(
+//						selectedPiece.getI(), 
+//						selectedPiece.getJ()
+//					));
+//				}
 				
 				update();
 				InputUtility.update();

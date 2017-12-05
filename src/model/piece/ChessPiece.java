@@ -28,7 +28,8 @@ public abstract class ChessPiece extends Entity implements ChessGameInfo {
 		if (piece == Piece.WHITE_BISHOP || piece == Piece.BLACK_BISHOP) return Bishop.getInstance();
 		if (piece == Piece.WHITE_KING || piece == Piece.BLACK_KING) return King.getInstance();
 		if (piece == Piece.WHITE_QUEEN || piece == Piece.BLACK_QUEEN) return Queen.getInstance();
-		if (piece == Piece.WHITE_PAWN || piece == Piece.BLACK_PAWN) return Pawn.getInstance();
+		if (Piece.isPawn(piece)) return Pawn.getInstance();
+		System.out.println(piece);
 		
 		throw new NoPieceException(piece);
 	}

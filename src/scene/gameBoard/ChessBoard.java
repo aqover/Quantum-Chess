@@ -11,6 +11,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import model.NormalChessGame;
+import model.QuantumChessGame;
 import model.ChessGameInfo.Piece;
 import model.piece.ChessPiece;
 import model.piece.Pawn;
@@ -146,14 +147,50 @@ public class ChessBoard extends Canvas {
 			for (int j = 0; j < game.getBoard().getColumns(); ++j) {
 
 				char piece = game.getBoard().getAt(i, j);
+
 				if (piece != Piece.EMPTY_SPACE) {
 				
 					Team team = NormalChessGame.getSide(piece);
 					
 					try {
 						
-						@SuppressWarnings("unchecked")
-						Class<? extends ChessPiece> pieceClass = (Class<? extends ChessPiece>) Class.forName(ChessPiece.getClassFromChar(piece).getClass().getName());
+						Class<? extends ChessPiece> pieceClass = (Class<? extends ChessPiece>) ChessPiece.getClassFromChar(piece).getClass();
+						
+						Constructor<? extends ChessPiece> constructor = pieceClass.getConstructor(Integer.class, Integer.class, Team.class);
+						ChessPiece chessPiece = (ChessPiece) constructor.newInstance(i, j, team);
+							
+						 entity.add(chessPiece);
+					
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				
+				entity.add(new ChessValidMoves(i, j));
+			}
+		}
+		
+		GameHolder.getInstance().setEntity(entity);
+	}
+
+	public void setBoard(QuantumChessGame game) {
+		ArrayList<IRenderable> entity = new ArrayList<IRenderable>();
+		
+		flipBoard = false;
+		entity.add(new ChessBackGround());
+		
+		model.ChessBoard board = game.getDisplayBoard();
+		for (int i = 0; i < board.getRows(); ++i) {
+			for (int j = 0; j < board.getColumns(); ++j) {
+
+				char piece = board.getAt(i, j);
+				if (piece != Piece.EMPTY_SPACE) {
+				
+					Team team = NormalChessGame.getSide(piece);
+					
+					try {
+						
+						Class<? extends ChessPiece> pieceClass = (Class<? extends ChessPiece>) ChessPiece.getClassFromChar(piece).getClass();
 						
 						Constructor<? extends ChessPiece> constructor = pieceClass.getConstructor(Integer.class, Integer.class, Team.class);
 						ChessPiece chessPiece = (ChessPiece) constructor.newInstance(i, j, team);
