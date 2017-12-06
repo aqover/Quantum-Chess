@@ -7,4 +7,6 @@ public interface TCPSocket {
 	public default int write(Command cmd, String string) { return write(cmd.toString() + string); }
 	public String read();
 	public boolean isConnected();
+	
+	public void destroy();
 }

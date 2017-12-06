@@ -107,7 +107,6 @@ public class TCPServer extends Thread implements TCPSocket {
 
 	@Override
 	public void destroy() {
-		// TODO Auto-generated method stub
 		close();
 	}
 

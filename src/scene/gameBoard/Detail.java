@@ -21,6 +21,9 @@ public abstract class Detail extends AnchorPane {
 	@FXML Label labelNameA;
 	@FXML Label labelNameB;
 
+	public String getNameWhite() { return labelNameA.getText(); }
+	public String getNameBlack() { return labelNameB.getText(); }
+	
 	public void setName(String a, String b) {
 		labelNameA.setText(a);
 		labelNameB.setText(b);

@@ -3,7 +3,6 @@ package controller;
 import java.util.Arrays;
 
 import helper.InputUtility;
-import helper.OnlineMethod;
 import helper.Team;
 import helper.Tuple;
 import javafx.animation.AnimationTimer;
@@ -15,26 +14,33 @@ import model.piece.ChessPiece;
 import model.piece.Knight;
 import model.piece.Queen;
 import model.piece.Rook;
-import scene.gameBoard.ChessDetail;
+import scene.gameBoard.Chat;
 import scene.gameBoard.ChessOnlineDetail;
 import scene.gameBoard.shareObject.Animation;
 import scene.gameBoard.shareObject.GameHolder;
 import model.ChessBoard;
+import model.NormalChessGame;
 import model.ChessBoard.Move;
 
 public class BoardGameOnlineController extends ChessController implements TCPListener, TCPCommand {
 	
 	private final Team playerTurn;
-
-	private TCPSocket socket;
-	private OnlineMethod onlineMethod;
 	
-	public BoardGameOnlineController(TCPSocket socket) {
+	protected Chat chat;
+	
+	private TCPSocket socket;
+	
+	public Chat getChat() { return this.chat; }
+	
+	public BoardGameOnlineController(String username, TCPSocket socket) {
 		super();
+		
+		chat.setUserName(username);
+		chat.setSocket(socket);
+		
 		this.playerTurn = (socket instanceof TCPServer) ? Team.PLAYER_WHITE : Team.PLAYER_BLACK;
 		this.socket = socket;
-		this.onlineMethod = new OnlineMethod(this);
-
+		
 		if (this.playerTurn == Team.PLAYER_BLACK) {
 			flipBoard();
 		}
@@ -43,11 +49,12 @@ public class BoardGameOnlineController extends ChessController implements TCPLis
 	public boolean isCurrentTurn() {
 		return playerTurn == getTurn();
 	}
-	
+
 	@Override
 	protected void initialPane() {
 		pane = new HBox();
 		detail = new ChessOnlineDetail(this);
+		chat = new Chat();
 		
 		animationTimer = new AnimationTimer() {
 			public void handle(long now) {				
@@ -60,6 +67,9 @@ public class BoardGameOnlineController extends ChessController implements TCPLis
 				Animation.getInstance().update(now);
 				GameHolder.getInstance().update();
 				board.paintComponent();
+				
+				// chat
+				chat.update();
 				
 				if (selectedPiece != null) {
 					board.paintValidMoves(normalChessGame.getValidMoves(
@@ -77,11 +87,41 @@ public class BoardGameOnlineController extends ChessController implements TCPLis
 		
 		pane.getChildren().add(detail);
 		pane.getChildren().add(board);
+		pane.getChildren().add(chat);
 	}
 
 	@Override
+	public void endGame() {
+		socket.write(this.playerTurn == Team.PLAYER_WHITE ? Command.WHITE_SURRENDER : Command.BLACK_SURRENDER, "");
+		super.endGame();
+		socket.destroy();
+	}
+	
+	protected void surrender() {
+		
+		String opponentName = (this.playerTurn == Team.PLAYER_WHITE ? 
+			getDetail().getNameWhite() : 
+			getDetail().getNameBlack());
+		
+		SceneManager.showMessage(opponentName + " has resigned. You win!",
+			new SceneManager.onFinish() {
+				@Override
+				public void run() {
+					BoardGameOnlineController.super.endGame();
+					socket.destroy();
+				}
+			});
+	}
+	
+	@Override
 	public void endTurn() {
-		checkEndGame();
+
+		int result = normalChessGame.getGameResult();
+		if (result != NormalChessGame.GAME_RESULT_ONGOING) {
+			socket.destroy();
+		}
+		
+		super.checkEndGame();
 	}
 
 	@Override
@@ -142,7 +182,7 @@ public class BoardGameOnlineController extends ChessController implements TCPLis
 		Move move = new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ());
 		if (isCurrentTurn()) {
 			if (super.movePiece(source, mouse)) {
-				socket.write(Command.MOVE.toString() + move.toString());
+				socket.write(Command.MOVE, move.toString());
 				return true;
 			}
 			return false;
@@ -153,8 +193,6 @@ public class BoardGameOnlineController extends ChessController implements TCPLis
 
 	@Override
 	public void OnReceived(Command cmd, String msg) {
-
-		System.out.println(cmd + " ## " + msg);
 
 		switch (cmd) {
 		
@@ -175,55 +213,18 @@ public class BoardGameOnlineController extends ChessController implements TCPLis
 				
 			case SET_BOARD_VERSION: break;
 
+			case WHITE_SURRENDER: case BLACK_SURRENDER:
+				surrender();
+				break;
+				
+			case SEND_TEXT:
+				chat.insert(new Chat.ChatField(msg));
+				break;
+				
 			default: // no command
 		}
-		if (cmd == Command.MOVE) {
-
-			
-		} else {
-			
-		}
-		/*
-		else if (cmd == Command.SET_BOARD_VERSION) {
-			onlineMethod.setVersion(value);
-		}
-		else if (cmd == Command.GET_BOARD_VERSION) {
-		//	socket.write(onlineMethod.getVersion());
-		}
-		else if (cmd == Command.SET_TIME_PLAYER_BLACK) { 
-			onlineMethod.setTime(Team.PLAYER_BLACK, value);
-		}
-		else if (cmd == Command.GET_TIME_PLAYER_BLACK) { 
-			socket.write(onlineMethod.getTime(Team.PLAYER_BLACK));
-		}
-		else if (cmd == Command.SET_TIME_PLAYER_WHITE) { 
-			onlineMethod.setTime(Team.PLAYER_WHITE, value);
-		}
-		else if (cmd == Command.GET_TIME_PLAYER_WHITE) { 
-			socket.write(onlineMethod.getTime(Team.PLAYER_WHITE));
-		}
-		else if (cmd == Command.BLACK_DRAW) {
-			onlineMethod.draw(Team.PLAYER_BLACK);
-		}
-		else if (cmd == Command.BLACK_END_TURN) {
-			onlineMethod.endTurn(Team.PLAYER_BLACK);
-		}
-		else if (cmd == Command.BLACK_SURRENDER) {
-			onlineMethod.surrender(Team.PLAYER_BLACK);
-		}
-		else if (cmd == Command.WHITE_DRAW) {
-			onlineMethod.draw(Team.PLAYER_WHITE);
-		}
-		else if (cmd == Command.WHITE_END_TURN) { 
-			onlineMethod.endTurn(Team.PLAYER_WHITE);
-		}
-		else if (cmd == Command.WHITE_SURRENDER) {
-			onlineMethod.surrender(Team.PLAYER_WHITE);
-		}
-		else if (cmd == Command.GAME_RESULT) {
-		}
-		*/
 	}
+
 
 	@Override public void OnSended(String msg) { }
 

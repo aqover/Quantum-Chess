@@ -1,15 +1,17 @@
 package scene.gameBoard;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import controller.BoardGameOnlineController;
+import controller.SceneManager;
 import helper.Team;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 
 public class ChessOnlineDetail extends Detail {
 	private long nanoSecond = 1000000000l;
@@ -19,6 +21,21 @@ public class ChessOnlineDetail extends Detail {
 	@FXML RadioButton radioA;
 	@FXML RadioButton radioB;
 
+	@FXML
+	public void handleGiveUp(MouseEvent evt) {
+		SceneManager.showMessage("Are you sure you want to give up?",
+			Arrays.asList(ButtonType.OK, ButtonType.CANCEL), 
+			new SceneManager.onFinish() {
+			
+				@Override
+				public void run(ButtonType btn) {
+					if (btn == ButtonType.OK) {
+						gameControl.endGame();						
+					}
+				}
+			});
+	}
+	
 	public ChessOnlineDetail(BoardGameOnlineController gameControl) {
 		super(gameControl);
 		

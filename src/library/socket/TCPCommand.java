@@ -17,7 +17,8 @@ public interface TCPCommand {
 		WHITE_END_TURN(13),
 		GAME_RESULT(14),
 		NAME_PLAYER(15),
-		SET_UPGRADE_PAWN(16);
+		SET_UPGRADE_PAWN(16),
+		SEND_TEXT(17);
 		
 		private final int id;
 		Command(int id) {

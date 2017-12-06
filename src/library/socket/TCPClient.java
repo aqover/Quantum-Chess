@@ -77,7 +77,7 @@ public class TCPClient extends Thread implements Runnable, TCPSocket {
 	
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
+
 		connect();
 		
 		String msg;
@@ -106,7 +106,6 @@ public class TCPClient extends Thread implements Runnable, TCPSocket {
 
 	@Override
 	public void destroy() {
-		// TODO Auto-generated method stub
 		close();
 	}
 	
