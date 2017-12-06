@@ -24,7 +24,8 @@ public class Rook extends ChessPiece {
 
 	public char getWhitePiece() { return Piece.WHITE_ROOK; }
 	public char getBlackPiece() { return Piece.BLACK_ROOK; }
-
+	public static char getChar() { return 'r'; }
+	
 	@Override
 	public boolean isValidMove(ChessBoard board, Move move) {
 

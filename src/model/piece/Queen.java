@@ -23,7 +23,8 @@ public class Queen extends ChessPiece {
 
 	public char getWhitePiece() { return Piece.WHITE_QUEEN; }
 	public char getBlackPiece() { return Piece.BLACK_QUEEN; }
-
+	public static char getChar() { return 'q'; }
+	
 	@Override
 	public boolean isValidMove(ChessBoard board, ChessBoard.Move move) {
 

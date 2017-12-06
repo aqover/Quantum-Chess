@@ -20,19 +20,20 @@ import model.piece.Queen;
 import model.piece.Rook;
 import scene.gameBoard.ChessBoard;
 import scene.gameBoard.ChessDetail;
+import scene.gameBoard.Detail;
 import scene.gameBoard.shareObject.Animation;
 import scene.gameBoard.shareObject.GameHolder;
 
 public class ChessController {
 	
-	private HBox pane;
-	private ChessBoard board;
-	private ChessDetail detail;	
-	private NormalChessGame normalChessGame;
-	private AnimationTimer animationTimer;
-	private Tuple<Integer, Integer> mouse;
+	protected HBox pane;
+	protected ChessBoard board;
+	protected Detail detail;	
+	protected NormalChessGame normalChessGame;
+	protected AnimationTimer animationTimer;
+	protected Tuple<Integer, Integer> mouse;
 	
-	private long timePrevious;
+	protected long timePrevious;
 	
 	protected ChessPiece selectedPiece;
 	protected ChessPiece lastMovedPiece;
@@ -51,7 +52,7 @@ public class ChessController {
 		return normalChessGame;
 	}
 
-	public ChessDetail getDetail() {
+	public Detail getDetail() {
 		return detail;
 	}
 
@@ -101,14 +102,12 @@ public class ChessController {
 				mouse = new Tuple<Integer, Integer>(7 - mouse.getI(), 7 - mouse.getJ());
 			}	
 			
-			ChessPiece piece = GameHolder.getInstance().getPieceFromMouse(mouse);
+			ChessPiece piece = GameHolder.getInstance().getPiece(mouse);
 
 			if(selectedPiece != null) {		
 				if (piece == null || (piece != null && selectedPiece.getTeam() != piece.getTeam())) {
 					if (movePiece(selectedPiece, mouse)) {
-						if (piece != null) {
-							piece.Destroy();
-						}
+						piece = null;
 						select(null);
 					}
 				} else {
@@ -126,6 +125,12 @@ public class ChessController {
 		}			
 	}
 
+	public void endGame() {
+		resetGame();
+		animationTimer.stop();
+		SceneManager.setSceneMainMenu();
+	}
+	
 	protected void checkEndGame() {
 		int result = normalChessGame.getGameResult();
 		if (result != NormalChessGame.GAME_RESULT_ONGOING) {
@@ -134,8 +139,7 @@ public class ChessController {
 				new SceneManager.onFinish() {
 					@Override
 					public void run() {
-						animationTimer.stop();
-						SceneManager.setSceneMainMenu();
+						endGame();
 					}
 				}
 			);
@@ -155,6 +159,7 @@ public class ChessController {
 			e.printStackTrace();
 		}
 	}
+	
 	protected void checkUpgradePawn(Runnable onDone) {
 		
 		if (!normalChessGame.isUpgradePawnAvailable()) {
@@ -200,7 +205,6 @@ public class ChessController {
 	}
 	
 	public void undo() {
-		System.out.println("undo");
 		
 		if (normalChessGame.undo()) {
 			if (board.isBoardFlipped()) {
@@ -249,10 +253,19 @@ public class ChessController {
 		if (normalChessGame.isMoveValid(new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ()))) {
 			
 			normalChessGame.move(new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ()));
-
+			Tuple<Integer, Integer> target = new Tuple<Integer, Integer>(mouse);
+			if (board.isBoardFlipped()) {
+				target = new Tuple<Integer, Integer> (7 - mouse.getI(), 7 - mouse.getJ());
+			}
+			
+			ChessPiece piece = GameHolder.getInstance().getPiece(mouse);
+			if (piece != null) {
+				piece.Destroy();
+			}
+			
 			Animation.getInstance().startAnimate(
 				source, 
-				InputUtility.getMousePosition(), 
+				target, 
 				() -> {
 					
 					if (lastMovedPiece != null) {
@@ -269,8 +282,6 @@ public class ChessController {
 				}
 			);
 			return true;
-		} else {
-			SceneManager.showMessage("The move is not valid", new SceneManager.onFinish() {});
 		}
 			
 		return false;

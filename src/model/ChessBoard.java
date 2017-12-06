@@ -119,13 +119,8 @@ public class ChessBoard {
 				Character.toString((char) (this.col2 + 'A'));
 		}
 		
-		public Move(String move) throws Exception {
+		public Move(String move) {
 			this(move.charAt(0)-'1', move.charAt(1)-'A', move.charAt(2)-'1', move.charAt(3)-'A');
-			
-			if (move.length() != 4) {
-				throw new Exception("Move Invalid : " + move);
-			}
-
 		}
 		
 		public boolean isMoving() {

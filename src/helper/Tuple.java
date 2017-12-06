@@ -9,6 +9,11 @@ public class Tuple<X, Y> {
 		this.j = j;
 	}
 
+	public Tuple(Tuple<X, Y> tuple) {
+		this.i = tuple.getI();
+		this.j = tuple.getJ();
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		// TODO Auto-generated method stub

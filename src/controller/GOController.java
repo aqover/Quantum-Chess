@@ -34,7 +34,7 @@ public class GOController extends Pane implements TCPListener {
 
 	private static final long timeout = 30000000000l; // 30 second
 	private static TCPSocket socket;
-	private ChessController chessControl;
+	private static BoardGameOnlineController chessControl;
 	private AcceptClient waiting;
 	
 	private static String nameWhite;
@@ -222,6 +222,10 @@ public class GOController extends Pane implements TCPListener {
 				nameBlack = value;
 			else if(socket instanceof TCPClient)
 				nameWhite = value;
+		}
+		
+		if (chessControl != null) {
+			chessControl.OnReceived(cmd, value);
 		}
 	}
 

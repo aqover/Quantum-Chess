@@ -23,7 +23,8 @@ public class Bishop extends ChessPiece {
 
 	public char getWhitePiece() { return Piece.WHITE_BISHOP; }
 	public char getBlackPiece() { return Piece.BLACK_BISHOP; }
-
+	public static char getChar() { return 'b'; }
+	
 	@Override
 	public boolean isValidMove(ChessBoard board, Move move) {
 		

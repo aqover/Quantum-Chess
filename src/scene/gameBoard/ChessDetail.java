@@ -1,22 +1,22 @@
 package scene.gameBoard;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import controller.ChessController;
+import controller.SceneManager;
 import helper.Team;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
-public class ChessDetail extends AnchorPane {
+public class ChessDetail extends Detail {
 	private long nanoSecond = 1000000000l;
-	private long timePlayerA;
-	private long timePlayerB;
 	
-	private ChessController gameControl;
 	
 	@FXML Label labelNameA;
 	@FXML Label labelTimeA;
@@ -40,15 +40,29 @@ public class ChessDetail extends AnchorPane {
 		gameControl.redo();
     }
 
+	@FXML
+	protected void handleQuit(MouseEvent event) {
+		SceneManager.showMessage("Are you sure?",
+			Arrays.asList(ButtonType.OK, ButtonType.CANCEL), 
+			new SceneManager.onFinish() {
+			
+				@Override
+				public void run(ButtonType btn) {
+					if (btn == ButtonType.OK) {
+						gameControl.endGame();						
+					}
+				}
+			});
+	}
+	
 	public void setName(String a, String b) {
 		labelNameA.setText(a);
 		labelNameB.setText(b);
 	}
 	
 	public ChessDetail(ChessController gameControl) {
-		super();
-		
-		this.gameControl = gameControl;		
+		super(gameControl);
+
 		timePlayerA = timePlayerB = 60*60*nanoSecond; //unit in nanosecond, 60 mins;
 		
 		try {

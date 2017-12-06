@@ -98,7 +98,7 @@ public class NormalChessGame implements ChessGameInfo {
 				return false;
 			}
 			
-			if (!ChessPiece.getClassFromChar(piece).isValidMove(board, move)) {
+			if (!ChessPiece.getInstance(piece).isValidMove(board, move)) {
 				return false;
 			}
 			
@@ -116,11 +116,11 @@ public class NormalChessGame implements ChessGameInfo {
 	
 	public boolean isUpgradePawnAvailable() {
 		for (int i = 0; i < BOARD_SIZE; ++i) {
-			if (getBoard().getAt(0, i) == Piece.WHITE_PAWN) {
+			if (Piece.isWhitePawn(getBoard().getAt(0, i))) {
 				return true;
 			}
 			
-			if (getBoard().getAt(BOARD_SIZE-1, i) == Piece.BLACK_PAWN) {
+			if (Piece.isBlackPawn(getBoard().getAt(BOARD_SIZE-1, i))) {
 				return true;
 			}
 		}
@@ -132,10 +132,10 @@ public class NormalChessGame implements ChessGameInfo {
 	}
 	public void upgradePawn(char whitePiece, char blackPiece) {
 		for (int i = 0; i < BOARD_SIZE; ++i) {
-			if (getBoard().getAt(0, i) == Piece.WHITE_PAWN) {
+			if (Piece.isWhitePawn(getBoard().getAt(0, i))) {
 				setPosition(0, i, whitePiece);
 			}
-			if (getBoard().getAt(BOARD_SIZE-1, i) == Piece.BLACK_PAWN) {
+			if (Piece.isBlackPawn(getBoard().getAt(BOARD_SIZE-1, i))) {
 				setPosition(BOARD_SIZE-1, i, blackPiece);
 			}
 		}

@@ -106,7 +106,7 @@
             </HBox>
             <HBox prefHeight="42.0" prefWidth="170.0">
                <children>
-                  <Button mnemonicParsing="false" onMouseClicked="#handleRedo" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #00B0FF;" text="Quit" textFill="WHITE">
+                  <Button mnemonicParsing="false" onMouseClicked="#handleQuit" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #00B0FF;" text="Quit" textFill="WHITE">
                      <font>
                         <Font size="14.0" />
                      </font>

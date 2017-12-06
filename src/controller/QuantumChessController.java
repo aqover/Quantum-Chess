@@ -102,7 +102,7 @@ public class QuantumChessController extends ChessController {
 				mouse = new Tuple<Integer, Integer>(7 - mouse.getI(), 7 - mouse.getJ());
 			}	
 			
-			ChessPiece piece = GameHolder.getInstance().getPieceFromMouse(mouse);
+			ChessPiece piece = GameHolder.getInstance().getPiece(mouse);
 
 			if(selectedPiece != null) {		
 				if (piece == null || (piece != null && selectedPiece.getTeam() != piece.getTeam())) {

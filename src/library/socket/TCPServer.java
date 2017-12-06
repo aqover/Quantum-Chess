@@ -94,7 +94,7 @@ public class TCPServer extends Thread implements TCPSocket {
 		
 		return 0;
 	}
-		
+			
 	public void close() {
 		if (client != null) try { client.close(); } catch (IOException ex) { }
 		if (server != null) try { server.close(); } catch (IOException ex) { }

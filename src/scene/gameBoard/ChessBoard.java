@@ -154,7 +154,7 @@ public class ChessBoard extends Canvas {
 					
 					try {
 						
-						Class<? extends ChessPiece> pieceClass = (Class<? extends ChessPiece>) ChessPiece.getClassFromChar(piece).getClass();
+						Class<? extends ChessPiece> pieceClass = (Class<? extends ChessPiece>) ChessPiece.getInstance(piece).getClass();
 						
 						Constructor<? extends ChessPiece> constructor = pieceClass.getConstructor(Integer.class, Integer.class, Team.class);
 						ChessPiece chessPiece = (ChessPiece) constructor.newInstance(i, j, team);
@@ -190,7 +190,7 @@ public class ChessBoard extends Canvas {
 					
 					try {
 						
-						Class<? extends ChessPiece> pieceClass = (Class<? extends ChessPiece>) ChessPiece.getClassFromChar(piece).getClass();
+						Class<? extends ChessPiece> pieceClass = (Class<? extends ChessPiece>) ChessPiece.getInstance(piece).getClass();
 						
 						Constructor<? extends ChessPiece> constructor = pieceClass.getConstructor(Integer.class, Integer.class, Team.class);
 						ChessPiece chessPiece = (ChessPiece) constructor.newInstance(i, j, team);

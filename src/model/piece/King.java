@@ -63,7 +63,7 @@ public class King extends ChessPiece {
 				if (pieceSide != kside && pieceSide != Team.NONE) {
 					ChessBoard.Move move = new ChessBoard.Move(i, j, krow, kcol);
 					try {
-						if (ChessPiece.getClassFromChar(piece).isValidMove(board, move)) {
+						if (ChessPiece.getInstance(piece).isValidMove(board, move)) {
 							return true;
 						}
 					} catch (Exception e) {

@@ -2,6 +2,7 @@ package helper;
 
 import controller.ChessController;
 import library.socket.TCPCommand;
+import library.socket.TCPCommand.Command;
 import model.ChessBoard;
 import model.piece.ChessPiece;
 import scene.gameBoard.shareObject.GameHolder;
@@ -15,18 +16,14 @@ public class OnlineMethod {
 	}
 	
 	public void move(String move) {
+
+		ChessBoard.Move mv = new ChessBoard.Move(move);
 		
-		try {
-			ChessBoard.Move mv = new ChessBoard.Move(move);
+		ChessPiece source = GameHolder.getInstance().getPieceFromMouse(new Tuple<Integer, Integer>(mv.row1, mv.col1));
+		Tuple<Integer, Integer> mouse = new Tuple<Integer, Integer>(mv.row2, mv.col2);
+		
+		control.movePiece(source, mouse);
 			
-			ChessPiece source = GameHolder.getInstance().getPieceFromMouse(new Tuple<Integer, Integer>(7 - mv.row1, mv.col1));
-			Tuple<Integer, Integer> mouse = new Tuple<Integer, Integer>(7 - mv.row2, mv.col2);
-			
-			control.movePiece(source, mouse);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public void setVersion(String sBoard) {

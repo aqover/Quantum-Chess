@@ -10,13 +10,14 @@ import scene.gameBoard.shareObject.GameHolder;
 public class Knight extends ChessPiece {
 
 	private static Knight instance = new Knight(-1, -1, Team.NONE);
-	
+
 	public static Knight getInstance() {
 		return instance;
 	}
 	
 	public char getWhitePiece() { return Piece.WHITE_KNIGHT; }
 	public char getBlackPiece() { return Piece.BLACK_KNIGHT; }
+	public static char getChar() { return 'n'; }
 
 	public Knight(Integer row, Integer col, Team team) {
 		super(row, col, team, (team != Team.NONE ? 
