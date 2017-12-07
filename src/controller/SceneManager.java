@@ -55,13 +55,11 @@ public final class SceneManager {
 	}
 	
 	public static void setSceneGameOnline() {
-//		primaryStage.setScene(gameOnline);
-		primaryStage.setScene(quantumGameOnline);
+		primaryStage.setScene(gameOnline);
 	}
 	
 	public static void setSceneGameOffline() {
-//		primaryStage.setScene(gameOffline);
-		primaryStage.setScene(quantumGameOffline);
+		primaryStage.setScene(gameOffline);
 	}
 	
 	public static void setSceneQuantumChessOffline() {
