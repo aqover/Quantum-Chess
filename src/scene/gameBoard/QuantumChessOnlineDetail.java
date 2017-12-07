@@ -3,31 +3,27 @@ package scene.gameBoard;
 import java.io.IOException;
 import java.util.Arrays;
 
-import controller.BoardGameOnlineController;
 import controller.QuantumChessController;
 import controller.SceneManager;
 import helper.Team;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
-public class ChessOnlineDetail extends AnchorPane {
+public class QuantumChessOnlineDetail extends AnchorPane {
+	
 	private long nanoSecond = 1000000000l;
 	
-	@FXML Label labelNameA;
-	@FXML Label labelNameB;
-	@FXML Label labelTimeA;
-	@FXML Label labelTimeB;
-	@FXML RadioButton radioA;
-	@FXML RadioButton radioB;
-
 	protected long timePlayerA;
 	protected long timePlayerB;
-	protected BoardGameOnlineController gameControl;
+	protected QuantumChessController gameControl;
 	
 	public long getTimePlayerW() { return timePlayerA; }
 	public long getTimePlayerB() { return timePlayerB; }
@@ -49,9 +45,34 @@ public class ChessOnlineDetail extends AnchorPane {
 			timePlayerB = timePlayerB - decreseTime;
 	}
 	
+	@FXML Label labelNameA;
+	@FXML Label labelTimeA;
+	@FXML Label labelNameB;
+	@FXML Label labelTimeB;
+	@FXML RadioButton radioA;
+	@FXML RadioButton radioB;
+	
+	@FXML Slider moveProb;
+	@FXML Label labelProb;
+	
 	@FXML
-	public void handleGiveUp(MouseEvent evt) {
-		SceneManager.showMessage("Are you sure you want to give up?",
+	protected void handleFlipBoard(MouseEvent event) {
+		gameControl.flipBoard();
+    }
+
+	@FXML
+	protected void handlePass(MouseEvent event) {
+		gameControl.pass();
+	}
+	
+	protected void handleMoveProbChange(Number oldValue, Number newValue) {
+		gameControl.setMoveProb((double) newValue.intValue() / 10.0);
+		labelProb.setText(Integer.toString(newValue.intValue() * 10));
+	}
+	
+	@FXML
+	protected void handleQuit(MouseEvent event) {
+		SceneManager.showMessage("Are you sure?",
 			Arrays.asList(ButtonType.OK, ButtonType.CANCEL), 
 			new SceneManager.onFinish() {
 			
@@ -63,26 +84,31 @@ public class ChessOnlineDetail extends AnchorPane {
 				}
 			});
 	}
-
-	@FXML
-	public void handleFlip(MouseEvent evt) {
-		gameControl.flipBoard();
-	}
 	
-	public ChessOnlineDetail(BoardGameOnlineController gameControl) {
+	public QuantumChessOnlineDetail(QuantumChessController gameControl) {
 		super();
-		
-		this.gameControl = gameControl;		
+		this.gameControl = gameControl;
+
 		timePlayerA = timePlayerB = 60*60*nanoSecond; //unit in nanosecond, 60 mins;
 		
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("ChessOnlineDetail.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("QuantumChessDetail.fxml"));
 			loader.setRoot(this);
 			loader.setController(this);
 			loader.load();
+			
+			moveProb.valueProperty().addListener(new ChangeListener<Number>() {
+				
+				@Override
+				public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
+					handleMoveProbChange(oldValue, newValue);
+				}
+			});
+
 		} catch (IOException ex) {
             System.out.print(ex);
         }
+	
 	}
 	
 	public void update() {
@@ -100,5 +126,5 @@ public class ChessOnlineDetail extends AnchorPane {
 		labelTimeA.setText(String.format("%d:%d", (timePlayerA/nanoSecond)/60, (timePlayerA/nanoSecond)%60));
 		labelTimeB.setText(String.format("%d:%d", (timePlayerB/nanoSecond)/60, (timePlayerB/nanoSecond)%60));
 	}
-
+	
 }

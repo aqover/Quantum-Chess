@@ -229,8 +229,8 @@ public class NormalChessGame implements ChessGameInfo {
 	}
 	public static String getResultMessage(int result) {
 		if (result == GAME_RESULT_DRAW) return "draw";
-		if (result == GAME_RESULT_WHITE_WINS) return "white wins";
-		if (result == GAME_RESULT_BLACK_WINS) return "black wins";
+		if (result == GAME_RESULT_WHITE_WINS) return "White wins";
+		if (result == GAME_RESULT_BLACK_WINS) return "Black wins";
 		return "game is on going";
 	}
 	

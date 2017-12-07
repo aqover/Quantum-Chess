@@ -101,6 +101,10 @@ public abstract class ChessPiece extends Entity implements ChessGameInfo {
 		this.col = col;
 	}
 	
+	public void setPositionOnScreen(int row, int col) {
+		this.setPositionOnScreen(row * GameHolder.size, col * GameHolder.size);
+	}
+	
 	public void setPosition(int row, int col) {
 		this.row = row;
 		this.col = col;

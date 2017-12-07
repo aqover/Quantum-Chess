@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.effect.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -20,7 +19,7 @@
    <children>
       <FlowPane alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #03A9F4;" AnchorPane.topAnchor="0.0">
          <children>
-            <Label style="-fx-background-color: #03A9F4;" text="Chess Online" textAlignment="CENTER">
+            <Label style="-fx-background-color: #03A9F4;" text="Chess Offline" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
@@ -30,7 +29,7 @@
             <Insets left="15.0" />
          </padding>
       </FlowPane>
-      <VBox alignment="TOP_CENTER" prefWidth="100.0" spacing="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+      <VBox alignment="TOP_CENTER" prefWidth="100.0" spacing="10.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
          <children>
             <VBox>
                <children>
@@ -53,7 +52,7 @@
                         <Label fx:id="labelTimeA" prefHeight="50.0" text="Test" />
                      </children>
                   </HBox>
-                  <FlowPane prefHeight="60.0" prefWidth="170.0" />
+                  <FlowPane prefHeight="55.0" prefWidth="200.0" />
                </children>
             </VBox>
             <VBox>
@@ -77,12 +76,17 @@
                         <Label fx:id="labelTimeB" prefHeight="50.0" text="Test" />
                      </children>
                   </HBox>
-                  <FlowPane prefHeight="60.0" prefWidth="170.0" />
+                  <FlowPane prefHeight="40.0" prefWidth="200.0" />
                </children>
             </VBox>
-            <HBox alignment="CENTER" prefHeight="43.0" prefWidth="170.0" spacing="5.0">
+            <HBox prefHeight="42.0" prefWidth="170.0" spacing="5.0">
                <children>
-                  <Button alignment="CENTER" mnemonicParsing="false" onMouseClicked="#handleFlip" prefHeight="40.0" prefWidth="170.0" style="-fx-background-color: #00B0FF;" text="Flip" textFill="WHITE">
+                  <Button mnemonicParsing="false" onMouseClicked="#handleFlipBoard" prefHeight="40.0" prefWidth="170.0" style="-fx-background-color: #00B0FF;" text="Flip" textFill="WHITE">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" onMouseClicked="#handlePass" prefHeight="40.0" prefWidth="170.0" style="-fx-background-color: #00B0FF;" text="Pass" textFill="WHITE">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -92,20 +96,28 @@
                   <Insets left="5.0" right="5.0" />
                </padding>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="43.0" prefWidth="170.0" spacing="5.0">
+            <HBox prefHeight="20.0" prefWidth="200.0">
                <children>
-                  <Button alignment="CENTER" mnemonicParsing="false" onMouseClicked="#handleGiveUp" prefHeight="40.0" prefWidth="170.0" style="-fx-background-color: #00B0FF;" text="Give Up" textFill="WHITE">
+                  <Label prefHeight="15.0" prefWidth="86.0" text="Probability">
+                     <HBox.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Label fx:id="labelProb" prefHeight="15.0" prefWidth="42.0" />
+                  <Slider fx:id="moveProb" blockIncrement="1.0" max="10.0" prefHeight="16.0" prefWidth="107.0" value="5.0" />
+               </children>
+            </HBox>
+            <HBox prefHeight="42.0" prefWidth="170.0">
+               <children>
+                  <Button mnemonicParsing="false" onMouseClicked="#handleQuit" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #00B0FF;" text="Give Up" textFill="WHITE">
                      <font>
                         <Font size="14.0" />
                      </font>
+                     <HBox.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </HBox.margin>
                   </Button>
                </children>
-               <padding>
-                  <Insets left="5.0" right="5.0" />
-               </padding>
-               <VBox.margin>
-                  <Insets bottom="10.0" />
-               </VBox.margin>
             </HBox>
          </children>
         </VBox>

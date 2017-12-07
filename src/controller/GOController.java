@@ -32,13 +32,13 @@ public class GOController extends Pane implements TCPListener {
 	@FXML
 	Label time;
 
-	private static final long timeout = 30000000000l; // 30 second
-	private static TCPSocket socket;
+	protected static final long timeout = 30000000000l; // 30 second
+	protected static TCPSocket socket;
 	private static BoardGameOnlineController chessControl;
-	private AcceptClient waiting;
+	protected AcceptClient waiting;
 	
-	private static String nameWhite;
-	private static String nameBlack;
+	protected static String nameWhite;
+	protected static String nameBlack;
 
 	public GOController() {
 		try {
@@ -141,7 +141,7 @@ public class GOController extends Pane implements TCPListener {
 	public void linkReady(Thread thread) {
 		if (((AcceptClient) thread).isSuccess())
 		{
-			this.startGame(nameWhite, nameBlack);
+			startGame(nameWhite, nameBlack);
 		}
 		else
 		{
@@ -159,7 +159,7 @@ public class GOController extends Pane implements TCPListener {
 		SceneManager.setScene(chessControl.getPane());
 	}
 	
-	private class AcceptClient extends Thread {
+	protected class AcceptClient extends Thread {
 
 		private long startTimeout;		
 		private boolean isSuccess;
@@ -237,6 +237,7 @@ public class GOController extends Pane implements TCPListener {
 
 	@Override 
 	public void OnConnected() {
+		
 		if (socket instanceof TCPServer)
 			socket.write(Command.NAME_PLAYER.toString() + nameWhite);
 		else if(socket instanceof TCPClient)

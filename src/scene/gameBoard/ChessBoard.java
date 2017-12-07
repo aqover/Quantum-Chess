@@ -33,7 +33,7 @@ public class ChessBoard extends Canvas {
 		flipBoard = false;
 	}
 	
-	public synchronized void flipBoard() {
+	public void flipBoard() {
 		flipBoard = !flipBoard;
 			
 		for (IRenderable tmp: GameHolder.getInstance().getEntity())
@@ -50,7 +50,7 @@ public class ChessBoard extends Canvas {
 		}	
 	}
 	
-	public synchronized boolean isBoardFlipped() {
+	public boolean isBoardFlipped() {
 		return flipBoard;
 	}
 	
@@ -151,6 +151,8 @@ public class ChessBoard extends Canvas {
 	public void setBoard(NormalChessGame game) {
 		ArrayList<IRenderable> entity = new ArrayList<IRenderable>();
 		
+		boolean flipStatus = flipBoard;
+		
 		flipBoard = false;
 		entity.add(new ChessBackGround());
 		
@@ -169,8 +171,8 @@ public class ChessBoard extends Canvas {
 						
 						Constructor<? extends ChessPiece> constructor = pieceClass.getConstructor(Integer.class, Integer.class, Team.class);
 						ChessPiece chessPiece = (ChessPiece) constructor.newInstance(i, j, team);
-							
-						 entity.add(chessPiece);
+						
+						entity.add(chessPiece);
 					
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -182,10 +184,14 @@ public class ChessBoard extends Canvas {
 		}
 		
 		GameHolder.getInstance().setEntity(entity);
+		
+		if (flipStatus) { flipBoard(); }
 	}
 
 	public void setBoard(QuantumChessGame game) {
 		ArrayList<IRenderable> entity = new ArrayList<IRenderable>();
+
+		boolean flipStatus = flipBoard;
 		
 		flipBoard = false;
 		entity.add(new ChessBackGround());
@@ -209,6 +215,7 @@ public class ChessBoard extends Canvas {
 						ChessPiece chessPiece = (ChessPiece) constructor.newInstance(i, j, team);
 						
 						chessPiece.setPossibility(possibility[i][j]);
+
 						entity.add(chessPiece);
 					
 					} catch (Exception e) {
@@ -221,5 +228,7 @@ public class ChessBoard extends Canvas {
 		}
 		
 		GameHolder.getInstance().setEntity(entity);
+
+		if (flipStatus) { flipBoard(); }
 	}
 }

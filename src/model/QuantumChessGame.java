@@ -22,6 +22,8 @@ public class QuantumChessGame implements ChessGameInfo {
 	protected ChessBoard displayBoard;
 	protected double[][] piecePossibility = null;
 	
+	protected boolean lastMoveHiddenStatus;
+	
 	// for undo
 	private List<QuantumMove> moves;
 	
@@ -39,6 +41,7 @@ public class QuantumChessGame implements ChessGameInfo {
 		deadPieces = new ArrayList<>();
 		
 		firstTurn = Team.PLAYER_WHITE;
+		lastMoveHiddenStatus = false;
 	}
 	
 	private void resetGame() {
@@ -177,12 +180,13 @@ public class QuantumChessGame implements ChessGameInfo {
 	}
 	
 	// actual move
-	public void move(QuantumMove qmove) {
+	public void move(QuantumMove qmove, boolean hiddenMove) {
 		
 		if (qmove.prob <= 0) return;
 		
 		char purge = Piece.EMPTY_SPACE;
-		if (randomSuccess(qmove.prob)) {
+		lastMoveHiddenStatus = hiddenMove;
+		if (hiddenMove) {
 			if (NormalChessGame.isMoveValidNoKing(currentGame, qmove.move)) {
 				char cell = this.currentGame.getAt(qmove.move.row2, qmove.move.col2);
 				if (cell != Piece.EMPTY_SPACE) {
@@ -195,7 +199,7 @@ public class QuantumChessGame implements ChessGameInfo {
 		}
 		
 		ArrayList<QuantumBoard> newPossibleBoards = new ArrayList<>();
-		for (QuantumBoard qboard : possibleBoards) {	
+		for (QuantumBoard qboard : possibleBoards) {
 			if (NormalChessGame.isMoveValidNoKing(qboard.board, qmove.move)) {
 				if (qmove.prob < 1) {
 					newPossibleBoards.add(
@@ -240,11 +244,19 @@ public class QuantumChessGame implements ChessGameInfo {
 			setDisplayBoard();
 		}
 	}
+	private boolean randomSuccess(double prob) {
+		return Math.random() <= prob;
+	}
+	public void move(QuantumMove qmove) {
+		move(qmove, randomSuccess(qmove.prob));
+	}
 	
 	public void pass() {
 		moves.add(null);
 	}
 
+	public boolean lastMoveStatus() { return lastMoveHiddenStatus; }
+	
 	public boolean isDead(char piece) {
 		return deadPieces.contains(piece);
 	}
@@ -290,15 +302,12 @@ public class QuantumChessGame implements ChessGameInfo {
 		return GAME_RESULT_ONGOING;
 	}
 	public static String getResultMessage(int result) {
-		if (result == GAME_RESULT_DRAW) return "draw";
-		if (result == GAME_RESULT_WHITE_WINS) return "white wins";
-		if (result == GAME_RESULT_BLACK_WINS) return "black wins";
+		if (result == GAME_RESULT_DRAW) return "Draw";
+		if (result == GAME_RESULT_WHITE_WINS) return "White wins";
+		if (result == GAME_RESULT_BLACK_WINS) return "Black wins";
 		return "game is on going";
 	}
 		
-	private boolean randomSuccess(double prob) {
-		return Math.random() <= prob;
-	}
 	
 	private static class QuantumBoard {
 		
@@ -327,6 +336,17 @@ public class QuantumChessGame implements ChessGameInfo {
 		public QuantumMove(double prob, ChessBoard.Move move) {
 			this.prob = Math.max(0.0, Math.min(1.0, prob));
 			this.move = move;			
+		}
+		
+		public QuantumMove(String msg) {
+			this(Double.valueOf(msg.substring(4)), new ChessBoard.Move(msg.substring(0, 4)));
+		}
+		
+		public String encode() {
+			return move.toString() + Double.toString(prob);
+		}
+		public String toString() {
+			return encode();
 		}
 	}
 }

@@ -80,8 +80,9 @@ public class TCPServer extends Thread implements TCPSocket {
 	
 	@Override
 	public int write(String msg) {
-		if (client == null) return 0;
 		
+		if (client == null) return 0;
+
 		String text = String.format("%03d%s", msg.length(), msg);
 		try {
 			client.getOutputStream().write(text.getBytes(StandardCharsets.UTF_16));

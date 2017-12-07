@@ -238,6 +238,44 @@ public class QuantumChessController extends ChessController {
 		return false;
 	}
 	
+	public boolean movePiece(ChessPiece source, Tuple<Integer, Integer> mouse, boolean status) {
+		
+		Move move = new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ());
+		if (quantumChessGame.successProb(move) > 0) {
+
+			quantumChessGame.move(new QuantumMove(getMoveProb(), move), status);
+			
+			Tuple<Integer, Integer> target = new Tuple<Integer, Integer>(mouse);
+			if (board.isBoardFlipped()) {
+				target = new Tuple<Integer, Integer> (7 - mouse.getI(), 7 - mouse.getJ());
+			}
+			
+			Animation.getInstance().startAnimate(
+				source, 
+				target, 
+				() -> {
+					
+					if (lastMovedPiece != null) {
+						lastMovedPiece.setLastMoved(false);
+					}
+					lastMovedPiece = source;
+					
+					select(null);
+					source.setLastMoved(true);
+					
+					source.setOnlyPosition(mouse.getI(), mouse.getJ());
+					board.setBoard(quantumChessGame);
+					
+					checkUpgradePawn(() -> { 
+						 endTurn(); 
+					});
+				}
+			);
+			return true;
+		}
+			
+		return false;
+	}
 	@Override
 	protected void initialPane() {
 		pane = new HBox();

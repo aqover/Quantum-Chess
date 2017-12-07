@@ -3,13 +3,11 @@ package scene.gameBoard;
 import java.io.IOException;
 import java.util.Arrays;
 
-import controller.ChessController;
 import controller.QuantumChessController;
 import controller.SceneManager;
 import helper.Team;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ButtonType;
