@@ -3,7 +3,6 @@ package model.piece;
 import helper.Team;
 import model.ChessBoard;
 import model.NormalChessGame;
-import model.ChessGameInfo.Piece;
 import scene.gameBoard.shareObject.GameHolder;
 
 public class Pawn extends ChessPiece {

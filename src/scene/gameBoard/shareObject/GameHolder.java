@@ -1,5 +1,6 @@
 package scene.gameBoard.shareObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -27,6 +28,8 @@ public class GameHolder {
 	
 	public static Image bgDark;
 	public static Image bgLight;
+	
+	public static File pieceMove;
 	
 	public static double scoreA, scoreB;
 	
@@ -141,6 +144,8 @@ public class GameHolder {
 		
 		bgDark = new Image("square_dark.jpg");
 		bgLight = new Image("square_light.jpg");
+		
+		pieceMove = new File("res\\move.mp3");
 	}
 	
 }

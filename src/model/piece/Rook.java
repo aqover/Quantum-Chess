@@ -4,7 +4,6 @@ import helper.Team;
 import model.ChessBoard;
 import model.NormalChessGame;
 import model.ChessBoard.Move;
-import model.ChessGameInfo.Piece;
 import scene.gameBoard.shareObject.GameHolder;
 
 public class Rook extends ChessPiece {

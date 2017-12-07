@@ -13,6 +13,9 @@ public class TCPClient extends Thread implements Runnable, TCPSocket {
 	
 	private String host;
 	private int port;
+	private int totalPacket;
+	private int lossPacket;
+	private String lastPacket;
 		
 	private ArrayList<TCPListener> listeners = new ArrayList<TCPListener>();
 	public void addListener(TCPListener listener) { listeners.add(listener); }
@@ -26,7 +29,7 @@ public class TCPClient extends Thread implements Runnable, TCPSocket {
 		}
 		catch (Exception ex)
 		{
-			close();
+			close(false, true);
 		}		
 	}
 	
@@ -50,7 +53,7 @@ public class TCPClient extends Thread implements Runnable, TCPSocket {
 				return new String(buf, "UTF-16");
 			}
 		} catch (IOException e) { 
-			close();
+			close(false, true);
 		}
 		
 		return null;
@@ -59,8 +62,9 @@ public class TCPClient extends Thread implements Runnable, TCPSocket {
 	@Override
 	public int write(String msg)
 	{
-		if (socket == null)
-			return 0;
+		if (socket == null) return 0;
+		
+		lastPacket = msg;
 		
 		String text = String.format("%03d%s", msg.length(), msg);
 		try {
@@ -68,9 +72,7 @@ public class TCPClient extends Thread implements Runnable, TCPSocket {
 			OnSended(text);
 			return msg.length();
 		}
-		catch (IOException ex) { 
-			close();
-		}
+		catch (IOException ex) { }
 		
 		return 0;
 	}
@@ -82,31 +84,48 @@ public class TCPClient extends Thread implements Runnable, TCPSocket {
 		
 		String msg;
 		Command cmd;
-		int len;
+		int len = 0;
 		while(isConnected())
-		{
+		{			
 			msg = read();
 			if (msg != null)
-			{
-				len = Integer.parseInt(msg.substring(0, 3));
-				cmd = Command.valueOf(Integer.parseInt(msg.substring(3, 5)));
-				OnReceived(cmd, msg.substring(5, 3+len));
+			{				
+				totalPacket++;
+				try {
+					len = Integer.parseInt(msg.substring(0, 3));
+					if (msg.length() < 3+len)
+						throw new Exception("Losing Packet.");
+					
+					cmd = Command.valueOf(Integer.parseInt(msg.substring(3, 5)));
+					if (cmd == Command.TCP_FAIL)
+					{
+						lossPacket++;
+						write(lastPacket);
+					}
+					else
+						OnReceived(cmd, msg.substring(5, 3+len));
+				}
+				catch (Exception ex) {
+					sendLossPacket();
+					continue;
+				}
 			}
 		}
 		
-		close();
+		close(true, false);
 	}
 	
-	public void close() {
+	public void close(boolean runListener, boolean isException) {
 		if (socket != null) try { socket.close(); } catch (IOException e) { }
 		
 		socket = null;
-		OnClosed();
+		if (runListener)
+			OnClosed();
 	}
 
 	@Override
 	public void destroy() {
-		close();
+		close(false, false);
 	}
 	
 	private void OnConnected() {
@@ -135,6 +154,14 @@ public class TCPClient extends Thread implements Runnable, TCPSocket {
 			Platform.runLater(()->{
 				listener.OnClosed();
 			});
+	}
+	
+	public int getTotalPacket() {
+		return totalPacket;
+	}
+
+	public int getLossPacket() {
+		return lossPacket;
 	}
 
 }

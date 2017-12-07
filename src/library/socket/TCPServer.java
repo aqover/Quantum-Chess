@@ -11,14 +11,18 @@ public class TCPServer extends Thread implements TCPSocket {
 	
 	private static ServerSocket server;
 	private static Socket client;
-	
+		
 	private int port;
+	private int totalPacket;
+	private int lossPacket;
+	private String lastPacket;
 	
 	private ArrayList<TCPListener> listeners = new ArrayList<TCPListener>();
 	public void addListener(TCPListener listener) { listeners.add(listener); }
 	
 	public TCPServer(int port) {
 		this.port = port;
+		totalPacket = lossPacket = 0;
 	}
 	
 	public boolean isConnected() {
@@ -37,24 +41,40 @@ public class TCPServer extends Thread implements TCPSocket {
 			System.out.println("IOException " + ex);
 		}
 		catch (Exception ex) { 
-			close();
+			close(false, true);
 		}
 				
 		String msg;
 		Command cmd;
-		int len;
+		int len  = 0;
 		while(isConnected())
-		{
+		{			
 			msg = read();
 			if (msg != null)
-			{
-				len = Integer.parseInt(msg.substring(0, 3));
-				cmd = Command.valueOf(Integer.parseInt(msg.substring(3, 5)));
-				OnReceived(cmd, msg.substring(5, 3+len));
+			{				
+				totalPacket++;
+				try {
+					len = Integer.parseInt(msg.substring(0, 3));
+					if (msg.length() < 3+len)
+						throw new Exception("Losing Packet.");
+					
+					cmd = Command.valueOf(Integer.parseInt(msg.substring(3, 5)));
+					if (cmd == Command.TCP_FAIL)
+					{
+						lossPacket++;
+						write(lastPacket);
+					}
+					else
+						OnReceived(cmd, msg.substring(5, 3+len));
+				}
+				catch (Exception ex) {
+					sendLossPacket();
+					continue;
+				}
 			}
 		}
 		
-		close();
+		close(true, false);
 	}
 	
 	@Override
@@ -72,7 +92,7 @@ public class TCPServer extends Thread implements TCPSocket {
 			}
 		}
 		catch (IOException ex) { 
-			close();
+			close(false, true);
 		}
 		
 		return null;
@@ -82,6 +102,8 @@ public class TCPServer extends Thread implements TCPSocket {
 	public int write(String msg) {
 		if (client == null) return 0;
 		
+		lastPacket = msg;
+		
 		String text = String.format("%03d%s", msg.length(), msg);
 		try {
 			client.getOutputStream().write(text.getBytes(StandardCharsets.UTF_16));
@@ -89,25 +111,26 @@ public class TCPServer extends Thread implements TCPSocket {
 			return msg.length();
 		}
 		catch (IOException ex) { 
-			close();
+			close(false, true);
 		}
 		
 		return 0;
 	}
 			
-	public void close() {
+	public void close(boolean runListener, boolean isException) {
 		if (client != null) try { client.close(); } catch (IOException ex) { }
 		if (server != null) try { server.close(); } catch (IOException ex) { }
 		
 		client = null;
 		server = null;
 		
-		OnClosed();
+		if (runListener)
+			OnClosed();
 	}
 
 	@Override
 	public void destroy() {
-		close();
+		close(false, false);
 	}
 
 	private void OnConnected() {
@@ -137,4 +160,14 @@ public class TCPServer extends Thread implements TCPSocket {
 				listener.OnClosed();
 			});
 	}
+
+	public int getTotalPacket() {
+		return totalPacket;
+	}
+
+	public int getLossPacket() {
+		return lossPacket;
+	}
+	
+	
 }

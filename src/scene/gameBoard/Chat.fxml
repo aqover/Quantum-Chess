@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<fx:root type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+	<children>
+		<FlowPane alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #03A9F4;" AnchorPane.topAnchor="0.0">
+	         <children>
+	            <Label style="-fx-background-color: #03A9F4;" text="Chat" textAlignment="CENTER">
+	               <font>
+	                  <Font name="System Bold" size="18.0" />
+	               </font>
+	            </Label>
+	         </children>
+	         <padding>
+	            <Insets left="15.0" />
+	         </padding>
+	      </FlowPane>
+      <VBox prefWidth="200.0" AnchorPane.bottomAnchor="52.0" AnchorPane.topAnchor="50.0">
+         <children>
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefWidth="200.0" style="-fx-border-width: 0;" VBox.vgrow="ALWAYS">
+              <content>
+                <AnchorPane prefWidth="200.0">
+                     <children>
+                        <VBox fx:id="messageField" prefWidth="200.0" AnchorPane.topAnchor="0.0">
+                           <padding>
+                              <Insets top="1.0" />
+                           </padding></VBox>
+                     </children>
+                  </AnchorPane>
+              </content>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </ScrollPane>
+         </children></VBox>
+      <VBox prefWidth="200.0" spacing="5.0" AnchorPane.bottomAnchor="5.0">
+         <children>
+            <TextField fx:id="inputMessage" prefHeight="40.0" promptText="Message (Enter to send)" />
+         </children>
+         <padding>
+            <Insets left="5.0" right="5.0" />
+         </padding>
+      </VBox>
+	</children>
+</fx:root>

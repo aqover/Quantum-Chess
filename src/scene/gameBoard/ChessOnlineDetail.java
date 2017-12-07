@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import controller.BoardGameOnlineController;
-import controller.QuantumChessController;
 import controller.SceneManager;
 import helper.Team;
 import javafx.fxml.FXML;

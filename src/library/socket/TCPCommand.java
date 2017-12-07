@@ -18,7 +18,9 @@ public interface TCPCommand {
 		GAME_RESULT(14),
 		NAME_PLAYER(15),
 		SET_UPGRADE_PAWN(16),
-		SEND_TEXT(17);
+		SEND_TEXT(17),
+		TCP_KEEPALIVE(98),
+		TCP_FAIL(99);
 		
 		private final int id;
 		Command(int id) {
@@ -48,27 +50,7 @@ public interface TCPCommand {
 			this.id = id;
 		}
 		
-		public String toString() { return String.format("%01d", id); }
+		public String toString() { return String.format("%02d", id); }
 		public int getValue() { return id; }
-	}
-	
-	enum TCPResponde {
-		SUCCESS(1),
-		FAILED(2);
-		
-		private final int id;
-		TCPResponde(int id) {
-			this.id = id;
-		}
-		
-		public String toString() { return String.format("%01d", id); }
-		public int getValue() { return id; }
-		public static TCPResponde valueOf(int result)
-		{
-			for(TCPResponde c: TCPResponde.values())
-				if (result == c.getValue())
-					return c;
-			return null;
-		}
 	}
 }

@@ -146,7 +146,7 @@ public class GOController extends Pane implements TCPListener {
 		else
 		{
 			Platform.runLater(()->{
-				((TCPServer) socket).destroy();
+				socket.destroy();
 				socket = null;
 			});			
 		}

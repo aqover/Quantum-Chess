@@ -1,8 +1,6 @@
 package controller;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Optional;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
