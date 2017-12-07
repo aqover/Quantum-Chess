@@ -114,6 +114,17 @@ public class ChessBoard extends Canvas {
 		
 	}
 
+	public void paintPossibilityMoves(double[][] moves, double moveProb) {
+		
+		GraphicsContext gc = this.getGraphicsContext2D();
+		for (IRenderable tmp: GameHolder.getInstance().getEntity()) {
+			if (tmp instanceof ChessValidMoves) {
+				ChessValidMoves piece = (ChessValidMoves) tmp;
+				if (piece.isVisible() && !piece.isDestroyed())
+					piece.drawProbabilty(gc, moves[piece.getI()][piece.getJ()] * moveProb);
+			}
+		}
+	}
 	public void updatePawn(Constructor<? extends ChessPiece> constructor) {
 		
 		ArrayList<IRenderable> newPawns = new ArrayList<>();
@@ -180,6 +191,8 @@ public class ChessBoard extends Canvas {
 		entity.add(new ChessBackGround());
 		
 		model.ChessBoard board = game.getDisplayBoard();
+		double[][] possibility = game.getPiecePossibility();
+		
 		for (int i = 0; i < board.getRows(); ++i) {
 			for (int j = 0; j < board.getColumns(); ++j) {
 
@@ -194,8 +207,9 @@ public class ChessBoard extends Canvas {
 						
 						Constructor<? extends ChessPiece> constructor = pieceClass.getConstructor(Integer.class, Integer.class, Team.class);
 						ChessPiece chessPiece = (ChessPiece) constructor.newInstance(i, j, team);
-							
-						 entity.add(chessPiece);
+						
+						chessPiece.setPossibility(possibility[i][j]);
+						entity.add(chessPiece);
 					
 					} catch (Exception e) {
 						e.printStackTrace();

@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import helper.Team;
 import model.ChessGameInfo.Piece;
@@ -11,46 +12,98 @@ public class QuantumChessGame implements ChessGameInfo {
 
 	// player turn
 	public final Team firstTurn;
+	public final String fin;
 	
 	// for all version
-	private ArrayList<QuantumBoard> possibleBoards;
-	public ArrayList<Character> deadPieces;
+	private List<QuantumBoard> possibleBoards;
+	public List<Character> deadPieces;
 	
-	private final NormalChessGame currentGame;
-	private final ChessBoard displayBoard;
+	protected ChessBoard currentGame;
+	protected ChessBoard displayBoard;
+	protected double[][] piecePossibility = null;
 	
 	// for undo
-	private ArrayList<QuantumMove> moves;
+	private List<QuantumMove> moves;
 	
 	public QuantumChessGame(String fin) {
 		
-		possibleBoards = new ArrayList<>();
-		currentGame = new NormalChessGame(new ChessBoard(fin, BOARD_SIZE, BOARD_SIZE));
-		displayBoard = new ChessBoard(fin, BOARD_SIZE, BOARD_SIZE);
+		this.fin = fin;
 		
+		currentGame = new ChessBoard(fin, BOARD_SIZE, BOARD_SIZE);
+		displayBoard = new ChessBoard(fin, BOARD_SIZE, BOARD_SIZE);
+		piecePossibility = new double[BOARD_SIZE][BOARD_SIZE];
+		possibleBoards = new ArrayList<>();
 		resetGame();
+		
+		moves = new ArrayList<>();
+		deadPieces = new ArrayList<>();
+		
 		firstTurn = Team.PLAYER_WHITE;
 	}
 	
+	private void resetGame() {
+		currentGame = new ChessBoard(fin, BOARD_SIZE, BOARD_SIZE);
+		displayBoard = new ChessBoard(fin, BOARD_SIZE, BOARD_SIZE);
+		possibleBoards.clear();
+		possibleBoards.add(new QuantumBoard(1.0, new ChessBoard(fin, BOARD_SIZE, BOARD_SIZE)));
+		
+		setDisplayBoard();
+	}
+	
 	public QuantumChessGame() {
-		this("RNBQKBNR" + "PPPPPPPP" + "........" + "........" + "........" + "........" + "pppppppp" + "rnbqkbnr");
+		this("RNBQKBNR" + "!@#$%^&*" + "........" + "........" + "........" + "........" + "12345678" + "rnbqkbnr");
 	}
 
 	// return the probability of the move being successful
 	public double successProb(ChessBoard.Move move) {
 		double ans = 0.0;
 		for (QuantumBoard qboard : possibleBoards) {
-			if (NormalChessGame.isMoveValid(qboard.board, move)) {
+			if (NormalChessGame.isMoveValidNoKing(qboard.board, move)) {
 				ans += qboard.prob;
 			}
 		}
 		return ans;
 	}
 	
+	public double[][] getPossibilityMoves(int i, int j) {
+		
+		double[][] result = new double[BOARD_SIZE][BOARD_SIZE];
+		for (int ii = 0; ii < BOARD_SIZE; ++ii) {
+			for (int jj = 0; jj < BOARD_SIZE; ++jj) {
+				result[ii][jj] = successProb(new ChessBoard.Move(i, j, ii, jj));
+			}
+		}
+		return result;
+	}
+	
+	protected void setDisplayBoard() {
+		
+		displayBoard.fill(Piece.EMPTY_SPACE);
+		
+		for (int i = 0; i < BOARD_SIZE; ++i) {
+			for (int j = 0; j < BOARD_SIZE; ++j) {
+				piecePossibility[i][j] = 0.0;
+			}
+		}
+		
+		for (QuantumBoard qboard : possibleBoards) {
+			ChessBoard board = qboard.board;
+			for (int i = 0; i < board.getRows(); ++i) {
+				for (int j = 0; j < board.getColumns(); ++j) {
+					if (board.getAt(i, j) != Piece.EMPTY_SPACE) {
+						piecePossibility[i][j] += qboard.getProb();
+						displayBoard.setValue(i, j, board.getAt(i, j));
+					}
+				}
+			}
+		}
+	}
+	
 	// measure one of the cell
 	public void measure(ArrayList<Integer> rows, ArrayList<Integer> cols) {
 		
 		try {
+			
 			ArrayList<QuantumBoard> newPossibleBoards = new ArrayList<>();
 			
 			double sumProb = 0.0;
@@ -59,7 +112,7 @@ public class QuantumChessGame implements ChessGameInfo {
 				boolean valid = true;
 				for (int i = 0; i < rows.size(); ++i) {
 					if (qboard.board.getAt(rows.get(i), cols.get(i)) !=
-						currentGame.getBoard().getAt(rows.get(i), cols.get(i))) {
+						currentGame.getAt(rows.get(i), cols.get(i))) {
 						valid = false;
 						break;
 					}
@@ -70,37 +123,26 @@ public class QuantumChessGame implements ChessGameInfo {
 					sumProb += qboard.getProb();
 				}
 			}
-			
-			displayBoard.fill(Piece.EMPTY_SPACE);
-			
+
+			possibleBoards.clear();
 			possibleBoards = newPossibleBoards;
-			for (QuantumBoard qboard : possibleBoards) {
-				
+			for (QuantumBoard qboard : possibleBoards) {	
 				qboard.setProb(qboard.getProb() / sumProb);
-				
-				ChessBoard board = qboard.board;
-				for (int i = 0; i < board.getRows(); ++i) {
-					for (int j = 0; j < board.getColumns(); ++j) {
-						if (board.getAt(i, j) != Piece.EMPTY_SPACE) {
-							displayBoard.setValue(i, j, board.getAt(i, j));
-						}
-					}
-				}
 			}
 			
+			setDisplayBoard();
+			
+			System.gc();
+			
 		} catch (Exception e) {
-			return;
+			e.printStackTrace();
 		}
 	}
 	
-	protected boolean checkBoard(int i, int j, char piece) {
-		if (getDisplayBoard().getAt(i, j) != piece) return false;
-		if (piece == Piece.EMPTY_SPACE) return true;
-		measure(
-			(ArrayList<Integer>) Arrays.asList(i),
-			(ArrayList<Integer>) Arrays.asList(j)
-		);
-		return getDisplayBoard().getAt(i, j) == piece;
+	protected char checkBoard(int i, int j) {
+		if (getDisplayBoard().getAt(i, j) == Piece.EMPTY_SPACE) return Piece.EMPTY_SPACE;
+		measure(new ArrayList<>(Arrays.asList(i)), new ArrayList<>(Arrays.asList(j)));
+		return getDisplayBoard().getAt(i, j);
 	}
 	
 	protected void setPosition(int i, int j, char piece) {
@@ -111,21 +153,23 @@ public class QuantumChessGame implements ChessGameInfo {
 	
 	public void upgradePawn(char whitePiece, char blackPiece) {
 		for (int i = 0; i < BOARD_SIZE; ++i) {
-			if (checkBoard(0, i, Piece.WHITE_PAWN)) {
+			if (Piece.isWhitePawn(getDisplayBoard().getAt(0, i)) && Piece.isWhitePawn(checkBoard(0, i))) {
 				setPosition(0, i, whitePiece);
 			}
-			if (checkBoard(BOARD_SIZE-1, i, Piece.BLACK_PAWN)) {
+			if (Piece.isBlackPawn(getDisplayBoard().getAt(BOARD_SIZE-1, i)) && Piece.isBlackPawn(checkBoard(BOARD_SIZE-1, i))) {
 				setPosition(BOARD_SIZE-1, i, blackPiece);
 			}
 		}
+		
+		setDisplayBoard();
 	}
 	
 	public boolean isUpgradePawnAvailable() {
 		for (int i = 0; i < BOARD_SIZE; ++i) {
-			if (checkBoard(0, i, Piece.WHITE_PAWN)) {
+			if (Piece.isWhitePawn(getDisplayBoard().getAt(0, i)) && Piece.isWhitePawn(checkBoard(0, i))) {
 				return true;
 			}
-			if (checkBoard(BOARD_SIZE-1, i, Piece.BLACK_PAWN)) {
+			if (Piece.isBlackPawn(getDisplayBoard().getAt(BOARD_SIZE-1, i)) && Piece.isBlackPawn(checkBoard(BOARD_SIZE-1, i))) {
 				return true;
 			}
 		}
@@ -139,35 +183,41 @@ public class QuantumChessGame implements ChessGameInfo {
 		
 		char purge = Piece.EMPTY_SPACE;
 		if (randomSuccess(qmove.prob)) {
-			
-			if (this.currentGame.isMoveValid(qmove.move)) {
-				char cell = this.currentGame.getBoard().getAt(qmove.move.row2, qmove.move.row1);
+			if (NormalChessGame.isMoveValidNoKing(currentGame, qmove.move)) {
+				char cell = this.currentGame.getAt(qmove.move.row2, qmove.move.col2);
 				if (cell != Piece.EMPTY_SPACE) {
 					this.deadPieces.add(cell);
 					purge = cell;
 				}
 				
-				this.currentGame.move(qmove.move);
+				this.currentGame.move(qmove.move, Piece.EMPTY_SPACE);
 			}
 		}
 		
 		ArrayList<QuantumBoard> newPossibleBoards = new ArrayList<>();
-		for (QuantumBoard qboard : possibleBoards) {
-			if (NormalChessGame.isMoveValid(qboard.board, qmove.move)) {
-				newPossibleBoards.add(
-					new QuantumBoard(
-						qboard.getProb() * qmove.prob, 
-						qboard.board.moveDuplicate(qmove.move, Piece.EMPTY_SPACE)
-					));
-				qboard.setProb(qboard.getProb() * (1 - qmove.prob));
+		for (QuantumBoard qboard : possibleBoards) {	
+			if (NormalChessGame.isMoveValidNoKing(qboard.board, qmove.move)) {
+				if (qmove.prob < 1) {
+					newPossibleBoards.add(
+						new QuantumBoard(
+							qboard.getProb() * qmove.prob, 
+							qboard.board.moveDuplicate(qmove.move, Piece.EMPTY_SPACE)
+						));
+					
+					qboard.setProb(qboard.getProb() * (1 - qmove.prob));
+				} else {
+					qboard.board.move(qmove.move, Piece.EMPTY_SPACE);
+				}
 			}
 		}
 		
 		possibleBoards.addAll(newPossibleBoards);
 		moves.add(qmove);
 
-		if (displayBoard.getAt(qmove.move.row2, qmove.move.col2) != Piece.EMPTY_SPACE) {
-			measure(new ArrayList<>(qmove.move.row2), new ArrayList<>(qmove.move.col2));
+		char startPiece = displayBoard.getAt(qmove.move.row1, qmove.move.col1);
+		char targetPiece = displayBoard.getAt(qmove.move.row2, qmove.move.col2);
+		if (targetPiece != Piece.EMPTY_SPACE && targetPiece != startPiece) {
+			measure(new ArrayList<>(Arrays.asList(qmove.move.row2)), new ArrayList<>(Arrays.asList(qmove.move.col2)));
 		}
 		
 		// if there is a new dead
@@ -180,13 +230,19 @@ public class QuantumChessGame implements ChessGameInfo {
 				for (int j = 0; j < displayBoard.getColumns(); ++j) {
 					if (displayBoard.getAt(i, j) == purge) {
 						rows.add(i);
-						cols.add(i);
+						cols.add(j);
 					}
 				}
 			}
 			
 			measure(rows, cols);
+		} else {
+			setDisplayBoard();
 		}
+	}
+	
+	public void pass() {
+		moves.add(null);
 	}
 
 	public boolean isDead(char piece) {
@@ -215,6 +271,10 @@ public class QuantumChessGame implements ChessGameInfo {
 		return displayBoard;
 	}
 	
+	public double[][] getPiecePossibility() {
+		return piecePossibility;
+	}
+	
 	public int getGameResult() {
 		
 		// white king is dead
@@ -235,15 +295,7 @@ public class QuantumChessGame implements ChessGameInfo {
 		if (result == GAME_RESULT_BLACK_WINS) return "black wins";
 		return "game is on going";
 	}
-	
-	private void resetGame() {
-
-		this.currentGame.setVersion(0);
 		
-		this.possibleBoards.clear();
-		this.possibleBoards.add(new QuantumBoard(1.0, this.currentGame.getBoard()));
-	}
-	
 	private boolean randomSuccess(double prob) {
 		return Math.random() <= prob;
 	}

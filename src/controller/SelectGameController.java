@@ -22,7 +22,7 @@ public class SelectGameController extends Pane {
 	
 	@FXML
 	public void handlerOnline(MouseEvent arg0) {
-		SceneManager.setSceneGameOnilne();
+		SceneManager.setSceneGameOnline();
 	}
 	
 	@FXML

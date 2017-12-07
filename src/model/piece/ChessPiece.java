@@ -4,6 +4,7 @@ import helper.Team;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import model.ChessBoard;
 import model.ChessGameInfo;
 import scene.gameBoard.shareObject.GameHolder;
@@ -17,6 +18,8 @@ public abstract class ChessPiece extends Entity implements ChessGameInfo {
 	protected int row, col;
 	protected boolean isdead; 
 	
+	protected double prob;
+	
 	protected boolean isSelected;
 	protected boolean isLastMoved;
 	
@@ -29,9 +32,6 @@ public abstract class ChessPiece extends Entity implements ChessGameInfo {
 		if (piece == Piece.WHITE_KING || piece == Piece.BLACK_KING) return King.getInstance();
 		if (piece == Piece.WHITE_QUEEN || piece == Piece.BLACK_QUEEN) return Queen.getInstance();
 		if (Piece.isPawn(piece)) return Pawn.getInstance();
-		
-		System.out.println(piece);
-		
 		throw new NoPieceException(piece);
 	}
 	
@@ -51,6 +51,12 @@ public abstract class ChessPiece extends Entity implements ChessGameInfo {
 			}
 			if (this.isSelected) {
 				this.drawHover(gc);
+			}
+			
+			if (prob < 1.0) {
+				gc.setFont(new Font(10));
+				gc.setFill(Color.BLACK);
+				gc.fillText(String.format("%d", (int) (100 * prob)), x, y + GameHolder.size / 2);
 			}
 		}
 	}
@@ -101,12 +107,17 @@ public abstract class ChessPiece extends Entity implements ChessGameInfo {
 		this.setPositionOnScreen(col * GameHolder.size, row * GameHolder.size);
 	}
 	
+	public void setPossibility(double prob) {
+		this.prob = prob;
+	}
+	
 	public ChessPiece(int row, int col, Team team, Image displayImage) {
 		this.row = row;
 		this.col = col;
 		this.team = team;
 		this.displayImage = displayImage;
 		this.z = 1;
+		this.prob = 1.0;
 		
 		this.isdead = false;
 		

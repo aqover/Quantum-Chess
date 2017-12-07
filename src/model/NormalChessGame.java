@@ -109,9 +109,40 @@ public class NormalChessGame implements ChessGameInfo {
 			return false;
 		}
 	}
-	
+	public static boolean isMoveValidNoKing(ChessBoard board, ChessBoard.Move move) {
+		try {
+			
+			// out of bound
+			if (!move.isInBound(0, 0, BOARD_SIZE-1, BOARD_SIZE-1)) {
+				return false;
+			}
+			
+			return ChessPiece.getInstance(board.getAt(move.row1, move.col1)).isValidMove(board, move);
+			
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
 	public static boolean isMoveValid(ChessBoard board, ChessBoard.Move move) {
-		return (new NormalChessGame(board)).isMoveValid(move);
+		try {
+			
+			// out of bound
+			if (!move.isInBound(0, 0, BOARD_SIZE-1, BOARD_SIZE-1)) {
+				return false;
+			}
+			
+			char piece = board.getAt(move.row1, move.col1);
+			if (!ChessPiece.getInstance(piece).isValidMove(board, move)) {
+				return false;
+			}
+			
+			char king = (Piece.isWhite(piece) ? Piece.WHITE_KING : Piece.BLACK_KING);
+			return !King.isKingThreaten(board.moveDuplicate(move, Piece.EMPTY_SPACE), king);
+			
+		} catch (Exception e) {
+			return false;
+		}
 	}
 	
 	public boolean isUpgradePawnAvailable() {

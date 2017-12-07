@@ -27,10 +27,12 @@ public class BoardGameOnlineController extends ChessController implements TCPLis
 	private final Team playerTurn;
 	
 	protected Chat chat;
+	protected ChessOnlineDetail detail;
 	
 	private TCPSocket socket;
 	
 	public Chat getChat() { return this.chat; }
+	public ChessOnlineDetail getOnlineDetail() { return detail; }
 	
 	public BoardGameOnlineController(String username, TCPSocket socket) {
 		super();
@@ -100,8 +102,8 @@ public class BoardGameOnlineController extends ChessController implements TCPLis
 	protected void surrender() {
 		
 		String opponentName = (this.playerTurn == Team.PLAYER_WHITE ? 
-			getDetail().getNameWhite() : 
-			getDetail().getNameBlack());
+			getOnlineDetail().getNameWhite() : 
+			getOnlineDetail().getNameBlack());
 		
 		SceneManager.showMessage(opponentName + " has resigned. You win!",
 			new SceneManager.onFinish() {

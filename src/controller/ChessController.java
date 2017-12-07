@@ -20,7 +20,6 @@ import model.piece.Queen;
 import model.piece.Rook;
 import scene.gameBoard.ChessBoard;
 import scene.gameBoard.ChessDetail;
-import scene.gameBoard.Detail;
 import scene.gameBoard.shareObject.Animation;
 import scene.gameBoard.shareObject.GameHolder;
 
@@ -28,7 +27,7 @@ public class ChessController {
 	
 	protected HBox pane;
 	protected ChessBoard board;
-	protected Detail detail;	
+	protected ChessDetail detail;	
 	protected NormalChessGame normalChessGame;
 	protected AnimationTimer animationTimer;
 	protected Tuple<Integer, Integer> mouse;
@@ -52,7 +51,7 @@ public class ChessController {
 		return normalChessGame;
 	}
 
-	public Detail getDetail() {
+	public ChessDetail getDetail() {
 		return detail;
 	}
 
@@ -81,6 +80,8 @@ public class ChessController {
 			flipBoard(); 
 		}
 	}
+	
+	public void pass() {}
 	
 	private void changeLastMovedPiece(ChessPiece piece) {
 		if (lastMovedPiece != null) {
@@ -238,7 +239,7 @@ public class ChessController {
 		return normalChessGame.getTurn();
 	}
 	
-	private void select(ChessPiece piece) {
+	protected void select(ChessPiece piece) {
 		if (selectedPiece != null) {
 			selectedPiece.setSelected(false);	
 			selectedPiece = null;

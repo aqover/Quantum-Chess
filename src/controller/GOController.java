@@ -154,7 +154,7 @@ public class GOController extends Pane implements TCPListener {
 
 	public void startGame(String w, String b) {
 		chessControl = new BoardGameOnlineController(socket instanceof TCPServer ? w : b, socket);
-        chessControl.getDetail().setName(w, b);
+        chessControl.getOnlineDetail().setName(w, b);
         chessControl.startGame();
 		SceneManager.setScene(chessControl.getPane());
 	}

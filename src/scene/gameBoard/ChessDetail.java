@@ -14,10 +14,32 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
-public class ChessDetail extends Detail {
+public class ChessDetail extends AnchorPane {
 	private long nanoSecond = 1000000000l;
 	
+	protected long timePlayerA;
+	protected long timePlayerB;
+	protected ChessController gameControl;
 	
+	public long getTimePlayerW() { return timePlayerA; }
+	public long getTimePlayerB() { return timePlayerB; }
+	public void setTimePlayerW(long timePlayerW) { this.timePlayerA = timePlayerW; }
+	public void setTimePlayerB(long timePlayerB) { this.timePlayerB = timePlayerB; }
+
+	public String getNameBlack() { return labelNameB.getText(); }
+	
+	public void setName(String a, String b) {
+		labelNameA.setText(a);
+		labelNameB.setText(b);
+	}
+
+	public void decreseTime(long decreseTime) {
+		if (gameControl.getTurn() == Team.PLAYER_WHITE)
+			timePlayerA = timePlayerA - decreseTime;
+		else if (gameControl.getTurn() == Team.PLAYER_BLACK)
+			timePlayerB = timePlayerB - decreseTime;
+	}
+
 	@FXML Label labelNameA;
 	@FXML Label labelTimeA;
 	@FXML Label labelNameB;
@@ -55,13 +77,9 @@ public class ChessDetail extends Detail {
 			});
 	}
 	
-	public void setName(String a, String b) {
-		labelNameA.setText(a);
-		labelNameB.setText(b);
-	}
-	
 	public ChessDetail(ChessController gameControl) {
-		super(gameControl);
+		super();
+		this.gameControl = gameControl;
 
 		timePlayerA = timePlayerB = 60*60*nanoSecond; //unit in nanosecond, 60 mins;
 		
@@ -90,30 +108,5 @@ public class ChessDetail extends Detail {
 		labelTimeA.setText(String.format("%d:%d", (timePlayerA/nanoSecond)/60, (timePlayerA/nanoSecond)%60));
 		labelTimeB.setText(String.format("%d:%d", (timePlayerB/nanoSecond)/60, (timePlayerB/nanoSecond)%60));
 	}
-	
-	public void decreseTime(long decreseTime)
-	{
-		if (gameControl.getTurn() == Team.PLAYER_WHITE)
-			timePlayerA = timePlayerA - decreseTime;
-		else if (gameControl.getTurn() == Team.PLAYER_BLACK)
-			timePlayerB = timePlayerB - decreseTime;
-	}
-
-	public long getTimePlayerW() {
-		return timePlayerA;
-	}
-
-	public long getTimePlayerB() {
-		return timePlayerB;
-	}
-
-	public void setTimePlayerW(long timePlayerW) {
-		this.timePlayerA = timePlayerW;
-	}
-
-	public void setTimePlayerB(long timePlayerB) {
-		this.timePlayerB = timePlayerB;
-	}
-	
 	
 }
