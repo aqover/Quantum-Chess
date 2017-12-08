@@ -1,6 +1,7 @@
 package scene.gameBoard.shareObject;
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -8,6 +9,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import helper.Tuple;
 import javafx.scene.image.Image;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import model.piece.ChessPiece;
 
 public class GameHolder {
@@ -29,7 +33,7 @@ public class GameHolder {
 	public static Image bgDark;
 	public static Image bgLight;
 	
-	public static File pieceMove;
+	public static AudioClip pieceMove;
 	
 	public static double scoreA, scoreB;
 	
@@ -141,11 +145,18 @@ public class GameHolder {
 		wp = new Image("merida/wp.png");
 		wq = new Image("merida/wq.png");
 		wr = new Image("merida/wr.png");
-		
-		bgDark = new Image("square_dark.jpg");
-		bgLight = new Image("square_light.jpg");
-		
-		pieceMove = new File("res\\move.mp3");
+
+		ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		bgDark = new Image(loader.getResourceAsStream("square_dark.jpg"));
+		bgLight = new Image(loader.getResourceAsStream("square_light.jpg"));
+	
+		pieceMove = null;
+		try {
+			pieceMove = new AudioClip(loader.getResource("move.mp3").toURI().toString());
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }

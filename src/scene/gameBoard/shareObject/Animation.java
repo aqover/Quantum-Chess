@@ -51,7 +51,9 @@ public class Animation extends AnimationTimer {
 		stopNanoTime = startNanoTime + (animationTimeSpeed * 1000000l);
 		
 		this.onFinished = onFinished;
-		new AudioClip(GameHolder.pieceMove.toURI().toString()).play();
+		if (GameHolder.pieceMove != null) {
+			GameHolder.pieceMove.play();
+		}
 	}
 	
 	public void update(long currentNanoTime) {
@@ -75,6 +77,10 @@ public class Animation extends AnimationTimer {
 		isAnimating = false;
 		source = null;
 		sink = null;
+		
+		if (GameHolder.pieceMove != null) {
+			GameHolder.pieceMove.stop();
+		}
 	}
 	
 	private double calculateDistance() {
