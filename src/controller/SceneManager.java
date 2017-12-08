@@ -22,6 +22,8 @@ public final class SceneManager {
 	
 	private static boolean disable;
 	
+	private static boolean isQuantumChess;
+	
 	static {
 		mainMenu = new Scene(new MainMenuController());
 		selectGame = new Scene(new SelectGameController());
@@ -29,9 +31,10 @@ public final class SceneManager {
 		gameOnline = new Scene(new GOController());
 		
 		quantumGameOffline = new Scene(new GQFController());
-		quantumGameOnline = new Scene(new GQOController());
+//		quantumGameOnline = new Scene(new GQOController());
 		
 		disable = false;
+		isQuantumChess = false;
 	}
 	
 	public static void initialize(Stage stage) {
@@ -48,24 +51,23 @@ public final class SceneManager {
 		primaryStage.setScene(mainMenu);
 	}
 	
-	public static void setSceneSelectGame() {
+	public static void setSceneSelectGame(boolean isQuantumChess) {
+		SceneManager.isQuantumChess = isQuantumChess;
 		primaryStage.setScene(selectGame);
 	}
 	
 	public static void setSceneGameOnline() {
-		primaryStage.setScene(gameOnline);
+		if (isQuantumChess)
+			primaryStage.setScene(quantumGameOnline);
+		else
+			primaryStage.setScene(gameOnline);
 	}
 	
 	public static void setSceneGameOffline() {
-		primaryStage.setScene(gameOffline);
-	}
-	
-	public static void setSceneQuantumChessOffline() {
-		primaryStage.setScene(quantumGameOffline);
-	}
-	
-	public static void setSceneQuantumChessOnline() {
-		primaryStage.setScene(quantumGameOnline);
+		if (isQuantumChess)
+			primaryStage.setScene(quantumGameOffline);
+		else
+			primaryStage.setScene(gameOffline);
 	}
 	
 	public static void setScene(Pane pane)

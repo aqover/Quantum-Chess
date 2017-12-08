@@ -16,6 +16,8 @@ public class GFController extends Pane {
 	@FXML TextField playerA;
 	@FXML TextField playerB;
 	
+	protected ChessController chessControl;
+	
 	public GFController() {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/scene/GameOffline.fxml"));
@@ -29,7 +31,7 @@ public class GFController extends Pane {
 	
 	@FXML
 	public void handlerBack(MouseEvent arg0) {
-		SceneManager.setSceneSelectGame();
+		SceneManager.setSceneSelectGame(false);
 	}
 	
 	@FXML 
@@ -48,14 +50,18 @@ public class GFController extends Pane {
         	return;
        	}
         
-        ChessController chessControl = new ChessController();
-        chessControl.getDetail().setName(playerA.getText(), playerB.getText());
-        chessControl.startGame();
-		SceneManager.setScene(chessControl.getPane());
+        createGameController();
     }
 
 	public void showAlert(AlertType type, String msg) {
 		Alert alert = new Alert(AlertType.NONE, msg, ButtonType.OK);
 		alert.show();
+	}
+	
+	protected void createGameController() {
+		chessControl = new ChessController();
+        chessControl.getDetail().setName(playerA.getText(), playerB.getText());
+        chessControl.startGame();
+		SceneManager.setScene(chessControl.getPane());
 	}
 }

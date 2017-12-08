@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -15,6 +16,9 @@ public class MainMenuController extends Pane {
 	
 	@FXML TextField playerA;
 	@FXML TextField playerB;
+	
+	@FXML Button normalChess;
+	@FXML Button quantumChess;
 	
 	public MainMenuController() {		
 		try {
@@ -50,8 +54,13 @@ public class MainMenuController extends Pane {
     }
 	
 	@FXML 
-	public void handlerSelectGame(MouseEvent arg0) {
-		SceneManager.setSceneSelectGame();
+	public void handlerSelectNormal(MouseEvent arg0) {;
+		SceneManager.setSceneSelectGame(false);
+	}
+	
+	@FXML 
+	public void handlerSelectQuantum(MouseEvent arg0) {;
+		SceneManager.setSceneSelectGame(true);
 	}
 	
 	@FXML 

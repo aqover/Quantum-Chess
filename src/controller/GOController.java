@@ -21,21 +21,17 @@ public class GOController extends Pane implements TCPListener {
 	
 	private static final GOController instance = new GOController();
 
-	@FXML
-	TextField ip;
-	@FXML
-	TextField name;
-	@FXML
-	Pane modal;
-	@FXML
-	Pane main;
-	@FXML
-	Label time;
+	@FXML TextField ip;
+	@FXML TextField name;
+	@FXML Pane modal;
+	@FXML Pane main;
+	@FXML Label time;
 
 	protected static final long timeout = 30000000000l; // 30 second
 	protected static TCPSocket socket;
-	private static BoardGameOnlineController chessControl;
 	protected AcceptClient waiting;
+	
+	private static BoardGameOnlineController chessControl;
 	
 	protected static String nameWhite;
 	protected static String nameBlack;
@@ -53,7 +49,7 @@ public class GOController extends Pane implements TCPListener {
 
 	@FXML
 	public void handlerBack(MouseEvent arg0) {
-		SceneManager.setSceneSelectGame();
+		SceneManager.setSceneSelectGame(true);
 	}
 
 	@FXML
@@ -141,7 +137,7 @@ public class GOController extends Pane implements TCPListener {
 	public void linkReady(Thread thread) {
 		if (((AcceptClient) thread).isSuccess())
 		{
-			startGame(nameWhite, nameBlack);
+			createGameController();
 		}
 		else
 		{
@@ -152,9 +148,9 @@ public class GOController extends Pane implements TCPListener {
 		}
 	}
 
-	public void startGame(String w, String b) {
-		chessControl = new BoardGameOnlineController(socket instanceof TCPServer ? w : b, socket);
-        chessControl.getOnlineDetail().setName(w, b);
+	public void createGameController() {
+		chessControl = new BoardGameOnlineController(socket instanceof TCPServer ? nameWhite : nameBlack, socket);
+        chessControl.getOnlineDetail().setName(nameWhite, nameBlack);
         chessControl.startGame();
 		SceneManager.setScene(chessControl.getPane());
 	}

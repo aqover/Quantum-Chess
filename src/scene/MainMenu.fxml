@@ -3,10 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.Cursor?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
@@ -23,12 +19,17 @@
 	         </font>
 	      </Label>
 
-	      <Button layoutX="50.0" layoutY="80.0" onMouseClicked="#handlerSelectGame" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #40C4FF;" text="Start Game" textFill="WHITE">
+	      <Button fx:id="normalChess" layoutX="50.0" layoutY="80.0" onMouseClicked="#handlerSelectNormal" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #40C4FF;" text="Normal Chess" textFill="WHITE">
 
 	         <font>
 	            <Font name="System Bold" size="18.0" />
 	         </font>
 	      </Button>
+         <Button fx:id="quantumChess" layoutX="50.0" layoutY="150.0" onMouseClicked="#handlerSelectQuantum" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #40C4FF;" text="Quantum Chess" textFill="WHITE">
+            <font>
+               <Font name="System Bold" size="18.0" />
+            </font>
+         </Button>
          <FlowPane alignment="CENTER_LEFT" hgap="15.0" layoutY="365.0" prefHeight="25.0" prefWidth="300.0">
             <children>
                <Label onMouseClicked="#handlerHTP" text="How to play" textFill="#40c4ff">
