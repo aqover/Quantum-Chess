@@ -82,29 +82,36 @@ public final class SceneManager {
 		default public void run(ButtonType btn) {}
 	}
 	
-	public static synchronized void showMessage(String msg, onFinish onDone) {
+	public static synchronized boolean showMessage(String msg, onFinish onDone) {
 		
-		if (disable) return;
+		if (disable) { onDone.run(); return false; }
 		disable = true;
 		
 		Alert alert = new Alert(AlertType.NONE, msg, ButtonType.OK);
-		alert.setOnHidden(e -> { onDone.run(); disable = false; });
+		alert.setOnHidden(e -> { 
+			disable = false; 
+			onDone.run(); 
+		});
 		alert.show();
+		
+		return true;
 	}
 	
-	public static synchronized void showMessage(String msg, Collection<? extends ButtonType> btns, onFinish onDone) {
+	public static synchronized boolean showMessage(String msg, Collection<? extends ButtonType> btns, onFinish onDone) {
 		
-		if (disable) return;
+		if (disable) { onDone.run(null); return false; }
 		disable = true;
 	
 		Alert alert = new Alert(AlertType.NONE, "");
 		alert.setHeaderText(msg);
 		alert.getButtonTypes().addAll(btns);
 		alert.setOnHidden((e) -> {
-			onDone.run(alert.getResult());
 			disable = false;
+			onDone.run(alert.getResult());
 		});
 		
 		alert.show();
+		
+		return true;
 	}
 }

@@ -99,9 +99,9 @@ public class GQOController extends GOController implements TCPListener {
 	}
 
 	@Override
-	public void startGame(String w, String b) {
-		chessControl = new QuantumChessOnlineController(socket instanceof TCPServer ? w : b, socket);
-        chessControl.getOnlineDetail().setName(w, b);
+	public void createGameController() {
+		chessControl = new QuantumChessOnlineController(socket instanceof TCPServer ? nameWhite : nameBlack, socket);
+        chessControl.getOnlineDetail().setName(nameWhite, nameBlack);
         chessControl.startGame();
 		SceneManager.setScene(chessControl.getPane());
 	}
