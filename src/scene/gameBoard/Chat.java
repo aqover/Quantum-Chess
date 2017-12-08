@@ -1,26 +1,30 @@
 package scene.gameBoard;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import library.socket.TCPCommand.Command;
 import library.socket.TCPSocket;
 
-public class Chat extends VBox {
+public class Chat extends AnchorPane {
 
 	private static int CHAT_LIMIT = 20;
 	
@@ -29,17 +33,18 @@ public class Chat extends VBox {
 	protected String username;
 	protected TCPSocket socket;
 	
-	protected Label label = new Label();
-	protected TextField inputMessage;
-	protected VBox messageField;
-	
+	@FXML Button clear;
+	@FXML Button send;
+	@FXML TextField inputMessage;
+	@FXML VBox messageField;
+		
 	public static class ChatField {
 
 		protected final String user;
 		protected final String message;		
 		protected final long time;
 		
-		protected Text text;
+		protected Label text;
 		protected TextFlow textflow;
 		protected Pane flowpane;
 		
@@ -62,9 +67,16 @@ public class Chat extends VBox {
 		}
 
 		protected void createPane() {
-			this.text = new Text(this.user + ": " + this.message);
-			this.textflow = new TextFlow(text);
+			this.text = new Label();
+			this.text.setText(this.user);
+			this.text.setPadding(new Insets(5, 5, 5, 5));
+			this.text.setStyle("-fx-background-color: #81D4FA;");
+			this.textflow = new TextFlow(new Text(this.message));
+			this.textflow.setPadding(new Insets(5, 5, 5, 5));
 			this.flowpane = new FlowPane();
+			this.flowpane.setMaxWidth(200.0);
+			this.flowpane.setMinHeight(20.0);
+			this.flowpane.getChildren().add(this.text);
 			this.flowpane.getChildren().add(this.textflow);
 		}
 		
@@ -95,6 +107,8 @@ public class Chat extends VBox {
 			}
 			chatFieldData.add(idx, chatField);
 		}
+		
+		update();
 	}
 	
 	public void update() {
@@ -112,16 +126,14 @@ public class Chat extends VBox {
 		this.username = null;
 		this.socket = null;
 		
-		label.setText("Chat");
-		label.setPrefWidth(200);
-		label.setAlignment(Pos.CENTER);
-		label.setPadding(new Insets(20, 0, 20, 0));
-		
-		messageField = new VBox();
-		VBox.setVgrow(messageField, Priority.ALWAYS);
-		
-		inputMessage = new TextField();
-		inputMessage.setPromptText("Message (Enter to send)");
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("Chat.fxml"));
+			loader.setRoot(this);
+			loader.setController(this);
+			loader.load();
+		} catch (IOException ex) {
+            System.out.print(ex);
+        }
 
 		inputMessage.setOnKeyReleased(new EventHandler<KeyEvent>() {
 			
@@ -129,31 +141,10 @@ public class Chat extends VBox {
 			public void handle(KeyEvent evt) {
 				
 				if (evt.getCode().equals(KeyCode.ENTER)) {
-
-					// create new chatField
-					String message = inputMessage.getText().trim();
-					if (message == "") return;
-					
-					ChatField chatField = new ChatField(getUserName(), message, (new Date()).getTime());
-					insert(chatField);
-					
-					// send message
-					TCPSocket socket = getSocket();
-					if (socket != null && socket.isConnected()) {
-						socket.write(Command.SEND_TEXT, chatField.encode());
-					}
-					
-					// clear input field
-					inputMessage.clear();
+					sendMessage();
 				}
 			}
 		});
-		
-		this.setPadding(new Insets(10, 5, 10, 5));
-		
-		getChildren().add(label);
-		getChildren().add(messageField);
-		getChildren().add(inputMessage);
 	}
 	
 	public String getUserName() { return username; }	
@@ -165,6 +156,34 @@ public class Chat extends VBox {
 	@Override
 	public void requestFocus() {
 		inputMessage.requestFocus();
+	}
+	
+	@FXML
+	protected void handleClear(MouseEvent event) {
+		inputMessage.clear();
+    }
+	
+	@FXML
+	protected void handleSend(MouseEvent event) {
+		sendMessage();
+    }
+	
+	private void sendMessage() {
+		// create new chatField
+		String message = inputMessage.getText().trim();
+		if (message == "") return;
+		
+		ChatField chatField = new ChatField(getUserName(), message, (new Date()).getTime());
+		insert(chatField);
+		
+		// send message
+		TCPSocket socket = getSocket();
+		if (socket != null && socket.isConnected()) {
+			socket.write(Command.SEND_TEXT, chatField.encode());
+		}
+		
+		// clear input field
+		inputMessage.clear();
 	}
 	
 }

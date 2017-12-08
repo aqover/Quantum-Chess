@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import helper.Team;
-import model.ChessGameInfo.Piece;
-import model.piece.King;
 
 public class QuantumChessGame implements ChessGameInfo {
 

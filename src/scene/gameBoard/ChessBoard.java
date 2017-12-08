@@ -2,7 +2,6 @@ package scene.gameBoard;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.List;
 
 import helper.InputUtility;
 import helper.Team;

@@ -1,9 +1,7 @@
 package controller;
 
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 
 import helper.InputUtility;
 import helper.Team;
@@ -20,7 +18,6 @@ import model.piece.Knight;
 import model.piece.Queen;
 import model.piece.Rook;
 import scene.gameBoard.ChessBoard;
-import scene.gameBoard.ChessDetail;
 import scene.gameBoard.QuantumChessDetail;
 import scene.gameBoard.shareObject.Animation;
 import scene.gameBoard.shareObject.GameHolder;

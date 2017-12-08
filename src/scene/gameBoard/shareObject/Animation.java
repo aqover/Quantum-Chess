@@ -2,6 +2,7 @@ package scene.gameBoard.shareObject;
 
 import helper.Tuple;
 import javafx.animation.AnimationTimer;
+import javafx.scene.media.AudioClip;
 import model.piece.ChessPiece;
 
 public class Animation extends AnimationTimer {	
@@ -50,6 +51,9 @@ public class Animation extends AnimationTimer {
 		stopNanoTime = startNanoTime + (animationTimeSpeed * 1000000l);
 		
 		this.onFinished = onFinished;
+		if (GameHolder.pieceMove != null) {
+			GameHolder.pieceMove.play();
+		}
 	}
 	
 	public void update(long currentNanoTime) {
@@ -68,12 +72,15 @@ public class Animation extends AnimationTimer {
 	}
 	
 	public void stopAnimate() {
-		
 		this.onFinished.run();
 		
 		isAnimating = false;
 		source = null;
-		sink = null;		
+		sink = null;
+		
+		if (GameHolder.pieceMove != null) {
+			GameHolder.pieceMove.stop();
+		}
 	}
 	
 	private double calculateDistance() {

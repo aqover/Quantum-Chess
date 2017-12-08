@@ -1,8 +1,6 @@
 package scene.gameBoard.view;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import scene.gameBoard.shareObject.GameHolder;
 import scene.gameBoard.shareObject.IRenderable;
 
 public class Entity implements IRenderable {

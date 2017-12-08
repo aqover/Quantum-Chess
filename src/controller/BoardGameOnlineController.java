@@ -71,7 +71,7 @@ public class BoardGameOnlineController extends ChessController implements TCPLis
 				board.paintComponent();
 				
 				// chat
-				chat.update();
+				//chat.update();
 				
 				if (selectedPiece != null) {
 					board.paintValidMoves(normalChessGame.getValidMoves(
@@ -230,7 +230,7 @@ public class BoardGameOnlineController extends ChessController implements TCPLis
 
 	@Override public void OnSended(String msg) { }
 
-	@Override public void OnClosed() { }
+	@Override public void OnClosed() { surrender(); }
 
 	@Override public void OnConnected() { }
 }
