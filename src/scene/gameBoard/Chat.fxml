@@ -25,19 +25,16 @@
 	      </FlowPane>
       <VBox prefWidth="200.0" AnchorPane.bottomAnchor="52.0" AnchorPane.topAnchor="50.0">
          <children>
-            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefWidth="200.0" style="-fx-border-width: 0;" VBox.vgrow="ALWAYS">
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefWidth="200.0" style="-fx-border-width: 0; -fx-background-color: transparent;" VBox.vgrow="ALWAYS">
               <content>
                 <AnchorPane prefWidth="200.0">
                      <children>
-                        <VBox fx:id="messageField" prefWidth="200.0" AnchorPane.topAnchor="0.0">
-                           <padding>
-                              <Insets top="1.0" />
-                           </padding></VBox>
+                        <VBox fx:id="messageField" prefWidth="200.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
               </content>
                <VBox.margin>
-                  <Insets />
+                  <Insets left="-1.0" top="-1.0" />
                </VBox.margin>
             </ScrollPane>
          </children></VBox>

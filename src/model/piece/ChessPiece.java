@@ -1,10 +1,11 @@
 package model.piece;
 
 import helper.Team;
+import helper.Ultility;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
+import javafx.scene.shape.ArcType;
 import model.ChessBoard;
 import model.ChessGameInfo;
 import scene.gameBoard.shareObject.GameHolder;
@@ -40,23 +41,24 @@ public abstract class ChessPiece extends Entity implements ChessGameInfo {
 	
 	public void draw(GraphicsContext gc) {
 		if (displayImage != null && isVisible()) {
+			if (prob < 1.0) {
+				gc.setStroke(Ultility.rgbFade(Color.RED, Color.GREENYELLOW, prob));
+				gc.setLineWidth(6);
+				gc.strokeArc(x + 6, y + 6, GameHolder.size - 12, GameHolder.size - 12, -90, 360*prob, ArcType.OPEN);
+			}
+			
 			gc.drawImage(displayImage, 
-				x, 
-				y, 
-				GameHolder.size, 
-				GameHolder.size);
+				x + ((prob < 1.0)? GameHolder.size*0.05: 0), 
+				y + ((prob < 1.0)? GameHolder.size*0.05: 0), 
+				(prob < 1.0)? GameHolder.size*0.9 : GameHolder.size, 
+				(prob < 1.0)? GameHolder.size*0.9 : GameHolder.size);
 			
 			if (this.isLastMoved) {
 				this.drawLastMoved(gc);
 			}
+			
 			if (this.isSelected) {
 				this.drawHover(gc);
-			}
-			
-			if (prob < 1.0) {
-				gc.setFont(new Font(10));
-				gc.setFill(Color.BLACK);
-				gc.fillText(String.format("%d", (int) (100 * prob)), x, y + GameHolder.size / 2);
 			}
 		}
 	}

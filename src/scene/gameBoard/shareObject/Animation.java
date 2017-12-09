@@ -2,7 +2,6 @@ package scene.gameBoard.shareObject;
 
 import helper.Tuple;
 import javafx.animation.AnimationTimer;
-import javafx.scene.media.AudioClip;
 import model.piece.ChessPiece;
 
 public class Animation extends AnimationTimer {	

@@ -32,9 +32,11 @@ public class GOController extends Pane implements TCPListener {
 	protected AcceptClient waiting;
 	
 	private static BoardGameOnlineController chessControl;
+	private static String MY_GAME_TYPE = "NORMAL_CHESS";
 	
 	protected static String nameWhite;
 	protected static String nameBlack;
+	protected static String gameType;
 
 	public GOController() {
 		try {
@@ -45,6 +47,12 @@ public class GOController extends Pane implements TCPListener {
 		} catch (IOException ex) {
 			System.out.print(ex);
 		}
+	}
+	
+	public void clear() {
+		nameWhite = nameBlack = gameType = null;
+		ip.setText("");
+		name.setText("");
 	}
 
 	@FXML
@@ -69,17 +77,7 @@ public class GOController extends Pane implements TCPListener {
 		String host = ip.getText().split(":")[0];
 		String port = ip.getText().split(":")[1];
 
-		try {
-			socket = new TCPClient(host, Integer.parseInt(port));
-			((TCPClient) socket).addListener(instance);
-		} catch (NumberFormatException ex) {
-			showAlert(AlertType.WARNING, "The ip or port invalid.");
-			return;
-		} catch (Exception e) {
-			System.out.println(e);
-			showAlert(AlertType.WARNING, "System error, Contact the adminstrator.");
-			return;
-		}
+		createTCPClient(host, port, instance);
 		
 		waiting = new AcceptClient();
 		waiting.addListener(() -> {linkReady(waiting);});
@@ -100,19 +98,7 @@ public class GOController extends Pane implements TCPListener {
 		nameWhite = name.getText();		
 		String port = ip.getText().split(":")[1];
 		
-		try {
-			socket = new TCPServer(Integer.parseInt(port));			
-			((TCPServer) socket).addListener(instance);
-
-		} catch (NumberFormatException ex) {
-			showAlert(AlertType.WARNING, "The ip or port invalid.");
-			return;
-			
-		} catch (Exception e) {
-			System.out.println(e);
-			showAlert(AlertType.WARNING, "System error, Contact the adminstrator.");
-			return;
-		}
+		this.createTCPServer(port, instance);
 		
 		waiting = new AcceptClient();
 		waiting.addListener(() -> {linkReady(waiting);});
@@ -147,8 +133,44 @@ public class GOController extends Pane implements TCPListener {
 			});			
 		}
 	}
+	
+	protected void createTCPClient(String host, String port, TCPListener instance) {
+		try {
+			socket = new TCPClient(host, Integer.parseInt(port));
+			((TCPClient) socket).addListener(instance);
+		} catch (NumberFormatException ex) {
+			showAlert(AlertType.WARNING, "The ip or port invalid.");
+			return;
+		} catch (Exception e) {
+			System.out.println(e);
+			showAlert(AlertType.WARNING, "System error, Contact the adminstrator.");
+			return;
+		}
+	}
+	
+	protected void createTCPServer(String port, TCPListener instance) {
+		try {
+			socket = new TCPServer(Integer.parseInt(port));			
+			((TCPServer) socket).addListener(instance);
 
-	public void createGameController() {
+		} catch (NumberFormatException ex) {
+			showAlert(AlertType.WARNING, "The ip or port invalid.");
+			return;
+			
+		} catch (Exception e) {
+			System.out.println(e);
+			showAlert(AlertType.WARNING, "System error, Contact the adminstrator.");
+			return;
+		}
+	}
+
+	protected void createGameController() {
+		if (!gameType.equals(MY_GAME_TYPE))
+		{
+			socket.destroy();
+			return;
+		}
+		
 		chessControl = new BoardGameOnlineController(socket instanceof TCPServer ? nameWhite : nameBlack, socket);
         chessControl.getOnlineDetail().setName(nameWhite, nameBlack);
         chessControl.startGame();
@@ -180,16 +202,15 @@ public class GOController extends Pane implements TCPListener {
 				
 				if (socket.isConnected())
 				{
-					if (socket instanceof TCPClient)
-					{
-						if (nameWhite != null)
-							break;
-					}
-					else if (socket instanceof TCPServer)
-					{
-						if (nameBlack != null)
-							break;
-					}						
+					if (gameType == null) 
+						socket.write(Command.GET_GAME_TYPE, "");
+					if (nameWhite == null) 
+						socket.write(Command.GET_NAME_PLAYER_WHITE, "");
+					if (nameBlack == null) 
+						socket.write(Command.GET_NAME_PLAYER_BLACK, "");
+					
+					if (gameType != null && nameWhite != null && nameBlack != null)
+						break;
 				}
 				
 				try { sleep(1000); } catch (InterruptedException e) { }
@@ -213,11 +234,25 @@ public class GOController extends Pane implements TCPListener {
 
 	@Override
 	public void OnReceived(Command cmd, String value) {
-		if (cmd == Command.NAME_PLAYER) {
-			if (socket instanceof TCPServer)
-				nameBlack = value;
-			else if(socket instanceof TCPClient)
-				nameWhite = value;
+		switch(cmd)
+		{
+			case SET_NAME_PLAYER_WHITE:
+				nameWhite = value; break;
+			case SET_NAME_PLAYER_BLACK:
+				nameBlack = value; break;
+			case SET_GAME_TYPE:
+				gameType = value; break;
+			case GET_NAME_PLAYER_WHITE:
+				socket.write(Command.SET_NAME_PLAYER_WHITE, nameWhite);
+				break;
+			case GET_NAME_PLAYER_BLACK:
+				socket.write(Command.SET_NAME_PLAYER_BLACK, nameBlack);
+				break;
+			case GET_GAME_TYPE:
+				socket.write(Command.SET_GAME_TYPE, MY_GAME_TYPE);
+				break;
+			default:
+				break;
 		}
 		
 		if (chessControl != null) {
@@ -232,12 +267,5 @@ public class GOController extends Pane implements TCPListener {
 	public void OnClosed() { }
 
 	@Override 
-	public void OnConnected() {
-		
-		if (socket instanceof TCPServer)
-			socket.write(Command.NAME_PLAYER.toString() + nameWhite);
-		else if(socket instanceof TCPClient)
-			socket.write(Command.NAME_PLAYER.toString() + nameBlack);
-				
-	}
+	public void OnConnected() { }
 }

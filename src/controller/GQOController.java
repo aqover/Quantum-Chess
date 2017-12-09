@@ -1,30 +1,18 @@
 package controller;
 
-import java.io.IOException;
-
-import controller.GOController.AcceptClient;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
-import library.socket.TCPClient;
 import library.socket.TCPCommand.Command;
 import library.socket.TCPListener;
 import library.socket.TCPServer;
-import library.socket.TCPSocket;
 
 public class GQOController extends GOController implements TCPListener {
 	
 	private static final GQOController instance = new GQOController();
 
 	private static QuantumChessOnlineController chessControl;
-	
+	private static String MY_GAME_TYPE = "QUANTUM_CHESS";
 	public GQOController() {
 		super();
 	}
@@ -47,17 +35,7 @@ public class GQOController extends GOController implements TCPListener {
 		String host = ip.getText().split(":")[0];
 		String port = ip.getText().split(":")[1];
 
-		try {
-			socket = new TCPClient(host, Integer.parseInt(port));
-			((TCPClient) socket).addListener(instance);
-		} catch (NumberFormatException ex) {
-			showAlert(AlertType.WARNING, "The ip or port invalid.");
-			return;
-		} catch (Exception e) {
-			System.out.println(e);
-			showAlert(AlertType.WARNING, "System error, Contact the adminstrator.");
-			return;
-		}
+		createTCPClient(host, port, instance);
 		
 		waiting = new AcceptClient();
 		waiting.addListener(() -> {linkReady(waiting);});
@@ -79,19 +57,7 @@ public class GQOController extends GOController implements TCPListener {
 		nameWhite = name.getText();		
 		String port = ip.getText().split(":")[1];
 		
-		try {
-			socket = new TCPServer(Integer.parseInt(port));			
-			((TCPServer) socket).addListener(instance);
-
-		} catch (NumberFormatException ex) {
-			showAlert(AlertType.WARNING, "The ip or port invalid.");
-			return;
-			
-		} catch (Exception e) {
-			System.out.println(e);
-			showAlert(AlertType.WARNING, "System error, Contact the adminstrator.");
-			return;
-		}
+		this.createTCPServer(port, instance);
 		
 		waiting = new AcceptClient();
 		waiting.addListener(() -> {linkReady(waiting);});
@@ -99,21 +65,42 @@ public class GQOController extends GOController implements TCPListener {
 	}
 
 	@Override
-	public void createGameController() {
+	protected void createGameController() {
+//		System.out.println(nameWhite + " " + nameBlack + " " + gameType);
+		if (!gameType.equals(MY_GAME_TYPE))
+		{
+			socket.destroy();
+			return;
+		}
+		
 		chessControl = new QuantumChessOnlineController(socket instanceof TCPServer ? nameWhite : nameBlack, socket);
         chessControl.getOnlineDetail().setName(nameWhite, nameBlack);
         chessControl.startGame();
 		SceneManager.setScene(chessControl.getPane());
 	}
 	
-
 	@Override
 	public void OnReceived(Command cmd, String value) {
-		if (cmd == Command.NAME_PLAYER) {
-			super.OnReceived(cmd, value);
+		switch(cmd)
+		{
+			case SET_NAME_PLAYER_WHITE:
+				nameWhite = value; break;
+			case SET_NAME_PLAYER_BLACK:
+				nameBlack = value; break;
+			case SET_GAME_TYPE:
+				gameType = value; break;
+			case GET_NAME_PLAYER_WHITE:
+				socket.write(Command.SET_NAME_PLAYER_WHITE, nameWhite);
+				break;
+			case GET_NAME_PLAYER_BLACK:
+				socket.write(Command.SET_NAME_PLAYER_BLACK, nameBlack);
+				break;
+			case GET_GAME_TYPE:
+				socket.write(Command.SET_GAME_TYPE, MY_GAME_TYPE);
+				break;
+			default:
+				break;
 		}
-		
-		System.out.println(cmd + " " + value);
 		
 		if (chessControl != null) {
 			chessControl.OnReceived(cmd, value);

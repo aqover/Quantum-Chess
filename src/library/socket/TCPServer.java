@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import library.socket.TCPCommand.Command;
 
 public class TCPServer extends Thread implements TCPSocket {
+	private static final long KEEP_ALIVE_INTERVAL = 1000000000l;
 	
 	private static ServerSocket server;
 	private static Socket client;
@@ -47,8 +48,17 @@ public class TCPServer extends Thread implements TCPSocket {
 		String msg;
 		Command cmd;
 		int len  = 0;
+		long prevTime = System.nanoTime();
+		long nowTime;
 		while(isConnected())
-		{			
+		{
+			nowTime = System.nanoTime();
+			if ((nowTime - prevTime) > KEEP_ALIVE_INTERVAL)
+			{
+				write(Command.TCP_KEEPALIVE, "");
+				prevTime = nowTime;
+			}
+				
 			msg = read();
 			if (msg != null)
 			{				
@@ -62,8 +72,10 @@ public class TCPServer extends Thread implements TCPSocket {
 					if (cmd == Command.TCP_FAIL)
 					{
 						lossPacket++;
-						write(lastPacket);
+						write(lastPacket, true);
 					}
+					else if (cmd == Command.TCP_KEEPALIVE)
+						continue;
 					else
 						OnReceived(cmd, msg.substring(5, 3+len));
 				}
@@ -79,8 +91,6 @@ public class TCPServer extends Thread implements TCPSocket {
 	
 	@Override
 	public String read() {
-		if (client == null) return null;
-		
 		try {
 			if (client.getInputStream().available() > 0)
 			{
@@ -91,7 +101,7 @@ public class TCPServer extends Thread implements TCPSocket {
 				return new String(buf, "UTF-16");
 			}
 		}
-		catch (IOException ex) { 
+		catch (Exception ex) { 
 			close(false, true);
 		}
 		
@@ -99,9 +109,8 @@ public class TCPServer extends Thread implements TCPSocket {
 	}	
 	
 	@Override
-	public int write(String msg) {
-		
-		lastPacket = msg;
+	public int write(String msg, boolean savePacket) {
+		if (savePacket) lastPacket = msg;
 		
 		String text = String.format("%03d%s", msg.length(), msg);
 		try {
@@ -109,7 +118,7 @@ public class TCPServer extends Thread implements TCPSocket {
 			OnSended(text);
 			return msg.length();
 		}
-		catch (IOException ex) { 
+		catch (Exception ex) { 
 			close(false, true);
 		}
 		

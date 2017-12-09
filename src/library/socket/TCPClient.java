@@ -9,6 +9,7 @@ import javafx.application.Platform;
 import library.socket.TCPCommand.Command;
 
 public class TCPClient extends Thread implements Runnable, TCPSocket {	
+	private static final long KEEP_ALIVE_INTERVAL = 1000000000l;
 	private static Socket socket;
 	
 	private String host;
@@ -38,46 +39,6 @@ public class TCPClient extends Thread implements Runnable, TCPSocket {
 	}
 	
 	@Override
-	public String read()
-	{
-		if (socket == null)
-			return null;
-		
-		try {
-			if (socket.getInputStream().available() > 0)
-			{
-				byte[] buf = new byte[socket.getInputStream().available()];
-				if (socket.getInputStream().read(buf) <= 0)
-					return null;
-				
-				return new String(buf, "UTF-16");
-			}
-		} catch (IOException e) { 
-			close(false, true);
-		}
-		
-		return null;
-	}
-	
-	@Override
-	public int write(String msg)
-	{
-		if (socket == null) return 0;
-		
-		lastPacket = msg;
-		
-		String text = String.format("%03d%s", msg.length(), msg);
-		try {
-			socket.getOutputStream().write(text.getBytes(StandardCharsets.UTF_16));
-			OnSended(text);
-			return msg.length();
-		}
-		catch (IOException ex) { }
-		
-		return 0;
-	}
-	
-	@Override
 	public void run() {
 
 		connect();
@@ -85,8 +46,17 @@ public class TCPClient extends Thread implements Runnable, TCPSocket {
 		String msg;
 		Command cmd;
 		int len = 0;
+		long prevTime = System.nanoTime();
+		long nowTime;
 		while(isConnected())
-		{			
+		{
+			nowTime = System.nanoTime();
+			if ((nowTime - prevTime) > KEEP_ALIVE_INTERVAL)
+			{
+				write(Command.TCP_KEEPALIVE, "");
+				prevTime = nowTime;
+			}
+			
 			msg = read();
 			if (msg != null)
 			{				
@@ -100,8 +70,10 @@ public class TCPClient extends Thread implements Runnable, TCPSocket {
 					if (cmd == Command.TCP_FAIL)
 					{
 						lossPacket++;
-						write(lastPacket);
+						write(lastPacket, true);
 					}
+					else if (cmd == Command.TCP_KEEPALIVE)
+						continue;
 					else
 						OnReceived(cmd, msg.substring(5, 3+len));
 				}
@@ -114,7 +86,42 @@ public class TCPClient extends Thread implements Runnable, TCPSocket {
 		
 		close(true, false);
 	}
+
+	@Override
+	public String read() {
+		try {
+			if (socket.getInputStream().available() > 0)
+			{
+				byte[] buf = new byte[socket.getInputStream().available()];
+				if (socket.getInputStream().read(buf) <= 0)
+					return null;
+				
+				return new String(buf, "UTF-16");
+			}
+		} catch (Exception e) { 
+			close(false, true);
+		}
+		
+		return null;
+	}
 	
+	@Override
+	public int write(String msg, boolean savePacket) {
+		if (savePacket) lastPacket = msg;
+		
+		String text = String.format("%03d%s", msg.length(), msg);
+		try {
+			socket.getOutputStream().write(text.getBytes(StandardCharsets.UTF_16));
+			OnSended(text);
+			return msg.length();
+		}
+		catch (Exception ex) {
+			close(false, true);
+		}
+		
+		return 0;
+	}
+		
 	public void close(boolean runListener, boolean isException) {
 		if (socket != null) try { socket.close(); } catch (IOException e) { }
 		

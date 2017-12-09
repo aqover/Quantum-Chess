@@ -12,7 +12,6 @@ import library.socket.TCPCommand;
 import library.socket.TCPListener;
 import library.socket.TCPServer;
 import library.socket.TCPSocket;
-import model.NormalChessGame;
 import model.QuantumChessGame;
 import model.ChessBoard.Move;
 import model.QuantumChessGame.QuantumMove;

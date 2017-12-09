@@ -31,7 +31,7 @@ public final class SceneManager {
 		gameOnline = new Scene(new GOController());
 		
 		quantumGameOffline = new Scene(new GQFController());
-//		quantumGameOnline = new Scene(new GQOController());
+		quantumGameOnline = new Scene(new GQOController());
 		
 		disable = false;
 		isQuantumChess = false;
@@ -58,16 +58,28 @@ public final class SceneManager {
 	
 	public static void setSceneGameOnline() {
 		if (isQuantumChess)
+		{
+			((GOController) quantumGameOnline.getRoot()).clear();
 			primaryStage.setScene(quantumGameOnline);
+		}
 		else
+		{
+			((GOController) gameOnline.getRoot()).clear();
 			primaryStage.setScene(gameOnline);
+		}
 	}
 	
 	public static void setSceneGameOffline() {
 		if (isQuantumChess)
+		{
+			((GFController) quantumGameOffline.getRoot()).clear();
 			primaryStage.setScene(quantumGameOffline);
+		}
 		else
+		{
+			((GFController) gameOffline.getRoot()).clear();
 			primaryStage.setScene(gameOffline);
+		}
 	}
 	
 	public static void setScene(Pane pane)

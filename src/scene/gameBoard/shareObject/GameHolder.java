@@ -1,6 +1,5 @@
 package scene.gameBoard.shareObject;
 
-import java.io.File;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -10,8 +9,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import helper.Tuple;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import model.piece.ChessPiece;
 
 public class GameHolder {
@@ -34,6 +31,7 @@ public class GameHolder {
 	public static Image bgLight;
 	
 	public static AudioClip pieceMove;
+	public static AudioClip pieceDead;
 	
 	public static double scoreA, scoreB;
 	
@@ -126,7 +124,11 @@ public class GameHolder {
 			for(IRenderable tmp: entity)
 			{
 				if (tmp.isDestroyed())
+				{
+					if (pieceDead != null)
+						pieceDead.play();
 					entity.remove(tmp);
+				}
 			}
 			System.gc();
 		}
@@ -151,8 +153,10 @@ public class GameHolder {
 		bgLight = new Image(loader.getResourceAsStream("square_light.jpg"));
 	
 		pieceMove = null;
+		pieceDead = null;
 		try {
 			pieceMove = new AudioClip(loader.getResource("move.mp3").toURI().toString());
+			pieceDead = new AudioClip(loader.getResource("dead.mp3").toURI().toString());
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

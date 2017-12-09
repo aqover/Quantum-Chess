@@ -29,6 +29,11 @@ public class GFController extends Pane {
         }
 	}
 	
+	public void clear() {
+		playerA.setText("");
+		playerB.setText("");
+	}
+	
 	@FXML
 	public void handlerBack(MouseEvent arg0) {
 		SceneManager.setSceneSelectGame(false);
