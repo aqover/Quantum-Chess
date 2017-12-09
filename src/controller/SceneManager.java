@@ -31,7 +31,7 @@ public final class SceneManager {
 		gameOnline = new Scene(new GOController());
 		
 		quantumGameOffline = new Scene(new GQFController());
-//		quantumGameOnline = new Scene(new GQOController());
+		quantumGameOnline = new Scene(new GQOController());
 		
 		disable = false;
 		isQuantumChess = false;
