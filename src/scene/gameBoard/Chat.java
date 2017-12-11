@@ -21,7 +21,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import library.socket.TCPCommand.Command;
+import library.socket.TCPCommand;
 import library.socket.TCPSocket;
 
 public class Chat extends AnchorPane {
@@ -179,7 +179,7 @@ public class Chat extends AnchorPane {
 		// send message
 		TCPSocket socket = getSocket();
 		if (socket != null && socket.isConnected()) {
-			socket.write(Command.SEND_TEXT, chatField.encode());
+			socket.write(TCPCommand.SEND_TEXT, chatField.encode());
 		}
 		
 		// clear input field

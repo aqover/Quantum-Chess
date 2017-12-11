@@ -12,7 +12,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import library.socket.TCPClient;
-import library.socket.TCPCommand.Command;
+import library.socket.TCPCommand;
 import library.socket.TCPListener;
 import library.socket.TCPServer;
 import library.socket.TCPSocket;
@@ -203,11 +203,11 @@ public class GOController extends Pane implements TCPListener {
 				if (socket.isConnected())
 				{
 					if (gameType == null) 
-						socket.write(Command.GET_GAME_TYPE, "");
+						socket.write(TCPCommand.GET_GAME_TYPE, "");
 					if (nameWhite == null) 
-						socket.write(Command.GET_NAME_PLAYER_WHITE, "");
+						socket.write(TCPCommand.GET_NAME_PLAYER_WHITE, "");
 					if (nameBlack == null) 
-						socket.write(Command.GET_NAME_PLAYER_BLACK, "");
+						socket.write(TCPCommand.GET_NAME_PLAYER_BLACK, "");
 					
 					if (gameType != null && nameWhite != null && nameBlack != null)
 						break;
@@ -233,7 +233,7 @@ public class GOController extends Pane implements TCPListener {
 	}
 
 	@Override
-	public void OnReceived(Command cmd, String value) {
+	public void OnReceived(TCPCommand cmd, String value) {
 		switch(cmd)
 		{
 			case SET_NAME_PLAYER_WHITE:
@@ -243,13 +243,13 @@ public class GOController extends Pane implements TCPListener {
 			case SET_GAME_TYPE:
 				gameType = value; break;
 			case GET_NAME_PLAYER_WHITE:
-				socket.write(Command.SET_NAME_PLAYER_WHITE, nameWhite);
+				socket.write(TCPCommand.SET_NAME_PLAYER_WHITE, nameWhite);
 				break;
 			case GET_NAME_PLAYER_BLACK:
-				socket.write(Command.SET_NAME_PLAYER_BLACK, nameBlack);
+				socket.write(TCPCommand.SET_NAME_PLAYER_BLACK, nameBlack);
 				break;
 			case GET_GAME_TYPE:
-				socket.write(Command.SET_GAME_TYPE, MY_GAME_TYPE);
+				socket.write(TCPCommand.SET_GAME_TYPE, MY_GAME_TYPE);
 				break;
 			default:
 				break;

@@ -3,7 +3,7 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
-import library.socket.TCPCommand.Command;
+import library.socket.TCPCommand;
 import library.socket.TCPListener;
 import library.socket.TCPServer;
 
@@ -80,7 +80,7 @@ public class GQOController extends GOController implements TCPListener {
 	}
 	
 	@Override
-	public void OnReceived(Command cmd, String value) {
+	public void OnReceived(TCPCommand cmd, String value) {
 		switch(cmd)
 		{
 			case SET_NAME_PLAYER_WHITE:
@@ -90,13 +90,13 @@ public class GQOController extends GOController implements TCPListener {
 			case SET_GAME_TYPE:
 				gameType = value; break;
 			case GET_NAME_PLAYER_WHITE:
-				socket.write(Command.SET_NAME_PLAYER_WHITE, nameWhite);
+				socket.write(TCPCommand.SET_NAME_PLAYER_WHITE, nameWhite);
 				break;
 			case GET_NAME_PLAYER_BLACK:
-				socket.write(Command.SET_NAME_PLAYER_BLACK, nameBlack);
+				socket.write(TCPCommand.SET_NAME_PLAYER_BLACK, nameBlack);
 				break;
 			case GET_GAME_TYPE:
-				socket.write(Command.SET_GAME_TYPE, MY_GAME_TYPE);
+				socket.write(TCPCommand.SET_GAME_TYPE, MY_GAME_TYPE);
 				break;
 			default:
 				break;

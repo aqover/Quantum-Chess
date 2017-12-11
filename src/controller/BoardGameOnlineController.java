@@ -22,7 +22,7 @@ import model.ChessBoard;
 import model.NormalChessGame;
 import model.ChessBoard.Move;
 
-public class BoardGameOnlineController extends ChessController implements TCPListener, TCPCommand {
+public class BoardGameOnlineController extends ChessController implements TCPListener {
 	
 	private final Team PLAYER_TURN;
 	
@@ -94,7 +94,7 @@ public class BoardGameOnlineController extends ChessController implements TCPLis
 
 	@Override
 	public void endGame() {
-		socket.write(this.PLAYER_TURN == Team.PLAYER_WHITE ? Command.WHITE_SURRENDER : Command.BLACK_SURRENDER, "");
+		socket.write(this.PLAYER_TURN == Team.PLAYER_WHITE ? TCPCommand.WHITE_SURRENDER : TCPCommand.BLACK_SURRENDER, "");
 		super.endGame();
 		socket.destroy();
 	}
@@ -156,16 +156,16 @@ public class BoardGameOnlineController extends ChessController implements TCPLis
 						
 						// TODO send message to other players
 						if (btn == buttonTypeKnight) {
-							socket.write(Command.SET_UPGRADE_PAWN, Character.toString(Knight.getChar()));
+							socket.write(TCPCommand.SET_UPGRADE_PAWN, Character.toString(Knight.getChar()));
 							upgradePawn(Knight.getInstance());
 						} else if (btn == buttonTypeBishop) {
-							socket.write(Command.SET_UPGRADE_PAWN, Character.toString(Bishop.getChar()));
+							socket.write(TCPCommand.SET_UPGRADE_PAWN, Character.toString(Bishop.getChar()));
 							upgradePawn(Bishop.getInstance());
 						} else if (btn == buttonTypeRook) {
-							socket.write(Command.SET_UPGRADE_PAWN, Character.toString(Rook.getChar()));
+							socket.write(TCPCommand.SET_UPGRADE_PAWN, Character.toString(Rook.getChar()));
 							upgradePawn(Rook.getInstance());
 						} else {
-							socket.write(Command.SET_UPGRADE_PAWN, Character.toString(Queen.getChar()));
+							socket.write(TCPCommand.SET_UPGRADE_PAWN, Character.toString(Queen.getChar()));
 							upgradePawn(Queen.getInstance());
 						}
 
@@ -184,7 +184,7 @@ public class BoardGameOnlineController extends ChessController implements TCPLis
 		Move move = new Move(source.getI(), source.getJ(), mouse.getI(), mouse.getJ());
 		if (isCurrentTurn()) {
 			if (super.movePiece(source, mouse)) {
-				socket.write(Command.MOVE, move.toString());
+				socket.write(TCPCommand.MOVE, move.toString());
 				return true;
 			}
 			return false;
@@ -194,7 +194,7 @@ public class BoardGameOnlineController extends ChessController implements TCPLis
 	}
 
 	@Override
-	public void OnReceived(Command cmd, String msg) {
+	public void OnReceived(TCPCommand cmd, String msg) {
 
 		switch (cmd) {
 		
