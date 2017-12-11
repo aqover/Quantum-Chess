@@ -99,7 +99,7 @@
                         <Insets left="5.0" right="5.0" />
                      </HBox.margin>
                   </Label>
-                  <Label fx:id="labelProb" prefHeight="15.0" prefWidth="42.0" />
+                  <Label fx:id="labelProb" prefHeight="15.0" prefWidth="42.0" text="50" />
                   <Slider fx:id="moveProb" blockIncrement="1.0" max="10.0" prefHeight="16.0" prefWidth="107.0" value="5.0" />
                </children>
             </HBox>

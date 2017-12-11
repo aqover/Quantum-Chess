@@ -73,14 +73,14 @@ public class QuantumChessOnlineController extends QuantumChessController impleme
 				// Board game
 				Animation.getInstance().update(now);
 				GameHolder.getInstance().update();
-				board.paintComponent();
+				board.paintComponentQuantum();
 				
 				// chat
 				chat.update();
 				
 				// paint value
 				if (possibility != null) {
-					board.paintPossibilityMoves(possibility, getMoveProb());
+					board.paintPossibilityMoves(possibility, getMoveProb(), selectedPiece);
 				}
 				
 				update();
@@ -199,8 +199,6 @@ public class QuantumChessOnlineController extends QuantumChessController impleme
 	@Override
 	public void OnReceived(Command cmd, String msg) {
 
-		System.out.println(cmd + " ## " + msg);
-		
 		switch (cmd) {
 		
 			case MOVE:

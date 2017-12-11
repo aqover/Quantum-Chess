@@ -99,7 +99,26 @@ public class ChessBoard extends Canvas {
 			}
 		}
 	}
-	
+
+	public void paintComponentQuantum() {
+		
+		GraphicsContext gc = this.getGraphicsContext2D();
+		for (IRenderable tmp: GameHolder.getInstance().getEntity())
+		{
+			if (tmp instanceof ChessBackGround) {
+				ChessBackGround bg = (ChessBackGround) tmp;
+				if (bg.isVisible() && !bg.isDestroyed())
+					bg.draw(gc);
+			}
+			
+			if (tmp instanceof ChessPiece) {
+				ChessPiece piece = (ChessPiece) tmp;
+				if (piece.isVisible() && !piece.isDestroyed())
+					piece.drawWithProbability(gc);			
+			}
+		}
+	}
+
 	public void paintValidMoves(boolean[][] moves) {
 
 		GraphicsContext gc = this.getGraphicsContext2D();
@@ -113,17 +132,18 @@ public class ChessBoard extends Canvas {
 		
 	}
 
-	public void paintPossibilityMoves(double[][] moves, double moveProb) {
+	public void paintPossibilityMoves(double[][] moves, double moveProb, ChessPiece selectedPiece) {
 		
 		GraphicsContext gc = this.getGraphicsContext2D();
 		for (IRenderable tmp: GameHolder.getInstance().getEntity()) {
 			if (tmp instanceof ChessValidMoves) {
 				ChessValidMoves piece = (ChessValidMoves) tmp;
 				if (piece.isVisible() && !piece.isDestroyed())
-					piece.drawProbabilty(gc, moves[piece.getI()][piece.getJ()] * moveProb);
+					piece.drawProbabilty(gc, selectedPiece, moves[piece.getI()][piece.getJ()] * moveProb);
 			}
 		}
 	}
+	
 	public void updatePawn(Constructor<? extends ChessPiece> constructor) {
 		
 		ArrayList<IRenderable> newPawns = new ArrayList<>();

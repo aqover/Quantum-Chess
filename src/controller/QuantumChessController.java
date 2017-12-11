@@ -288,11 +288,11 @@ public class QuantumChessController extends ChessController {
 				// Board game
 				Animation.getInstance().update(now);
 				GameHolder.getInstance().update();
-				board.paintComponent();
+				board.paintComponentQuantum();
 				
 				// paint value
 				if (possibility != null) {
-					board.paintPossibilityMoves(possibility, getMoveProb());
+					board.paintPossibilityMoves(possibility, getMoveProb(), selectedPiece);
 				}
 				
 				update();
