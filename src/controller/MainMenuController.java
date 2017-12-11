@@ -63,16 +63,6 @@ public class MainMenuController extends Pane {
 		SceneManager.setSceneSelectGame(true);
 	}
 	
-	@FXML 
-	public void handlerHTP(MouseEvent arg0) {
-		SceneManager.setScene(new HTPController());
-	}
-	
-	@FXML 
-	public void handlerAbout(MouseEvent arg0) {
-		SceneManager.setScene(new AboutController());
-	}
-	
 	public void showAlert(AlertType type, String msg) {
 		Alert alert = new Alert(AlertType.NONE, msg, ButtonType.OK);
 		alert.show();

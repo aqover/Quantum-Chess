@@ -32,11 +32,8 @@ public class GameHolder {
 	
 	public static AudioClip pieceMove;
 	public static AudioClip pieceDead;
-	
-	public static double scoreA, scoreB;
-	
+		
 	public static double size;
-	public static double LineWidth;
 		
 	public static boolean isTurnEnded;
 	
@@ -114,8 +111,6 @@ public class GameHolder {
 	
 	public GameHolder() {
 		size = 60;
-		LineWidth = 5;
-		scoreA = scoreB = 0;
 	}
 	
 	public void update() {

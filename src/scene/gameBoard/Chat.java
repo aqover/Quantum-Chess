@@ -33,10 +33,10 @@ public class Chat extends AnchorPane {
 	protected String username;
 	protected TCPSocket socket;
 	
-	@FXML Button clear;
-	@FXML Button send;
-	@FXML TextField inputMessage;
-	@FXML VBox messageField;
+	@FXML private Button clear;
+	@FXML private Button send;
+	@FXML private TextField inputMessage;
+	@FXML private VBox messageField;
 		
 	public static class ChatField {
 

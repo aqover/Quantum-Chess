@@ -17,12 +17,12 @@ import javafx.scene.layout.AnchorPane;
 public class ChessOnlineDetail extends AnchorPane {
 	private long nanoSecond = 1000000000l;
 	
-	@FXML Label labelNameA;
-	@FXML Label labelNameB;
-	@FXML Label labelTimeA;
-	@FXML Label labelTimeB;
-	@FXML RadioButton radioA;
-	@FXML RadioButton radioB;
+	@FXML private Label labelNameA;
+	@FXML private Label labelNameB;
+	@FXML private Label labelTimeA;
+	@FXML private Label labelTimeB;
+	@FXML private RadioButton radioA;
+	@FXML private RadioButton radioB;
 
 	protected long timePlayerA;
 	protected long timePlayerB;

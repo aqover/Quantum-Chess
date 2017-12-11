@@ -40,12 +40,12 @@ public class ChessDetail extends AnchorPane {
 			timePlayerB = timePlayerB - decreseTime;
 	}
 
-	@FXML Label labelNameA;
-	@FXML Label labelTimeA;
-	@FXML Label labelNameB;
-	@FXML Label labelTimeB;
-	@FXML RadioButton radioA;
-	@FXML RadioButton radioB;
+	@FXML private Label labelNameA;
+	@FXML private Label labelTimeA;
+	@FXML private Label labelNameB;
+	@FXML private Label labelTimeB;
+	@FXML private RadioButton radioA;
+	@FXML private RadioButton radioB;
 	
 	@FXML
 	protected void handleFlipBoard(MouseEvent event) {

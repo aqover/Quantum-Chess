@@ -44,19 +44,4 @@ public interface TCPCommand {
 			return null;
 		}
 	}
-	
-	enum GameResult {
-		BLACK_WIN(1),
-		WHITE_WIN(2),
-		DRAW(5),
-		CONTINUE(6);
-		
-		private final int id;
-		GameResult(int id) {
-			this.id = id;
-		}
-		
-		public String toString() { return String.format("%02d", id); }
-		public int getValue() { return id; }
-	}
 }

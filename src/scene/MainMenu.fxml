@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
@@ -30,23 +29,6 @@
                <Font name="System Bold" size="18.0" />
             </font>
          </Button>
-         <FlowPane alignment="CENTER_LEFT" hgap="15.0" layoutY="365.0" prefHeight="25.0" prefWidth="300.0">
-            <children>
-               <Label onMouseClicked="#handlerHTP" text="How to play" textFill="#40c4ff">
-                  <font>
-                     <Font size="10.0" />
-                  </font>
-               </Label>
-               <Label onMouseClicked="#handlerAbout" text="About" textFill="#40c4ff">
-                  <font>
-                     <Font size="10.0" />
-                  </font>
-               </Label>
-            </children>
-            <padding>
-               <Insets left="15.0" right="15.0" />
-            </padding>
-         </FlowPane>
 	   </children>
       <padding>
          <Insets bottom="10.0" />
