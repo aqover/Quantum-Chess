@@ -199,8 +199,6 @@ public class QuantumChessOnlineController extends QuantumChessController impleme
 	@Override
 	public void OnReceived(Command cmd, String msg) {
 
-		System.out.println(cmd + " ## " + msg);
-		
 		switch (cmd) {
 		
 			case MOVE:
