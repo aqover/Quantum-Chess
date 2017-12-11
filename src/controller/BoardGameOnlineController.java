@@ -24,7 +24,7 @@ import model.ChessBoard.Move;
 
 public class BoardGameOnlineController extends ChessController implements TCPListener, TCPCommand {
 	
-	private final Team playerTurn;
+	private final Team PLAYER_TURN;
 	
 	protected Chat chat;
 	protected ChessOnlineDetail detail;
@@ -40,16 +40,16 @@ public class BoardGameOnlineController extends ChessController implements TCPLis
 		chat.setUserName(username);
 		chat.setSocket(socket);
 		
-		this.playerTurn = (socket instanceof TCPServer) ? Team.PLAYER_WHITE : Team.PLAYER_BLACK;
+		this.PLAYER_TURN = (socket instanceof TCPServer) ? Team.PLAYER_WHITE : Team.PLAYER_BLACK;
 		this.socket = socket;
 		
-		if (this.playerTurn == Team.PLAYER_BLACK) {
+		if (this.PLAYER_TURN == Team.PLAYER_BLACK) {
 			flipBoard();
 		}
 	}
 	
 	public boolean isCurrentTurn() {
-		return playerTurn == getTurn();
+		return PLAYER_TURN == getTurn();
 	}
 
 	@Override
@@ -94,14 +94,14 @@ public class BoardGameOnlineController extends ChessController implements TCPLis
 
 	@Override
 	public void endGame() {
-		socket.write(this.playerTurn == Team.PLAYER_WHITE ? Command.WHITE_SURRENDER : Command.BLACK_SURRENDER, "");
+		socket.write(this.PLAYER_TURN == Team.PLAYER_WHITE ? Command.WHITE_SURRENDER : Command.BLACK_SURRENDER, "");
 		super.endGame();
 		socket.destroy();
 	}
 	
 	protected void surrender() {
 		
-		String opponentName = (this.playerTurn == Team.PLAYER_WHITE ? 
+		String opponentName = (this.PLAYER_TURN == Team.PLAYER_WHITE ? 
 			getOnlineDetail().getNameWhite() : 
 			getOnlineDetail().getNameBlack());
 		

@@ -14,11 +14,11 @@ import javafx.scene.layout.Pane;
 
 public class MainMenuController extends Pane {
 	
-	@FXML TextField playerA;
-	@FXML TextField playerB;
+	@FXML private TextField playerA;
+	@FXML private TextField playerB;
 	
-	@FXML Button normalChess;
-	@FXML Button quantumChess;
+	@FXML private Button normalChess;
+	@FXML private Button quantumChess;
 	
 	public MainMenuController() {		
 		try {

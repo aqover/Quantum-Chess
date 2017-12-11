@@ -19,20 +19,20 @@ import library.socket.TCPSocket;
 
 public class GOController extends Pane implements TCPListener {
 	
-	private static final GOController instance = new GOController();
+	private static final GOController INSTANCE = new GOController();
 
-	@FXML TextField ip;
-	@FXML TextField name;
-	@FXML Pane modal;
-	@FXML Pane main;
-	@FXML Label time;
+	@FXML protected TextField ip;
+	@FXML protected TextField name;
+	@FXML private Pane modal;
+	@FXML private Pane main;
+	@FXML private Label time;
 
-	protected static final long timeout = 30000000000l; // 30 second
+	protected static final long TIMEOUT = 30000000000l; // 30 second
 	protected static TCPSocket socket;
 	protected AcceptClient waiting;
 	
 	private static BoardGameOnlineController chessControl;
-	private static String MY_GAME_TYPE = "NORMAL_CHESS";
+	private static final String MY_GAME_TYPE = "NORMAL_CHESS";
 	
 	protected static String nameWhite;
 	protected static String nameBlack;
@@ -57,7 +57,7 @@ public class GOController extends Pane implements TCPListener {
 
 	@FXML
 	public void handlerBack(MouseEvent arg0) {
-		SceneManager.setSceneSelectGame(true);
+		SceneManager.setSceneMainMenu();
 	}
 
 	@FXML
@@ -77,7 +77,7 @@ public class GOController extends Pane implements TCPListener {
 		String host = ip.getText().split(":")[0];
 		String port = ip.getText().split(":")[1];
 
-		createTCPClient(host, port, instance);
+		createTCPClient(host, port, INSTANCE);
 		
 		waiting = new AcceptClient();
 		waiting.addListener(() -> {linkReady(waiting);});
@@ -98,7 +98,7 @@ public class GOController extends Pane implements TCPListener {
 		nameWhite = name.getText();		
 		String port = ip.getText().split(":")[1];
 		
-		this.createTCPServer(port, instance);
+		this.createTCPServer(port, INSTANCE);
 		
 		waiting = new AcceptClient();
 		waiting.addListener(() -> {linkReady(waiting);});
@@ -194,10 +194,10 @@ public class GOController extends Pane implements TCPListener {
 			startTimeout = System.nanoTime();
 			
 			((Thread) socket).start();
-			while ((System.nanoTime() - startTimeout) < timeout) {
+			while ((System.nanoTime() - startTimeout) < TIMEOUT) {
 				
 				Platform.runLater(() -> {
-					time.setText(String.format("%d", (timeout - (System.nanoTime() - startTimeout)) / 1000000000l));
+					time.setText(String.format("%d", (TIMEOUT - (System.nanoTime() - startTimeout)) / 1000000000l));
 				});
 				
 				if (socket.isConnected())
@@ -216,7 +216,7 @@ public class GOController extends Pane implements TCPListener {
 				try { sleep(1000); } catch (InterruptedException e) { }
 			}
 			
-			isSuccess = ((System.nanoTime() - startTimeout) < timeout);
+			isSuccess = ((System.nanoTime() - startTimeout) < TIMEOUT);
 			
 			setShowModal(false);
 			Platform.runLater(()->{
@@ -227,7 +227,7 @@ public class GOController extends Pane implements TCPListener {
 		@Override
 		public void destroy() {
 			// TODO Auto-generated method stub
-			startTimeout = System.nanoTime() - timeout;
+			startTimeout = System.nanoTime() - TIMEOUT;
 		}
 		
 	}
