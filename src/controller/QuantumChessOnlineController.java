@@ -206,8 +206,8 @@ public class QuantumChessOnlineController extends QuantumChessController impleme
 			case MOVE:
 				boolean status = msg.charAt(0) == '1';
 				QuantumMove qmove = new QuantumMove(msg.substring(1));
-				ChessPiece source = GameHolder.getInstance().getPiece(new Tuple<Integer, Integer>(qmove.move.row1, qmove.move.col1));
-				movePiece(source, new Tuple<Integer, Integer>(qmove.move.row2, qmove.move.col2), status);
+				ChessPiece source = GameHolder.getInstance().getPiece(new Tuple<Integer, Integer>(qmove.MOVE.row1, qmove.MOVE.col1));
+				movePiece(source, new Tuple<Integer, Integer>(qmove.MOVE.row2, qmove.MOVE.col2), status);
 				break;
 			
 			case SET_UPGRADE_PAWN: 

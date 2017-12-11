@@ -5,7 +5,7 @@ import javafx.animation.AnimationTimer;
 import model.piece.ChessPiece;
 
 public class Animation extends AnimationTimer {	
-	private static final Animation instance = new Animation();
+	private static final Animation INSTANCE = new Animation();
 	
 	private Runnable onFinished;
 	
@@ -19,7 +19,7 @@ public class Animation extends AnimationTimer {
 	private double tmpTime, tmpX, tmpY, tmpDistance;
 
 	public static Animation getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	public Animation() {

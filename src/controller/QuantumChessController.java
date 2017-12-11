@@ -58,7 +58,7 @@ public class QuantumChessController extends ChessController {
 	@Override
 	public void endTurn() {
 		checkEndGame();
-		if (board.isBoardFlipped() != (quantumChessGame.getTurn() != quantumChessGame.firstTurn)) {
+		if (board.isBoardFlipped() != (quantumChessGame.getTurn() != quantumChessGame.FIRST_TURN)) {
 			flipBoard(); 
 		}
 	}

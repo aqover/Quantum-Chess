@@ -12,7 +12,7 @@ import javafx.scene.media.AudioClip;
 import model.piece.ChessPiece;
 
 public class GameHolder {
-	private static final GameHolder instance = new GameHolder();
+	private static final GameHolder INSTANCE = new GameHolder();
 	
 	public static Image bb;
 	public static Image bk;
@@ -40,7 +40,7 @@ public class GameHolder {
 	private List<IRenderable> entity = new CopyOnWriteArrayList<IRenderable>();
 	
 	public static GameHolder getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 	
 	//Add or Get Entity

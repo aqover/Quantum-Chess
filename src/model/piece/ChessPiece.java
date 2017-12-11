@@ -13,7 +13,7 @@ import scene.gameBoard.view.Entity;
 
 public abstract class ChessPiece extends Entity implements ChessGameInfo {
 
-	protected final Image displayImage;
+	protected final Image DISPLAY_IMAGE;
 	
 	protected final Team team;
 	protected int row, col;
@@ -40,14 +40,14 @@ public abstract class ChessPiece extends Entity implements ChessGameInfo {
 	public abstract char getBlackPiece();
 	
 	public void draw(GraphicsContext gc) {
-		if (displayImage != null && isVisible()) {
+		if (DISPLAY_IMAGE != null && isVisible()) {
 			if (prob < 1.0) {
 				gc.setStroke(Ultility.rgbFade(Color.RED, Color.GREENYELLOW, prob));
 				gc.setLineWidth(6);
 				gc.strokeArc(x + 6, y + 6, GameHolder.size - 12, GameHolder.size - 12, -90, 360*prob, ArcType.OPEN);
 			}
 			
-			gc.drawImage(displayImage, 
+			gc.drawImage(DISPLAY_IMAGE, 
 				x + ((prob < 1.0)? GameHolder.size*0.05: 0), 
 				y + ((prob < 1.0)? GameHolder.size*0.05: 0), 
 				(prob < 1.0)? GameHolder.size*0.9 : GameHolder.size, 
@@ -121,7 +121,7 @@ public abstract class ChessPiece extends Entity implements ChessGameInfo {
 		this.row = row;
 		this.col = col;
 		this.team = team;
-		this.displayImage = displayImage;
+		this.DISPLAY_IMAGE = displayImage;
 		this.z = 1;
 		this.prob = 1.0;
 		

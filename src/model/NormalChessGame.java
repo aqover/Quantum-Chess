@@ -10,7 +10,7 @@ import model.piece.King;
 public class NormalChessGame implements ChessGameInfo {
 
 	// first turn
-	public final Team firstTurn;
+	public final Team FIRST_TURN;
 		
 	// for undo state
 	private int versionIndex;
@@ -29,7 +29,7 @@ public class NormalChessGame implements ChessGameInfo {
 		versions.add(board);
 		
 		versionIndex = 0;
-		firstTurn = Team.PLAYER_WHITE;
+		FIRST_TURN = Team.PLAYER_WHITE;
 		
 	}
 	public NormalChessGame(String fin) {
@@ -43,7 +43,7 @@ public class NormalChessGame implements ChessGameInfo {
 	// copy constructor
 	public NormalChessGame(NormalChessGame game) {
 
-		this.firstTurn = game.firstTurn;
+		this.FIRST_TURN = game.FIRST_TURN;
 		this.versionIndex = game.versionIndex;
 
 		this.versions = new ArrayList<>(game.versions);
@@ -297,8 +297,8 @@ public class NormalChessGame implements ChessGameInfo {
 	}
 	
 	public Team getTurn() {
-		return this.versionIndex % 2 == 0 ? this.firstTurn : 
-			(this.firstTurn == Team.PLAYER_WHITE ? Team.PLAYER_BLACK : Team.PLAYER_WHITE);
+		return this.versionIndex % 2 == 0 ? this.FIRST_TURN : 
+			(this.FIRST_TURN == Team.PLAYER_WHITE ? Team.PLAYER_BLACK : Team.PLAYER_WHITE);
 	}
 	
 	// toString function

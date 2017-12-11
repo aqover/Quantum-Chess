@@ -74,7 +74,7 @@ public class ChessController {
 	
 	public void endTurn() {
 		checkEndGame();
-		if (board.isBoardFlipped() != (normalChessGame.getTurn() != normalChessGame.firstTurn)) {
+		if (board.isBoardFlipped() != (normalChessGame.getTurn() != normalChessGame.FIRST_TURN)) {
 			flipBoard(); 
 		}
 	}
