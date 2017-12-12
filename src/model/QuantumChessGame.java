@@ -259,19 +259,6 @@ public class QuantumChessGame implements ChessGameInfo {
 		return deadPieces.contains(piece);
 	}
 	
-	public int getWinner() { 
-		
-		if (deadPieces.contains(Piece.BLACK_KING)) {
-			return GAME_RESULT_WHITE_WINS;
-		}
-		
-		if (deadPieces.contains(Piece.WHITE_KING)) {
-			return GAME_RESULT_BLACK_WINS;
-		}
-		
-		return GAME_RESULT_ONGOING;
-	}
-	
 	public Team getTurn() {
 		return this.moves.size() % 2 == 0 ? this.firstTurn : 
 			(this.firstTurn == Team.PLAYER_WHITE ? Team.PLAYER_BLACK : Team.PLAYER_WHITE);
