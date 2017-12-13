@@ -92,6 +92,7 @@ public abstract class ChessPiece extends Entity implements ChessGameInfo {
 
 	public void setSelected(boolean isSelected) {
 		this.isSelected = isSelected;
+		this.z = (isSelected ? 3 : 1);
 	}
 	
 	public boolean isLastMoved() {

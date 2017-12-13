@@ -1,8 +1,11 @@
 package scene.gameBoard.shareObject;
 
+import com.sun.media.jfxmedia.AudioClip;
+
 import helper.Tuple;
 import javafx.animation.AnimationTimer;
 import model.piece.ChessPiece;
+import sun.audio.AudioPlayer;
 
 public class Animation extends AnimationTimer {	
 	private static final Animation INSTANCE = new Animation();
@@ -51,7 +54,8 @@ public class Animation extends AnimationTimer {
 		
 		this.onFinished = onFinished;
 		if (GameHolder.pieceMove != null) {
-			GameHolder.pieceMove.play();
+			GameHolder.pieceMove.setMicrosecondPosition(0);
+			GameHolder.pieceMove.start();
 		}
 	}
 	

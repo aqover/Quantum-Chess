@@ -34,7 +34,7 @@ public class ChessValidMoves extends Entity {
 			gc.setStroke(Ultility.rgbFade(Color.RED, Color.GREENYELLOW, prob));	
 			gc.setLineWidth(6);
 
-            gc.setGlobalAlpha(prob / 2);
+            gc.setGlobalAlpha(0.3 + prob / 2);
             
 			gc.strokeArc(x + 6, y + 6, GameHolder.size - 12, GameHolder.size - 12, -90, 360*prob, ArcType.OPEN);
 			gc.drawImage(piece.getDisplayImage(), x, y, h, h);
