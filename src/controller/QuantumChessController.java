@@ -283,7 +283,7 @@ public class QuantumChessController extends ChessController {
 
 				//Detail
 				detail.update();
-				detail.decreseTime(now - timePrevious);
+				detail.increseTime(now - timePrevious);
 				
 				// Board game
 				Animation.getInstance().update(now);

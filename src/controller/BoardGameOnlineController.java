@@ -63,7 +63,7 @@ public class BoardGameOnlineController extends ChessController implements TCPLis
 
 				//Detail
 				detail.update();
-				detail.decreseTime(now - timePrevious);
+				detail.increseTime(now - timePrevious);
 				
 				// Board game
 				Animation.getInstance().update(now);
