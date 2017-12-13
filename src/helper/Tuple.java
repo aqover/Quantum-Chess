@@ -1,17 +1,17 @@
 package helper;
 
 public class Tuple<X, Y> {
-	private final X i;
-	private final Y j;
+	private final X I;
+	private final Y J;
 	
 	public Tuple(X i, Y j) {
-		this.i = i;
-		this.j = j;
+		this.I = i;
+		this.J = j;
 	}
 
 	public Tuple(Tuple<X, Y> tuple) {
-		this.i = tuple.getI();
-		this.j = tuple.getJ();
+		this.I = tuple.getI();
+		this.J = tuple.getJ();
 	}
 
 	@Override
@@ -23,14 +23,14 @@ public class Tuple<X, Y> {
 		
 		@SuppressWarnings("unchecked")
 		Tuple<Integer, Integer> tuple = (Tuple<Integer, Integer>) obj;
-		return (i == tuple.getI() && j == tuple.getJ());
+		return (I == tuple.getI() && J == tuple.getJ());
 	}
 
 	public X getI() {
-		return i;
+		return I;
 	}
 	
 	public Y getJ() {
-		return j;
+		return J;
 	}
 }

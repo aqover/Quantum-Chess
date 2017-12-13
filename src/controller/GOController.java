@@ -12,27 +12,27 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import library.socket.TCPClient;
-import library.socket.TCPCommand.Command;
+import library.socket.TCPCommand;
 import library.socket.TCPListener;
 import library.socket.TCPServer;
 import library.socket.TCPSocket;
 
 public class GOController extends Pane implements TCPListener {
 	
-	private static final GOController instance = new GOController();
+	private static final GOController INSTANCE = new GOController();
 
-	@FXML TextField ip;
-	@FXML TextField name;
-	@FXML Pane modal;
-	@FXML Pane main;
-	@FXML Label time;
+	@FXML protected TextField ip;
+	@FXML protected TextField name;
+	@FXML private Pane modal;
+	@FXML private Pane main;
+	@FXML private Label time;
 
-	protected static final long timeout = 30000000000l; // 30 second
+	protected static final long TIMEOUT = 30000000000l; // 30 second
 	protected static TCPSocket socket;
 	protected AcceptClient waiting;
 	
 	private static BoardGameOnlineController chessControl;
-	private static String MY_GAME_TYPE = "NORMAL_CHESS";
+	private static final String MY_GAME_TYPE = "NORMAL_CHESS";
 	
 	protected static String nameWhite;
 	protected static String nameBlack;
@@ -57,7 +57,7 @@ public class GOController extends Pane implements TCPListener {
 
 	@FXML
 	public void handlerBack(MouseEvent arg0) {
-		SceneManager.setSceneSelectGame(true);
+		SceneManager.setSceneMainMenu();
 	}
 
 	@FXML
@@ -77,7 +77,7 @@ public class GOController extends Pane implements TCPListener {
 		String host = ip.getText().split(":")[0];
 		String port = ip.getText().split(":")[1];
 
-		createTCPClient(host, port, instance);
+		createTCPClient(host, port, INSTANCE);
 		
 		waiting = new AcceptClient();
 		waiting.addListener(() -> {linkReady(waiting);});
@@ -98,7 +98,7 @@ public class GOController extends Pane implements TCPListener {
 		nameWhite = name.getText();		
 		String port = ip.getText().split(":")[1];
 		
-		this.createTCPServer(port, instance);
+		this.createTCPServer(port, INSTANCE);
 		
 		waiting = new AcceptClient();
 		waiting.addListener(() -> {linkReady(waiting);});
@@ -194,20 +194,20 @@ public class GOController extends Pane implements TCPListener {
 			startTimeout = System.nanoTime();
 			
 			((Thread) socket).start();
-			while ((System.nanoTime() - startTimeout) < timeout) {
+			while ((System.nanoTime() - startTimeout) < TIMEOUT) {
 				
 				Platform.runLater(() -> {
-					time.setText(String.format("%d", (timeout - (System.nanoTime() - startTimeout)) / 1000000000l));
+					time.setText(String.format("%d", (TIMEOUT - (System.nanoTime() - startTimeout)) / 1000000000l));
 				});
 				
 				if (socket.isConnected())
 				{
 					if (gameType == null) 
-						socket.write(Command.GET_GAME_TYPE, "");
+						socket.write(TCPCommand.GET_GAME_TYPE, "");
 					if (nameWhite == null) 
-						socket.write(Command.GET_NAME_PLAYER_WHITE, "");
+						socket.write(TCPCommand.GET_NAME_PLAYER_WHITE, "");
 					if (nameBlack == null) 
-						socket.write(Command.GET_NAME_PLAYER_BLACK, "");
+						socket.write(TCPCommand.GET_NAME_PLAYER_BLACK, "");
 					
 					if (gameType != null && nameWhite != null && nameBlack != null)
 						break;
@@ -216,7 +216,7 @@ public class GOController extends Pane implements TCPListener {
 				try { sleep(1000); } catch (InterruptedException e) { }
 			}
 			
-			isSuccess = ((System.nanoTime() - startTimeout) < timeout);
+			isSuccess = ((System.nanoTime() - startTimeout) < TIMEOUT);
 			
 			setShowModal(false);
 			Platform.runLater(()->{
@@ -227,13 +227,13 @@ public class GOController extends Pane implements TCPListener {
 		@Override
 		public void destroy() {
 			// TODO Auto-generated method stub
-			startTimeout = System.nanoTime() - timeout;
+			startTimeout = System.nanoTime() - TIMEOUT;
 		}
 		
 	}
 
 	@Override
-	public void OnReceived(Command cmd, String value) {
+	public void OnReceived(TCPCommand cmd, String value) {
 		switch(cmd)
 		{
 			case SET_NAME_PLAYER_WHITE:
@@ -243,13 +243,13 @@ public class GOController extends Pane implements TCPListener {
 			case SET_GAME_TYPE:
 				gameType = value; break;
 			case GET_NAME_PLAYER_WHITE:
-				socket.write(Command.SET_NAME_PLAYER_WHITE, nameWhite);
+				socket.write(TCPCommand.SET_NAME_PLAYER_WHITE, nameWhite);
 				break;
 			case GET_NAME_PLAYER_BLACK:
-				socket.write(Command.SET_NAME_PLAYER_BLACK, nameBlack);
+				socket.write(TCPCommand.SET_NAME_PLAYER_BLACK, nameBlack);
 				break;
 			case GET_GAME_TYPE:
-				socket.write(Command.SET_GAME_TYPE, MY_GAME_TYPE);
+				socket.write(TCPCommand.SET_GAME_TYPE, MY_GAME_TYPE);
 				break;
 			default:
 				break;

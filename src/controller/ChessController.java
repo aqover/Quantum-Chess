@@ -74,7 +74,7 @@ public class ChessController {
 	
 	public void endTurn() {
 		checkEndGame();
-		if (board.isBoardFlipped() != (normalChessGame.getTurn() != normalChessGame.firstTurn)) {
+		if (board.isBoardFlipped() != (normalChessGame.getTurn() != normalChessGame.FIRST_TURN)) {
 			flipBoard(); 
 		}
 	}
@@ -295,7 +295,7 @@ public class ChessController {
 
 				//Detail
 				detail.update();
-				detail.decreseTime(now - timePrevious);
+				detail.increseTime(now - timePrevious);
 				
 				// Board game
 				Animation.getInstance().update(now);

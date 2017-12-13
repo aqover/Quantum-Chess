@@ -3,16 +3,16 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
-import library.socket.TCPCommand.Command;
+import library.socket.TCPCommand;
 import library.socket.TCPListener;
 import library.socket.TCPServer;
 
 public class GQOController extends GOController implements TCPListener {
 	
-	private static final GQOController instance = new GQOController();
+	private static final GQOController INSTANCE = new GQOController();
 
 	private static QuantumChessOnlineController chessControl;
-	private static String MY_GAME_TYPE = "QUANTUM_CHESS";
+	private static final String MY_GAME_TYPE = "QUANTUM_CHESS";
 	public GQOController() {
 		super();
 	}
@@ -35,7 +35,7 @@ public class GQOController extends GOController implements TCPListener {
 		String host = ip.getText().split(":")[0];
 		String port = ip.getText().split(":")[1];
 
-		createTCPClient(host, port, instance);
+		createTCPClient(host, port, INSTANCE);
 		
 		waiting = new AcceptClient();
 		waiting.addListener(() -> {linkReady(waiting);});
@@ -57,7 +57,7 @@ public class GQOController extends GOController implements TCPListener {
 		nameWhite = name.getText();		
 		String port = ip.getText().split(":")[1];
 		
-		this.createTCPServer(port, instance);
+		this.createTCPServer(port, INSTANCE);
 		
 		waiting = new AcceptClient();
 		waiting.addListener(() -> {linkReady(waiting);});
@@ -80,7 +80,7 @@ public class GQOController extends GOController implements TCPListener {
 	}
 	
 	@Override
-	public void OnReceived(Command cmd, String value) {
+	public void OnReceived(TCPCommand cmd, String value) {
 		switch(cmd)
 		{
 			case SET_NAME_PLAYER_WHITE:
@@ -90,13 +90,13 @@ public class GQOController extends GOController implements TCPListener {
 			case SET_GAME_TYPE:
 				gameType = value; break;
 			case GET_NAME_PLAYER_WHITE:
-				socket.write(Command.SET_NAME_PLAYER_WHITE, nameWhite);
+				socket.write(TCPCommand.SET_NAME_PLAYER_WHITE, nameWhite);
 				break;
 			case GET_NAME_PLAYER_BLACK:
-				socket.write(Command.SET_NAME_PLAYER_BLACK, nameBlack);
+				socket.write(TCPCommand.SET_NAME_PLAYER_BLACK, nameBlack);
 				break;
 			case GET_GAME_TYPE:
-				socket.write(Command.SET_GAME_TYPE, MY_GAME_TYPE);
+				socket.write(TCPCommand.SET_GAME_TYPE, MY_GAME_TYPE);
 				break;
 			default:
 				break;

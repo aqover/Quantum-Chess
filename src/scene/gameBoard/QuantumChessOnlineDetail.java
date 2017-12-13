@@ -38,11 +38,11 @@ public class QuantumChessOnlineDetail extends AnchorPane {
 		labelNameB.setText(b);
 	}
 
-	public void decreseTime(long decreseTime) {
+	public void increseTime(long decreseTime) {
 		if (gameControl.getTurn() == Team.PLAYER_WHITE)
-			timePlayerA = timePlayerA - decreseTime;
+			timePlayerA = timePlayerA + decreseTime;
 		else if (gameControl.getTurn() == Team.PLAYER_BLACK)
-			timePlayerB = timePlayerB - decreseTime;
+			timePlayerB = timePlayerB + decreseTime;
 	}
 	
 	@FXML private Label labelNameA;
@@ -89,7 +89,7 @@ public class QuantumChessOnlineDetail extends AnchorPane {
 		super();
 		this.gameControl = gameControl;
 
-		timePlayerA = timePlayerB = 60*60*nanoSecond; //unit in nanosecond, 60 mins;
+		timePlayerA = timePlayerB = 0; //unit in nanosecond, 60 mins;
 		
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("QuantumChessDetail.fxml"));

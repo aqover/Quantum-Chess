@@ -13,9 +13,9 @@ import scene.gameBoard.view.Entity;
 
 public abstract class ChessPiece extends Entity implements ChessGameInfo {
 
-	protected final Image displayImage;
+	protected final Image DISPLAY_IMAGE;
 	
-	protected final Team team;
+	protected final Team TEAM;
 	protected int row, col;
 	protected boolean isdead; 
 	
@@ -40,9 +40,8 @@ public abstract class ChessPiece extends Entity implements ChessGameInfo {
 	public abstract char getBlackPiece();
 	
 	public void draw(GraphicsContext gc) {
-		if (displayImage != null && isVisible()) {
-			
-			gc.drawImage(displayImage, 
+		if (DISPLAY_IMAGE != null && isVisible()) {			
+			gc.drawImage(DISPLAY_IMAGE, 
 				x + ((prob < 1.0)? GameHolder.size*0.05: 0), 
 				y + ((prob < 1.0)? GameHolder.size*0.05: 0), 
 				(prob < 1.0)? GameHolder.size*0.9 : GameHolder.size, 
@@ -59,7 +58,7 @@ public abstract class ChessPiece extends Entity implements ChessGameInfo {
 	}
 	
 	public void drawWithProbability(GraphicsContext gc) {
-		if (displayImage != null && isVisible()) {
+		if (DISPLAY_IMAGE != null && isVisible()) {
 			gc.setStroke(Ultility.rgbFade(Color.RED, Color.GREENYELLOW, prob));
 			gc.setLineWidth(6);
 			gc.strokeArc(x + 6, y + 6, GameHolder.size - 12, GameHolder.size - 12, -90, 360*prob, ArcType.OPEN);
@@ -78,14 +77,14 @@ public abstract class ChessPiece extends Entity implements ChessGameInfo {
 	}
 
 	
-	public Team getTeam() { return team; }
+	public Team getTeam() { return TEAM; }
 	public int getRow() { return row; }
 	public int getI() { return row; }
 	public int getColumn() { return col; }
 	public int getJ() { return col; }
 	public boolean isDead() { return isdead; }
 	
-	public Image getDisplayImage() { return displayImage; }
+	public Image getDisplayImage() { return DISPLAY_IMAGE; }
 
 	public boolean isSelected() {
 		return isSelected;
@@ -125,8 +124,8 @@ public abstract class ChessPiece extends Entity implements ChessGameInfo {
 	public ChessPiece(int row, int col, Team team, Image displayImage) {
 		this.row = row;
 		this.col = col;
-		this.team = team;
-		this.displayImage = displayImage;
+		this.TEAM = team;
+		this.DISPLAY_IMAGE = displayImage;
 		this.z = 1;
 		this.prob = 1.0;
 		

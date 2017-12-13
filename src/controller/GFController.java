@@ -13,8 +13,8 @@ import javafx.scene.layout.Pane;
 
 public class GFController extends Pane {
 	
-	@FXML TextField playerA;
-	@FXML TextField playerB;
+	@FXML protected TextField playerA;
+	@FXML protected TextField playerB;
 	
 	protected ChessController chessControl;
 	
@@ -36,7 +36,7 @@ public class GFController extends Pane {
 	
 	@FXML
 	public void handlerBack(MouseEvent arg0) {
-		SceneManager.setSceneSelectGame(false);
+		SceneManager.setSceneMainMenu();
 	}
 	
 	@FXML 

@@ -18,7 +18,7 @@
                <children>
                   <ImageView cache="true" fitHeight="50.0" fitWidth="50.0" onMouseClicked="#handlerBack" pickOnBounds="true" preserveRatio="true" scaleX="0.75" scaleY="0.75">
                      <image>
-                        <Image url="@../../res/back.png" />
+                        <Image url="back.png" />
                      </image>
                      <viewport>
                         <Rectangle2D />

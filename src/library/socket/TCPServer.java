@@ -5,7 +5,7 @@ import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import javafx.application.Platform;
-import library.socket.TCPCommand.Command;
+import library.socket.TCPCommand;
 
 public class TCPServer extends Thread implements TCPSocket {
 	private static final long KEEP_ALIVE_INTERVAL = 1000000000l;
@@ -46,7 +46,7 @@ public class TCPServer extends Thread implements TCPSocket {
 		}
 				
 		String msg;
-		Command cmd;
+		TCPCommand cmd;
 		int len  = 0;
 		long prevTime = System.nanoTime();
 		long nowTime;
@@ -55,7 +55,7 @@ public class TCPServer extends Thread implements TCPSocket {
 			nowTime = System.nanoTime();
 			if ((nowTime - prevTime) > KEEP_ALIVE_INTERVAL)
 			{
-				write(Command.TCP_KEEPALIVE, "");
+				write(TCPCommand.TCP_KEEPALIVE, "");
 				prevTime = nowTime;
 			}
 				
@@ -68,13 +68,13 @@ public class TCPServer extends Thread implements TCPSocket {
 					if (msg.length() < 3+len)
 						throw new Exception("Losing Packet.");
 					
-					cmd = Command.valueOf(Integer.parseInt(msg.substring(3, 5)));
-					if (cmd == Command.TCP_FAIL)
+					cmd = TCPCommand.valueOf(Integer.parseInt(msg.substring(3, 5)));
+					if (cmd == TCPCommand.TCP_FAIL)
 					{
 						lossPacket++;
 						write(lastPacket, true);
 					}
-					else if (cmd == Command.TCP_KEEPALIVE)
+					else if (cmd == TCPCommand.TCP_KEEPALIVE)
 						continue;
 					else
 						OnReceived(cmd, msg.substring(5, 3+len));
@@ -155,7 +155,7 @@ public class TCPServer extends Thread implements TCPSocket {
 			});
 	}
 
-	private void OnReceived(Command cmd, String msg) {
+	private void OnReceived(TCPCommand cmd, String msg) {
 		for(TCPListener listener: listeners)
 			Platform.runLater(()->{
 				listener.OnReceived(cmd, msg);

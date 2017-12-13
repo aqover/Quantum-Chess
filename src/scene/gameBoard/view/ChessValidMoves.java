@@ -4,7 +4,6 @@ import helper.Ultility;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
-import javafx.scene.text.Font;
 import model.piece.ChessPiece;
 import scene.gameBoard.shareObject.GameHolder;
 
@@ -26,16 +25,11 @@ public class ChessValidMoves extends Entity {
 	
 	@Override
 	public void draw(GraphicsContext gc) {
-		gc.setFill(Color.rgb(255, 0, 0, 0.5));
+		gc.setFill(Color.rgb(166, 166, 166, 0.35));
 		gc.fillOval(x + h/4, y + h/4, h/2, h/2);
 	}
 	
 	public void drawProbabilty(GraphicsContext gc, ChessPiece piece, double prob) {
-//		if (prob > 0) {
-//			gc.setFont(new Font(10));
-//			gc.setFill(Color.BLACK);
-//			gc.fillText(String.format("%d", (int) (prob * 100)), x, y + h);
-//		}
 		if (prob > 0) {
 			gc.setStroke(Ultility.rgbFade(Color.RED, Color.GREENYELLOW, prob));	
 			gc.setLineWidth(6);

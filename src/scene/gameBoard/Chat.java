@@ -21,7 +21,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import library.socket.TCPCommand.Command;
+import library.socket.TCPCommand;
 import library.socket.TCPSocket;
 
 public class Chat extends AnchorPane {
@@ -40,9 +40,9 @@ public class Chat extends AnchorPane {
 		
 	public static class ChatField {
 
-		protected final String user;
-		protected final String message;		
-		protected final long time;
+		protected final String USER;
+		protected final String MESSAGE;		
+		protected final long TIME;
 		
 		protected Label text;
 		protected TextFlow textflow;
@@ -51,27 +51,27 @@ public class Chat extends AnchorPane {
 		public ChatField(String msg) {
 			
 			String[] data = msg.split("\\|");
-			this.user = data[0];
-			this.message = data[1];
-			this.time = Long.parseLong(data[2]);
+			this.USER = data[0];
+			this.MESSAGE = data[1];
+			this.TIME = Long.parseLong(data[2]);
 			
 			createPane();
 		}
 		
 		public ChatField(String user, String message, long time) {
-			this.user = user;
-			this.message = message;
-			this.time = time;
+			this.USER = user;
+			this.MESSAGE = message;
+			this.TIME = time;
 			
 			createPane();
 		}
 
 		protected void createPane() {
 			this.text = new Label();
-			this.text.setText(this.user);
+			this.text.setText(this.USER);
 			this.text.setPadding(new Insets(5, 5, 5, 5));
 			this.text.setStyle("-fx-background-color: #81D4FA;");
-			this.textflow = new TextFlow(new Text(this.message));
+			this.textflow = new TextFlow(new Text(this.MESSAGE));
 			this.textflow.setPadding(new Insets(5, 5, 5, 5));
 			this.flowpane = new FlowPane();
 			this.flowpane.setMaxWidth(200.0);
@@ -81,16 +81,16 @@ public class Chat extends AnchorPane {
 		}
 		
 		public String encode() { 
-			return this.user + "|" + this.message + "|" + this.time;
+			return this.USER + "|" + this.MESSAGE + "|" + this.TIME;
 		}
 		
 		public String toString() {
 			return encode();
 		}
 		
-		public String getUser() { return this.user; }
-		public String getMessage() { return this.message; }
-		public long getTime() { return this.time; }
+		public String getUser() { return this.USER; }
+		public String getMessage() { return this.MESSAGE; }
+		public long getTime() { return this.TIME; }
 		
 		public Pane getPane() { return this.flowpane; }
 		
@@ -179,7 +179,7 @@ public class Chat extends AnchorPane {
 		// send message
 		TCPSocket socket = getSocket();
 		if (socket != null && socket.isConnected()) {
-			socket.write(Command.SEND_TEXT, chatField.encode());
+			socket.write(TCPCommand.SEND_TEXT, chatField.encode());
 		}
 		
 		// clear input field
